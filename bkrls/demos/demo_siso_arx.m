@@ -9,13 +9,13 @@ cfg = struct();
 cfg.p = 1;                 % outputs
 cfg.m = 1;                 % inputs
 cfg.ell = 2;               % past outputs y_{k-1:k-ell}, past+current inputs u_{k:k-ell}
-cfg.T = 100;               % total samples
+cfg.T = 1000;              % total samples
 cfg.lambda = 0.999;        % forgetting factor
 cfg.rho = 1e-4;            % ridge (P0 = I/rho)
 cfg.eps = 1e-12;           % numeric jitter
 cfg.seed = 123;            % RNG seed for reproducibility
-cfg.noise_std = 1e-3;      % measurement noise
-% cfg.noise_std = 0.0;       % measurement noise
+% cfg.noise_std = 1e-3;      % measurement noise
+cfg.noise_std = 0.0;       % measurement noise
 
 % True SISO ARX with direct feedthrough:
 % y_t = a1*y_{t-1} + a2*y_{t-2} + b1*u_{t-1} + d*u_t + v_t
