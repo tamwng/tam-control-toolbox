@@ -1,4 +1,4 @@
-function demo_mimo_rbf_groundtruth()
+function demo_mimo_rbf_kernel_rbf()
 % DEMO: MIMO BK-RLS with RBF kernel for BOTH ground-truth generation and identification.
 % - True system: p=3 outputs, m=2 inputs, ℓ=2 lags, LPV via RBF(s_k)
 % - ID system:   same dimensions and same RBF dictionary (centers, sigma)
