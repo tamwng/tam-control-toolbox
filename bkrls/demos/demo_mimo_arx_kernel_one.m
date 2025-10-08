@@ -1,4 +1,4 @@
-function demo_mimo_arx()
+function demo_mimo_arx_kernel_one()
 % DEMO: MIMO ARX identification with BK-RLS (ones-kernel → ARX)
 % Template defaults: p=3 outputs, m=2 inputs, ℓ=2, direct feedthrough.
 % You can change cfg.* to generalize.

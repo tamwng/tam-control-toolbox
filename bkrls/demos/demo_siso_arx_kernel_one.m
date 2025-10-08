@@ -1,4 +1,4 @@
-function demo_siso_arx()
+function demo_siso_arx_kernel_one()
 % DEMO: SISO ARX identification with BK-RLS
 % - Known ARX orders and direct feedthrough
 % - PRBS input (PE)

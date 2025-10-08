@@ -13,6 +13,8 @@ bkrls/
     ├── kernel.m # Kernel dictionary: ones, linear, polynomial, RBF, mixed
     ├── regressor.m # Builds ψ_k, g_k, z_k, φ_k, and returns metadata
     └── rls_update.m # RLS parameter update with forgetting, ridge, SPD checks
+brlspc/
+└── demos # all demos for the paper
 pc/
 └── core
     ├── controller_step.m # computes next control (orchestration)
@@ -126,13 +128,12 @@ Edit `cfg` structures in demos to adjust:
 ### BRLS-PC
 
 Edit `cfg` structures and weights in demos to adjust:
+- `assert`: logical for guards (`true` default)
+- `eps`: numeric tolerance (`1e-12` default)
+- `J0`: optional constant for logging optimal cost (passed to `solve_cholesky`)
+
+Other parameters:
 - `N`: prediction horizon (e.g., 10–40)
 - `Q_y`: output-error weight (PSD). Typical: `kron(eye(N), diag(q_y))`
 - `R_u`: input-effort weight (PD). Typical: `rho*eye(m*N), rho∈[1e-4,1e-2]`
 - `R`: reference trajectory in 𝑅^𝑝𝑁 (stacked)
-- `assert`: logical for guards (`true` default)
-- `eps`: numeric tolerance (`1e-12` default)
-- `J0`: optional constant for logging optimal cost (passed to `solve_cholesky`)
-- `Ty, Tu, ofs`: Toeplitz operators and offset from propagation (sizes imply `p,m,N`)
-- `ridge`: optional extra PD bump on `Ru` if `chol` fails (add `ridge*I`)
-- `apply_first_block`: use only first m entries of 𝑈^⋆ each step (receding horizon)
