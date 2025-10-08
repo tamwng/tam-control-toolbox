@@ -15,15 +15,23 @@ bkrls/
     └── rls_update.m # RLS parameter update with forgetting, ridge, SPD checks
 pc/
 └── core
+    ├── controller_step.m # computes next control (orchestration)
     ├── cost_assemble.m # forms H≻0,ℎ for BRLS-PC
     ├── solve_cholesky.m # Cholesky solve
     └── toeplitz.m # builds 𝑇𝑦, 𝑇𝑢, 𝑠𝑘 from Θ, 𝑠𝑘, 𝑁, ℓ
 tests/
-└── core
-    ├── test_window.m # Unit tests for alignment/readiness logic
-    ├── test_kernel.m # Unit tests for kernel evaluation and dimension
-    ├── test_regressor.m # Unit tests for regressor construction
-    └── test_rls_update.m # Unit tests for RLS algebra, SPD, and determinism
+├── bkrls
+|   └── core
+|       ├── test_window.m # Unit tests for alignment/readiness logic
+|       ├── test_kernel.m # Unit tests for kernel evaluation and dimension
+|       ├── test_regressor.m # Unit tests for regressor construction
+|       └── test_rls_update.m # Unit tests for RLS algebra, SPD, and determinism
+└── pc
+    └── core
+        ├── test_controller.m
+        ├── test_cost_assemble.m
+        ├── test_solve_cholesky.m
+        └── test_toeplitz.m
 </pre>
 
 ## 🧩 Conceptual Overview
