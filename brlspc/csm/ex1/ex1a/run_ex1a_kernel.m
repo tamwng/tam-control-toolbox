@@ -16,36 +16,43 @@ if ~exist(outdir,'dir'), mkdir(outdir); end
 
 %% -------------------- Config (agreed spec) --------------------
 cfg = struct();
-cfg.p = 1;                 % outputs
-cfg.m = 1;                 % inputs
-cfg.ell = 2;               % known lag (regressor length)
-cfg.N_total = 1200;        % total simulation length (can adjust ad hoc)
-cfg.Twarm = 3;             % warm-up to fill window (no long Phase I)
-cfg.lambda = 1.0;          % no forgetting (time-invariant, noise-free)
-cfg.ridge  = 1e-4;         % small ridge for numerical stability
-cfg.eps    = 1e-12;        % numeric jitter
+cfg.p = 1;                                          % outputs
+cfg.m = 1;                                          % inputs
+cfg.ell = 2;                                        % known lag (regressor length)
+cfg.N_total = 250;                                 % total simulation length (can adjust ad hoc)
+cfg.Twarm = 50;                                     % warm-up to fill window (no long Phase I)
+cfg.lambda = 1.0;                                   % no forgetting (time-invariant, noise-free)
+cfg.ridge  = 1e-9;                                  % small ridge for numerical stability
+cfg.eps    = 1e-12;                                 % numeric jitter
 cfg.seed   = seed;
-cfg.noise_std = 0.0;       % noise-free baseline
+cfg.noise_std = 0.0;                                % noise-free baseline
+cfg.d_flat = cfg.p*cfg.ell + cfg.m*(cfg.ell+1);     % |s| = |vec(y_{t-1:ℓ})| + |vec(u_{t:ℓ})|
 
 % Horizon and weights (single horizon: N_c = N)
 N = 16;                             % covers ≈95% decay for |p|=0.837
-rho = 1e-4;                         % absolute-u penalty; keep small to avoid SSE
+rho = 1e-3;                         % differential-u penalty; keep small to avoid SSE
 Qy = speye(cfg.p * N);              % unit tracking weight
 Ru = rho * speye(cfg.m * N);        % small effort weight
 
 % Reference: three 300-step steps after warm-up
 T = cfg.N_total;
-N_phase2 = 900;                      % three 300-step segments
+segment = 50;
+N_phase2 = 3 * segment;                      % three 100-step segments
 r = zeros(T,1);
-r((cfg.Twarm+1):(cfg.Twarm+300))   = 1.0;
-r((cfg.Twarm+301):(cfg.Twarm+600)) = -0.5;
-r((cfg.Twarm+601):(cfg.Twarm+900)) = 0.75;
+r((cfg.Twarm+1):(cfg.Twarm+segment))   = 1.0;
+r((cfg.Twarm+segment+1):(cfg.Twarm+2*segment)) = -0.5;
+r((cfg.Twarm+2*segment+1):(cfg.Twarm+3*segment)) = 0.75;
 
 % Dither (APRBS): higher during warm-up, smaller thereafter
 dither.phase1_amp = 0.10;
 dither.phase2_amp = 0.05;
 dither.dwell_min  = 5;
 dither.dwell_max  = 15;
+
+% RBF config
+if (strcmpi(spec.type,'rbf'))
+    spec.centers = randn(spec.q, cfg.d_flat);      % deterministic with seed
+end
 
 rng(cfg.seed);
 
@@ -61,6 +68,7 @@ u = zeros(T,1);   % applied input
 y = zeros(T,1);   % output
 p = aprbs_two_phase(T, dither.dwell_min, dither.dwell_max, ...
                     dither.phase1_amp, dither.phase2_amp, cfg.Twarm);
+u(1:cfg.Twarm) = p(1:cfg.Twarm);
 
 % BK-RLS state
 W = window('init', cfg.p, cfg.m, cfg.ell);
@@ -70,7 +78,7 @@ ready_seen = false;
 % Diagnostics
 yhat = nan(T,1);     % one-step prediction before update
 e    = nan(T,1);     % one-step prediction error
-theta_hist = [];     % store θ for linear kernel
+theta_hist = [];     % store θ for unitary kernel
 
 %% -------------------- Simulation loop --------------------
 for t = 1:(T-1)
@@ -98,7 +106,7 @@ for t = 1:(T-1)
     e(t)    = y(t) - yhat(t);
     [stR, ~] = rls_update(stR, phi_k, y(t));
 
-    if strcmpi(spec.type,'linear')
+    if strcmpi(spec.type,'ones')
         theta_hist(:,end+1) = stR.theta(:);
     end
 
@@ -116,7 +124,8 @@ for t = 1:(T-1)
         % Assemble cost and solve via Cholesky; apply first control block
         C = cost_assemble(Ty, Tu, sigma_k, Qy, Ru, R, struct('assert',true,'eps',cfg.eps));
         Sln = solve_cholesky(C.H, C.h, struct('assert',true,'J0',C.J0));
-        u(t+1) = Sln.U(1:cfg.m) + p(t+1);  % NO clipping in 1a
+        % u(t+1) = Sln.U(1:cfg.m) + p(t+1);  % NO clipping in 1a
+        u(t+1) = Sln.U(1:cfg.m);  % NO clipping in 1a
     else
         % During warm-up, just dither (keeps window filling simple)
         u(t+1) = p(t+1);
@@ -216,6 +225,8 @@ end
 
 function name = filename_ex1a(spec, seed)
     switch lower(spec.type)
+        case 'ones'
+            tag = 'ones';
         case 'linear'
             tag = 'linear';
         case 'poly'
