@@ -19,6 +19,15 @@ set(groot,'defaultTextInterpreter','latex')
 set(groot,'defaultAxesTickLabelInterpreter','latex')
 set(groot,'defaultLegendInterpreter','latex')
 
+set(0,'DefaultFigureColor','w') 
+set(0,'DefaultAxesColor','w') 
+set(0,'DefaultLegendColor','w') 
+set(0,'DefaultAxesXColor','k') 
+set(0,'DefaultAxesYColor','k') 
+set(0,'DefaultAxesZColor','k') 
+set(0,'DefaultTextColor','k') 
+set(0,'DefaultLegendTextColor','k')
+
 % colors = [ 0.121, 0.466, 0.705; % blue 
 %     1.000, 0.498, 0.054; % orange 
 %     0.172, 0.627, 0.172; % green 
@@ -50,6 +59,7 @@ set(groot,'defaultAxesColorOrder',colors)
 S = load_all(cfg.files); 
 T = numel(S{1}.series.y); 
 t = (1:T).'; 
+tclip = S{1}.cfg.ell+1:T-1;
 tZ = (1:min(cfg.zoomN,T)).'; 
 names = legend_names(S);
 cfg.Twarm = S{1,1}.cfg.Twarm;
@@ -57,7 +67,7 @@ cfg.Twarm = S{1,1}.cfg.Twarm;
 %% Figure 1: Output (Full + Zoom)
 
 % --- Figure size: single-column (≈8.6 cm) and compact height ---
-f1 = figure('Units','centimeters','Position',[2 2 10 6],'Color','w');
+f11 = figure('Units','centimeters','Position',[2 2 10 6],'Color','w');
 % tiledlayout(2,1,'TileSpacing','compact','Padding','compact')
 
 % Compute global y-lims for output
@@ -86,8 +96,8 @@ fill(x_patch, y_patch, [0.85 0.93 1.0], ...
 uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
 
 % Panel B: zoom (first 120)
-f2 = figure('Name','Ex1a Output Zoom','Color','w');
-set(f2,'Units','centimeters','Position',[2 2 10 6])
+f12 = figure('Name','Ex1a Output Zoom','Color','w');
+set(f12,'Units','centimeters','Position',[2 2 10 6])
 hold on
 tZ = (1:min(cfg.zoomN,T)).';
 nexttile; hold on
@@ -105,8 +115,8 @@ fill(x_patch, y_patch, [0.85 0.93 1.0], ...
 uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
 
 % Panel C: Log error (full range, stair plot)
-f3 = figure('Name','Ex1a Log Error','Color','w');
-set(f3,'Units','centimeters','Position',[2 2 20 13])
+f13 = figure('Name','Ex1a Log Error','Color','w');
+set(f13,'Units','centimeters','Position',[2 2 20 13])
 hold on
 
 lw = 0.9;                             % thinner linewidth
@@ -133,59 +143,83 @@ uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
 legend([{'PRBS'}, names], 'NumColumns', 2, 'Location', 'southoutside');
 
 % Vector export, exact size
-exportgraphics(f1, fullfile(cfg.figdir,'ex1a_output.pdf'), 'ContentType','vector')
-exportgraphics(f2, fullfile(cfg.figdir,'ex1a_output_zoom.pdf'), 'ContentType','vector')
-exportgraphics(f3, fullfile(cfg.figdir, 'ex1a_log_error.pdf'), 'ContentType', 'vector');
+exportgraphics(f11, fullfile(cfg.figdir,'ex1a_output.pdf'), 'ContentType','vector')
+exportgraphics(f12, fullfile(cfg.figdir,'ex1a_output_zoom.pdf'), 'ContentType','vector')
+exportgraphics(f13, fullfile(cfg.figdir, 'ex1a_output_log_error.pdf'), 'ContentType', 'vector');
 
-%% ---- Figure 2: Input (full + zoom) ----
-f2 = figure('Name','Ex1a Input','Color','w');
-tiledlayout(2,1,'TileSpacing','compact','Padding','compact')
+% %% ---- Figure 2: Input (full + zoom) ----
+% f2 = figure('Name','Ex1a Input','Color','w');
+% tiledlayout(2,1,'TileSpacing','compact','Padding','compact')
+% 
+% % 2A: full
+% nexttile; hold on
+% for i=1:numel(S), stairs(t, S{i}.series.u); end
+% xlabel('k'); ylabel('Input')
+% % title('Applied input (full range)')
+% xlim([1 T]); legend(names,'Location','best')
+% 
+% % 2B: zoom
+% nexttile; hold on
+% for i=1:numel(S), stairs(tZ, S{i}.series.u(1:numel(tZ))); end
+% xlabel('k'); ylabel('Input')
+% % title(sprintf('Applied input (zoom first %d steps)', numel(tZ)))
+% xlim([1 numel(tZ)]); legend(names,'Location','best')
+% 
+% saveas(f2, fullfile(cfg.figdir,'ex1a_input.pdf'))
 
-% 2A: full
+
+% ---- Figure 3: error (all) + theta error (unitary only) ----
+f21 = figure('Units','centimeters','Position',[2 2 13 7],'Color','w');
+% tiledlayout(2,1,'TileSpacing','compact','Padding','compact')
+
+styles = {'-','-','-','-'};      % e.g., RBF dashed
+
+% Panel (a): |yhat - y|, log scale
 nexttile; hold on
-for i=1:numel(S), stairs(t, S{i}.series.u); end
-xlabel('k'); ylabel('Input')
-% title('Applied input (full range)')
-xlim([1 T]); legend(names,'Location','best')
-
-% 2B: zoom
-nexttile; hold on
-for i=1:numel(S), stairs(tZ, S{i}.series.u(1:numel(tZ))); end
-xlabel('k'); ylabel('Input')
-% title(sprintf('Applied input (zoom first %d steps)', numel(tZ)))
-xlim([1 numel(tZ)]); legend(names,'Location','best')
-
-saveas(f2, fullfile(cfg.figdir,'ex1a_input.pdf'))
-
-
-%% ---- Figure 3: Diagnostics ----
-f3 = figure('Name','Ex1a Diagnostics','Color','w');
-tiledlayout(1,2,'TileSpacing','compact','Padding','compact')
-
-% 3A: log10 EWMA(e^2)
-nexttile; hold on
-for i=1:numel(S), stairs(t, S{i}.series.log10_ew); end
-xlabel('k'); ylabel('$\log_{10} EWMA(e_k^2)$')
-% title('Prediction-error power'); xlim([1 T])
-legend(names,'Location','best')
-
-% 3B: parameter error for unit kernel (if present)
-nexttile; hold on
-i_unit = find(strcmpi(extract_types(S),'ones'),1,'first');
-if ~isempty(i_unit) && ~isempty(S{i_unit}.series.theta_hist)
-    k0 = find(~isnan(S{i_unit}.series.e),1,'first');
-    th = S{i_unit}.series.theta_hist;
-    theta_star = S{i_unit}.cfg_to_true(:);
-    E = vecnorm(th(2:5,:) - theta_star,2,1).';
-    kk = (k0:(k0+numel(E)-1)).';
-    stairs(kk,E)
-    xlabel('k'); ylabel('$||\theta_k - \theta^\ast||_2$')
-    % title('Parameter error (unit kernel)')
-else
-    axis off; text(0.05,0.5,'Parameter error shown for unit kernel only.','FontSize',10)
+for i=1:numel(S)
+    e = S{i}.series.e(:);
+    ae = max(abs(e), 1e-14);
+    stairs(tclip, ae, 'LineStyle', styles{i});
 end
+set(gca,'YScale','log','TickDir','out','Box','off')
+xlabel('$k$'); ylabel('$|\hat{y}_k-y_k|$')
+% xlim([1 T])
+legend(legend_names(S),'NumColumns',2,'Location','southoutside'); legend boxoff
+yL = ylim;
+x_patch = [1 cfg.Twarm cfg.Twarm 1];
+y_patch = [yL(1) yL(1) yL(2) yL(2)];
+fill(x_patch, y_patch, [0.85 0.93 1.0], ...
+     'EdgeColor','none','FaceAlpha',0.6);
+uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
+legend([{'PRBS'}, names], 'NumColumns', 2, 'Location', 'southoutside');
 
-saveas(f3, fullfile(cfg.figdir,'ex1a_diagnostics.pdf'))
+% Panel (b): ||theta - theta*||_2 for unitary kernel only
+f22 = figure('Units','centimeters','Position',[2 2 7 5.7],'Color','w');
+nexttile; hold on
+iu = find(strcmpi(extract_types(S),'ones'),1);
+if ~isempty(iu) && ~isempty(S{iu}.series.theta_hist)
+    th = S{iu}.series.theta_hist;             % columns align with updates
+    theta_star = S{iu}.cfg_to_true(:);        % [1.5;-0.7;0.5;0.3]
+    k0 = find(~isnan(S{iu}.series.e),1,'first');
+    perr = vecnorm(th(2:5,:) - theta_star,2,1).';
+    kk = (k0:(k0+numel(perr)-1)).';
+    stairs(kk, max(perr, 1e-14));
+    set(gca,'YScale','log')
+end
+set(gca,'TickDir','out','Box','off')
+xlabel('$k$'); ylabel('$\|\theta_k-\theta^\ast\|_2$')
+xlim([1 T])
+
+yL = ylim;
+x_patch = [1 cfg.Twarm cfg.Twarm 1];
+y_patch = [yL(1) yL(1) yL(2) yL(2)];
+fill(x_patch, y_patch, [0.85 0.93 1.0], ...
+     'EdgeColor','none','FaceAlpha',0.6);
+uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
+legend([{'PRBS'}, names{1}], 'NumColumns', 2, 'Location', 'southoutside');
+
+exportgraphics(f21, fullfile(cfg.figdir,'ex1a_err_prediction.pdf'), 'ContentType','vector')
+exportgraphics(f22, fullfile(cfg.figdir,'ex1a_err_theta.pdf'), 'ContentType','vector')
 
 %% ---- Metrics CSV (Phase II) ----
 % recompute if missing; write tidy CSV

@@ -1,7 +1,7 @@
 % batch_ex1a.m
 % Runs Example 1a once per kernel and saves results under ./results
 
-clear; clc;
+clear; clc; close all;
 
 outdir = './brlspc/csm/ex1/ex1a/results';
 seed = 42;

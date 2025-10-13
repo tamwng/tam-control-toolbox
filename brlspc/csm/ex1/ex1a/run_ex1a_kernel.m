@@ -156,7 +156,7 @@ Results.metrics = struct('RMSE_PhaseII', rmse2, ...
                          'TV_u',         tv_u, ...
                          'Peak_u',       peak_u, ...
                          'Final_log10_EWMA_e2', final_log10_ew);
-Results.series  = struct('y', y, 'u', u, 'r', r, 'e', e, ...
+Results.series  = struct('y', y, 'u', u, 'r', r, 'e', e(cfg.ell+1:T-1), ...
                          'log10_ew', log10_ew, 'theta_hist', theta_hist);
 Results.meta    = run_metadata();
 
@@ -203,18 +203,37 @@ function s = aprbs_two_phase(T, dwell_min, dwell_max, amp1, amp2, N1)
     end
 end
 
-function z = ewma(x, w)
-    alpha = 2/(w+1);
-    z = nan(size(x));
-    acc = 0; seen = false;
-    for i=1:numel(x)
-        xi = x(i);
-        if ~isnan(xi)
-            if ~seen, acc = xi; seen = true; else, acc = alpha*xi + (1-alpha)*acc; end
-            z(i) = acc;
+function z = ewma(x, L, varargin)
+% x: series (e.g., e.^2)
+% L: "equivalent window" length
+% varargin{1}: reset_indices (vector of k where EWMA restarts), optional
+
+alpha = 2/(L+1);
+z = nan(size(x));
+acc = 0; seen = false;
+
+reset_idx = [];
+if ~isempty(varargin)
+    reset_idx = varargin{1}(:).';
+end
+
+for i = 1:numel(x)
+    xi = x(i);
+    if any(i == reset_idx)
+        seen = false;           % force fresh seed at this index
+    end
+    if ~isnan(xi)
+        if ~seen
+            acc = xi;           % seed with first valid sample
+            seen = true;
+        else
+            acc = alpha*xi + (1-alpha)*acc;
         end
+        z(i) = acc;
     end
 end
+end
+
 
 function meta = run_metadata()
     meta = struct();
