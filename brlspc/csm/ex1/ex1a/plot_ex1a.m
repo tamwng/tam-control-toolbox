@@ -116,7 +116,7 @@ uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
 
 % Panel C: Log error (full range, stair plot)
 f13 = figure('Name','Ex1a Log Error','Color','w');
-set(f13,'Units','centimeters','Position',[2 2 20 13])
+set(f13,'Units','centimeters','Position',[2 2 20 10])
 hold on
 
 lw = 0.9;                             % thinner linewidth
@@ -197,6 +197,7 @@ fill(x_patch, y_patch, [0.85 0.93 1.0], ...
      'EdgeColor','none','FaceAlpha',0.6);
 uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
 legend([{'PRBS'}, names{1}], 'NumColumns', 2, 'Location', 'southoutside');
+legend boxoff;
 
 exportgraphics(f21, fullfile(cfg.figdir,'ex1a_err_prediction.pdf'), 'ContentType','vector')
 exportgraphics(f22, fullfile(cfg.figdir,'ex1a_err_theta.pdf'), 'ContentType','vector')
