@@ -1,0 +1,275 @@
+% run_ex1app_sensitivity.m
+% One-kernel runner for Example 1b (unconstrained baseline).
+% Saves a standardized Results struct for plotting and tables.
+%
+% Usage:
+%   run_ex1app_sensitivity(struct('type','linear'), 42, 'results');
+%   run_ex1app_sensitivity(struct('type','poly','degree',2), 42, 'results');
+%   run_ex1app_sensitivity(struct('type','rbf','sigma',1.0), 42, 'results');
+
+function run_ex1app_sensitivity(spec, seed, outdir)
+
+if nargin < 1, spec = struct('type','linear'); end
+if nargin < 2, seed = 42; end
+if nargin < 3, outdir = 'results'; end
+if ~exist(outdir,'dir'), mkdir(outdir); end
+
+%% -------------------- Config (agreed spec) --------------------
+cfg = struct();
+cfg.p = 1;                                          % outputs
+cfg.m = 1;                                          % inputs
+cfg.ell = 2;                                        % known lag (regressor length)
+cfg.N_total = 250;                                 % total simulation length (can adjust ad hoc)
+cfg.Twarm = 50;                                     % warm-up to fill window (no long Phase I)
+cfg.lambda = 1.0;                                   % no forgetting (time-invariant, noise-free)
+cfg.ridge  = 1e-9;                                  % small ridge for numerical stability
+cfg.eps    = 1e-12;                                 % numeric jitter
+cfg.seed   = seed;
+cfg.noise_std = 0.0;                                % noise-free baseline
+cfg.d_flat = cfg.p*cfg.ell + cfg.m*(cfg.ell+1);     % |s| = |vec(y_{t-1:ℓ})| + |vec(u_{t:ℓ})|
+
+% Horizon and weights (single horizon: N_c = N)
+N = 16;                             % covers ≈95% decay for |p|=0.837
+rho = spec.rho;                     % differential-u penalty; keep small to avoid SSE
+Qy = speye(cfg.p * N);              % unit tracking weight
+Ru = rho * speye(cfg.m * N);        % small effort weight
+
+% Reference: three 300-step steps after warm-up
+T = cfg.N_total;
+segment = 50;
+N_phase2 = 3 * segment;                      % three 100-step segments
+r = zeros(T,1);
+r((cfg.Twarm+1):(cfg.Twarm+segment))   = 1.0;
+r((cfg.Twarm+segment+1):(cfg.Twarm+2*segment)) = -0.5;
+r((cfg.Twarm+2*segment+1):(cfg.Twarm+3*segment)) = 0.75;
+
+% Dither (APRBS): higher during warm-up, smaller thereafter
+dither.phase1_amp = 0.10;
+dither.phase2_amp = 0.05;
+dither.dwell_min  = 5;
+dither.dwell_max  = 15;
+
+% RBF config
+if (strcmpi(spec.type,'rbf'))
+    spec.centers = randn(spec.q, cfg.d_flat);      % deterministic with seed
+end
+
+rng(cfg.seed);
+
+%% -------------------- Plant (ground truth) --------------------
+% y_{k+1} = 1.5 y_k - 0.7 y_{k-1} + 0.5 u_k + 0.3 u_{k-1}
+plant.a = [1.5; -0.7];
+plant.d  = 0.5;   % feedthrough on u_k
+plant.b1 = 0.3;   % on u_{k-1}
+theta_true = [plant.a(1); plant.a(2); plant.d; plant.b1]; % [y_k, y_{k-1}, u_k, u_{k-1}]
+umax = 0.5;
+umin = -umax;
+
+%% -------------------- Preallocate --------------------
+u = zeros(T,1);   % applied input
+y = zeros(T,1);   % output
+p = aprbs_two_phase(T, dither.dwell_min, dither.dwell_max, ...
+                    dither.phase1_amp, dither.phase2_amp, cfg.Twarm);
+u(1:cfg.Twarm) = p(1:cfg.Twarm);
+
+% BK-RLS state
+W = window('init', cfg.p, cfg.m, cfg.ell);
+stR = struct('theta', [], 'P', [], 'lambda', cfg.lambda, 'eps', cfg.eps);
+ready_seen = false;
+
+% Diagnostics
+yhat = nan(T,1);     % one-step prediction before update
+e    = nan(T,1);     % one-step prediction error
+theta_hist = [];     % store θ for unitary kernel
+
+%% -------------------- Simulation loop --------------------
+for t = 1:(T-1)
+
+    % Plant update: y(t) from current/past u and past y (discrete-time)
+    y1 = getv(y, t-1);          % y_{t-1}
+    y2 = getv(y, t-2);          % y_{t-2}
+    u0 = u(t);                  % u_{t}
+    u1 = getv(u, t-1);          % u_{t-1}
+    y(t) = plant.a(1)*y1 + plant.a(2)*y2 + plant.d*u0 + plant.b1*u1 ...
+         + cfg.noise_std*randn;
+
+    % Update window with applied u(t) and measured y(t)
+    [W, s_k, ready] = window('push', W, u(t), y(t));
+    if ~ready, continue; end
+
+    % Build regressor, predict BEFORE update, then RLS update
+    [phi_k, meta] = regressor(s_k, spec, cfg.p, cfg.m); %#ok<ASGLU>
+    if ~ready_seen
+        stR.theta = zeros(size(phi_k,2),1);
+        stR.P     = eye(size(phi_k,2))/cfg.ridge;
+        ready_seen = true;
+    end
+    yhat(t) = (phi_k * stR.theta);
+    e(t)    = y(t) - yhat(t);
+    [stR, ~] = rls_update(stR, phi_k, y(t));
+
+    if strcmpi(spec.type,'ones')
+        theta_hist(:,end+1) = stR.theta(:);
+    end
+
+    % After warm-up: ABRLS-PC, unconstrained, apply first move + dither
+    if t >= cfg.Twarm
+        % Reference stack over horizon
+        R = ref_stack(r, t, N);
+
+        % Basis and operators for multi-step prediction
+        gamma = kernel('eval', spec, s_k);
+        Theta = theta_vec_to_matrix(stR.theta, cfg.p);
+        [y_hist, u_hist] = histories(y, u, t, cfg.ell);
+        [Ty, Tu, sigma_k, ~] = toeplitz(Theta, gamma, y_hist, u_hist, N, cfg.ell);
+
+        % Assemble cost and solve via Cholesky; apply first control block
+        C = cost_assemble(Ty, Tu, sigma_k, Qy, Ru, R, struct('assert',true,'eps',cfg.eps));
+        Sln = solve_cholesky(C.H, C.h, struct('assert',true,'J0',C.J0));
+        u(t+1) = Sln.U(1:cfg.m);  % clipping in 1b
+    else
+        % During warm-up, just dither (keeps window filling simple)
+        u(t+1) = p(t+1);
+    end
+    u(t+1) = max(min(u(t+1), umax), umin);
+end
+
+% Final sample y(T) for completeness
+y(T) = plant.a(1)*getv(y,T-1) + plant.a(2)*getv(y,T-2) ...
+     + plant.d*u(T) + plant.b1*getv(u,T-1) + cfg.noise_std*randn;
+
+%% -------------------- Metrics --------------------
+log10_ew = log10(max(ewma(e.^2, 50), eps));     % EWMA power, log10
+idx2 = (cfg.Twarm+1):(cfg.Twarm+N_phase2);      % Phase-II window
+rmse2 = sqrt(mean((r(idx2) - y(idx2)).^2));
+iae2  = sum(abs(r(idx2) - y(idx2)));
+tv_u  = sum(abs(diff(u)));
+peak_u = max(abs(u));
+final_log10_ew = log10_ew(find(~isnan(log10_ew),1,'last'));
+
+%% -------------------- Package and save --------------------
+Results = struct();
+Results.spec    = spec;
+Results.cfg     = cfg;
+Results.horizon = struct('N', N);
+Results.weights = struct('Qy','I','Ru_rho',rho);
+Results.metrics = struct('RMSE_PhaseII', rmse2, ...
+                         'IAE_PhaseII',  iae2, ...
+                         'TV_u',         tv_u, ...
+                         'Peak_u',       peak_u, ...
+                         'Final_log10_EWMA_e2', final_log10_ew);
+Results.series  = struct('y', y, 'u', u, 'r', r, 'e', e(cfg.ell+1:T-1), ...
+                         'log10_ew', log10_ew, 'theta_hist', theta_hist);
+Results.meta    = run_metadata();
+
+fname = fullfile(outdir, filename_ex1app(spec, seed));
+save(fname, 'Results');
+fprintf('Saved %s\n', fname);
+
+end % function
+
+
+%% -------------------- Helpers (local) --------------------
+function v = getv(x, k)
+    if k>=1 && k<=numel(x), v = x(k); else, v = 0; end
+end
+
+function R = ref_stack(r, t, N)
+    T = numel(r);
+    idx = min(t+1:t+N, T);
+    R = r(idx);  % p=1 => (N x 1)
+end
+
+function [y_hist, u_hist] = histories(y,u,t,ell)
+    y_hist = zeros(1,ell);
+    u_hist = zeros(1,ell);
+    for i=1:ell
+        yi = t-(ell-i);
+        ui = t-(ell-i);
+        y_hist(i) = getv(y, yi);
+        u_hist(i) = getv(u, ui);
+    end
+end
+
+function s = aprbs_two_phase(T, dwell_min, dwell_max, amp1, amp2, N1)
+    s = zeros(T,1);
+    val = 1;
+    k = 1;
+    while k <= T
+        dwell = randi([dwell_min, dwell_max],1,1);
+        amp = (k <= N1) * amp1 + (k > N1) * amp2;
+        k_end = min(T, k + dwell - 1);
+        s(k:k_end) = amp * val;
+        val = -val;
+        k = k_end + 1;
+    end
+end
+
+function z = ewma(x, L, varargin)
+% x: series (e.g., e.^2)
+% L: "equivalent window" length
+% varargin{1}: reset_indices (vector of k where EWMA restarts), optional
+
+alpha = 2/(L+1);
+z = nan(size(x));
+acc = 0; seen = false;
+
+reset_idx = [];
+if ~isempty(varargin)
+    reset_idx = varargin{1}(:).';
+end
+
+for i = 1:numel(x)
+    xi = x(i);
+    if any(i == reset_idx)
+        seen = false;           % force fresh seed at this index
+    end
+    if ~isnan(xi)
+        if ~seen
+            acc = xi;           % seed with first valid sample
+            seen = true;
+        else
+            acc = alpha*xi + (1-alpha)*acc;
+        end
+        z(i) = acc;
+    end
+end
+end
+
+
+function meta = run_metadata()
+    meta = struct();
+    meta.when = datestr(now, 'yyyy-mm-ddTHH:MM:SS');
+    meta.matlab = version;
+    try, meta.host = char(java.net.InetAddress.getLocalHost.getHostName); catch, meta.host = ''; end
+end
+
+function name = filename_ex1app(spec, seed)
+    switch lower(spec.type)
+        case 'ones'
+            tag = 'ones';
+        case 'linear'
+            tag = 'linear';
+        case 'poly'
+            tag = sprintf('poly_deg%d', spec.degree);
+        case 'rbf'
+            % avoid dot in filename
+            tag = sprintf('rbf_sig%s', strrep(num2str(spec.sigma,'%0.3g'),'.','p'));
+        otherwise
+            tag = 'unknown';
+    end
+    name = sprintf('ex1app_%s_seed%d_rho%s.mat', tag, seed, num2str(spec.rho,'%0.3g'));
+end
+
+function Theta = theta_vec_to_matrix(theta_vec, p)
+% Map RLS vector θ to matrix Θ with p rows.
+% Column order must match the regressor construction used in your codebase.
+% This template assumes φ_k * θ == Θ * z_k with column-major vec.
+    d = numel(theta_vec);
+    W = d / p;
+    if abs(W - round(W)) > 1e-12
+        error('theta_vec length not divisible by p.');
+    end
+    Theta = reshape(theta_vec, p, W);
+end
+
