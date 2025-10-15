@@ -122,7 +122,8 @@ for t = 1:(T-1)
         [Ty, Tu, sigma_k, ~] = toeplitz(Theta, gamma, y_hist, u_hist, N, cfg.ell);
 
         % Assemble cost and solve via Cholesky; apply first control block
-        C = cost_assemble(Ty, Tu, sigma_k, Qy, Ru, R, struct('assert',true,'eps',cfg.eps));
+        C = cost_assemble(Ty, Tu, sigma_k, Qy, Ru, R, ...
+            struct('assert',true,'eps',cfg.eps,'m',cfg.m,'N',N,'u_k',u(t)));
         Sln = solve_cholesky(C.H, C.h, struct('assert',true,'J0',C.J0));
         % u(t+1) = Sln.U(1:cfg.m) + p(t+1);  % NO clipping in 1a
         u(t+1) = Sln.U(1:cfg.m);  % NO clipping in 1a
