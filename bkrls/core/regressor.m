@@ -67,13 +67,22 @@ function [phi_k, meta, z_k] = regressor(s_k, spec, p_opt, m_opt)
     q   = numel(g_k);
 
     % ---- z_k = g_k ⊗ ψ_k ----
-    % Readable version first; can be micro-optimized later.
-    % z = [g1*ψ; g2*ψ; ...; gq*ψ]
-    z_k = zeros(q * d0, 1);
-    idx = 0;
-    for j = 1:q
-        z_k(idx + (1:d0)) = g_k(j) * psi_k;
-        idx = idx + d0;
+    % NEW: intercept-aware construction to avoid duplicate columns when g_k includes a constant.
+    tol = 10*eps(class(g_k));
+    is_const = abs(g_k - 1) <= tol;
+    if any(is_const)
+        % coalesce constants: move the first constant to the front, drop the others
+        first_const = find(is_const, 1, 'first');
+        keep_idx = true(q,1); keep_idx(is_const) = false;  % drop all constants for now
+        g_front = g_k(first_const);
+        g_rest  = g_k(keep_idx);                           % non-constant features only
+        psi_rest = psi_k(2:end);                           % non-intercept part
+        z_k = [ g_front * psi_k ; kron(g_rest, psi_rest) ];
+        zlen = d0 + numel(g_rest)*(d0-1);
+    else
+        % standard Kronecker
+        z_k = kron(g_k, psi_k);
+        zlen = q * d0;
     end
 
     % ---- φ_k = z_k' ⊗ I_p ----
@@ -87,15 +96,13 @@ function [phi_k, meta, z_k] = regressor(s_k, spec, p_opt, m_opt)
     meta.ell   = ell;
     meta.d0    = d0;
     meta.q     = q;
-    meta.d     = p * q * d0;
+    meta.d     = p * zlen;  % effective width with intercept-aware z_k
     meta.shapes = struct('y', [p, ell], 'u', [m, ell+1]);
-    meta.notes  = "φ_k = (g_k ⊗ ψ_k)' ⊗ I_p; ARX when spec.type='ones'.";
+    meta.notes  = "φ_k = (g_k ⊗ ψ_k)' ⊗ I_p; intercept-aware z_k when a constant kernel feature is present.";
 
     % Optional: lightweight self-check in debug scenarios
     % (disable in hot paths if needed)
-    % Verify Θ z = φ vec(Θ) identity on a tiny random Θ
-    % rng(0);  % do not set RNG by default to preserve determinism elsewhere
-    % Theta_dbg = randn(p, q*d0);
+    % Theta_dbg = randn(p, zlen);
     % lhs = Theta_dbg * z_k;
     % rhs = phi_k * Theta_dbg(:);
     % assert(norm(lhs - rhs) <= 1e-10*(1+norm(lhs)), 'regressor: kron identity failed.');
