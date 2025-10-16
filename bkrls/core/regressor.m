@@ -67,23 +67,19 @@ function [phi_k, meta, z_k] = regressor(s_k, spec, p_opt, m_opt)
     q   = numel(g_k);
 
     % ---- z_k = g_k ⊗ ψ_k ----
-    % NEW: intercept-aware construction to avoid duplicate columns when g_k includes a constant.
-    tol = 10*eps(class(g_k));
-    is_const = abs(g_k - 1) <= tol;
-    if any(is_const)
-        % coalesce constants: move the first constant to the front, drop the others
-        first_const = find(is_const, 1, 'first');
-        keep_idx = true(q,1); keep_idx(is_const) = false;  % drop all constants for now
-        g_front = g_k(first_const);
-        g_rest  = g_k(keep_idx);                           % non-constant features only
-        psi_rest = psi_k(2:end);                           % non-intercept part
-        z_k = [ g_front * psi_k ; kron(g_rest, psi_rest) ];
-        zlen = d0 + numel(g_rest)*(d0-1);
+    % NEW: intercept-aware construction using a structural flag (no numeric test).
+    has_const = kernel_has_const(spec);  % true for ones/linear/poly or mix containing 'ones'
+
+    if has_const
+        % assume constant is the first feature in g_k
+        z_k  = [ g_k(1) * psi_k ; kron(g_k(2:end), psi_k(2:end)) ];
+        zlen = d0 + (numel(g_k)-1)*(d0-1);
     else
         % standard Kronecker
-        z_k = kron(g_k, psi_k);
-        zlen = q * d0;
+        z_k  = kron(g_k, psi_k);
+        zlen = numel(g_k) * d0;
     end
+
 
     % ---- φ_k = z_k' ⊗ I_p ----
     % Size: p × (p·q·d0). Keeps the model linear in parameters.
@@ -107,4 +103,17 @@ function [phi_k, meta, z_k] = regressor(s_k, spec, p_opt, m_opt)
     % rhs = phi_k * Theta_dbg(:);
     % assert(norm(lhs - rhs) <= 1e-10*(1+norm(lhs)), 'regressor: kron identity failed.');
 
+end
+
+% helper
+function tf = kernel_has_const(spec)
+switch lower(spec.type)
+    case {'ones','linear','poly'}
+        tf = true;
+    case 'mix'
+        parts = getfield(spec,'parts',[]);
+        tf = ~isempty(parts) && any(cellfun(@kernel_has_const, parts));
+    otherwise
+        tf = false;  % rbf, etc.
+end
 end

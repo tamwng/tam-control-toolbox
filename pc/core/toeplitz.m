@@ -38,40 +38,57 @@ if size(y_hist,2) ~= ell, error('y_hist must have ell columns (chronological).')
 m = size(u_hist,1);
 if size(u_hist,2) ~= ell, error('u_hist must have ell columns (chronological).'); end
 
-% Infer q from Theta width and dimensions
-cols_per_j = 1 + ell*p + (ell+1)*m; % C:1, A:ell blocks of p, B:(ell+1) blocks of m
-q = W / cols_per_j;
-if q ~= fix(q) || q < 1
-    error('Theta width incompatible with (p,m,ell). Got W=%d, expected multiple of %d.', W, cols_per_j);
-end
+cols1 = 1 + ell*p + (ell+1)*m;   % d0
+colsR = cols1 - 1;               % d0-1
 if isrow(gamma), gamma = gamma.'; end
-if length(gamma) ~= q
-    error('gamma length mismatch: got %d, expected q=%d.', length(gamma), q);
+qg = length(gamma);
+
+if W == cols1 + (qg-1)*colsR
+    has_const = true;  q = qg;           % intercept-aware layout
+elseif W == qg*cols1
+    has_const = (qg == 1);  q = qg;      % tie-break: unitary => constant
+else
+    error('Theta width incompatible with (p,m,ell). W=%d.', W);
 end
 
+% Build per-block indexer
+if has_const
+    cols_per_j_vec = [cols1, repmat(colsR,1,q-1)];   % j=1: d0; j>=2: d0-1
+else
+    cols_per_j_vec = repmat(cols1,1,q);              % uniform
+end
+col_start = [0, cumsum(cols_per_j_vec(1:end-1))];
+block_j   = @(j) (col_start(j)+1):(col_start(j)+cols_per_j_vec(j));
+
 % ---------- Partition Theta into basis blocks ----------
-C_hat = cell(q,1);                 % each p×1
-A_hat = cell(ell,1);  % each cell: {q blocks of p×p}
-B_hat = cell(ell+1,1);% each cell: {q blocks of p×m}
-for i = 1:ell,     A_hat{i} = cell(q,1); end
+% NOTE: In intercept-aware layout, only block j=1 contains C^(1) (p×1).
+C_hat = cell(q,1);                 % each p×1 (C_hat{j>=2} will be zeros)
+A_hat = cell(ell,1);               % each cell: {q blocks of p×p}
+B_hat = cell(ell+1,1);             % each cell: {q blocks of p×m}
+for i = 1:ell,     A_hat{i}   = cell(q,1); end
 for i = 0:ell,     B_hat{i+1} = cell(q,1); end
 
 for j = 1:q
-    base = (j-1)*cols_per_j + 1;
-    t = base;
-    % C^(j) : p×1
-    C_hat{j} = Theta(:, t); t = t + 1;
+    J = block_j(j);
+    pos = 1;
+    if has_const && j==1
+        % C^(1) : p×1
+        C_hat{1} = Theta(:, J(pos)); pos = pos + 1;
+    else
+        % no C-block in this j
+        C_hat{j} = zeros(p,1);
+    end
     % A_i^(j) : p×p for i=1..ell
     for i = 1:ell
-        cols = t:(t+p-1);
+        cols = J(pos:(pos+p-1)); pos = pos + p;
         A_hat{i}{j} = Theta(:, cols); % p×p
-        t = t + p;
+        if ~isequal(size(A_hat{i}{j}), [p,p]), error('A_{%d}^{(%d)} size error.', i, j); end
     end
     % B_i^(j) : p×m for i=0..ell
     for i = 0:ell
-        cols = t:(t+m-1);
+        cols = J(pos:(pos+m-1)); pos = pos + m;
         B_hat{i+1}{j} = Theta(:, cols); % p×m
-        t = t + m;
+        if ~isequal(size(B_hat{i+1}{j}), [p,m]), error('B_{%d}^{(%d)} size error.', i, j); end
     end
 end
 
@@ -109,7 +126,6 @@ for i = 1:ell
     F{i}   = [Fi_top; sparse(N-r, i)];
 end
 
-
 % ---------- Assemble T_y and T_u ----------
 pN = p*N; mN = m*N;
 Ty = sparse(pN, pN);
@@ -144,6 +160,7 @@ sigma_k = s_ofs;
 % ---------- Diagnostics meta ----------
 meta = struct();
 meta.p = p; meta.m = m; meta.q = q; meta.N = N; meta.ell = ell;
+meta.has_const = has_const;
 meta.Ck = Ck; meta.Ak = Ak; meta.Bk = Bk;
 meta.S = S;  meta.F = F; %#ok<STRNU>
 
