@@ -188,35 +188,63 @@ hasC = ~isempty(coeff_true.C);
 
 val_or_fro = @(M) (numel(M)==1) .* double(M) + (numel(M)~=1) .* norm(M,'fro');
 
-% -------- A-blocks (handles scalar or matrix) --------
-fA = figure('Name','LPV-ARX A','Color','w');
-set(fA,'Units','centimeters','Position',[2 2 6.5 7])
+% ===== LPV-ARX A (with magnifier insets) =====
+% Assumes: S, K, ellA, tt, T, cfg, coeff_true, styles, names, val_or_fro
 
+fA = figure('Name','LPV-ARX A','Color','w');
+set(fA,'Units','centimeters','Position',[2 2 7 7])
 tl = tiledlayout(ellA,1,'Padding','compact','TileSpacing','compact');
 
 for j = 1:ellA
-    nexttile(tl); hold on
+    ax = nexttile(tl); hold(ax,'on')
+    ax.PositionConstraint = 'innerposition';
+
+    % series
     for i = 1:K
-        v = zeros(length(tt),1);
-        l = 1;
-        for k = tt   % avoid shadowing; was: for t = tt
+        v = zeros(numel(tt),1); l = 1;
+        for k = tt
             v(l) = val_or_fro(S{i}.series.lpv_coeff(k).Ak{j});
             l = l + 1;
         end
-        stairs(tt, v, 'LineStyle', styles{i}, 'DisplayName', names{i});
+        stairs(ax, tt, v, 'LineStyle', styles{i}, 'DisplayName', names{i});
     end
-    yline(val_or_fro(coeff_true.A{j}), 'k--', 'DisplayName','true', 'LineWidth', cfg.linewidth-1.0);
-    grid on; xlabel('$k$'); ylabel(sprintf('$A_{k,%d}$', j));
-    xlim([1 T]);
 
-    yL = ylim;
-    x_patch = [1 cfg.Twarm cfg.Twarm 1];
-    y_patch = [yL(1) yL(1) yL(2) yL(2)];
-    fill(x_patch, y_patch, [0.85 0.93 1.0], ...
-        'EdgeColor','none','FaceAlpha',0.6);
-    uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
-    hold off
+    % truth
+    yline(ax, val_or_fro(coeff_true.A{j}), 'k--', 'DisplayName','true', ...
+          'LineWidth', max(cfg.linewidth-1.0,0.6));
+
+    % PRBS shading BEHIND data
+    yL = ylim(ax);
+    fill([1 cfg.Twarm cfg.Twarm 1],[yL(1) yL(1) yL(2) yL(2)], ...
+        [0.85 0.93 1.0],'EdgeColor','none','FaceAlpha',0.6,'Parent',ax);
+
+    % axes cosmetics
+    grid(ax,'on'); xlim(ax,[1 T]); xlabel(ax,'$k$'); ylabel(ax,sprintf('$A_{k,%d}$', j));
+
+    % bring data above shading
+    uistack(findall(ax,'Type','Stair','-or','Type','Line'),'top');
+    hold(ax,'off')
 end
+
+% --- 2) Freeze layout, then add insets/connectors on an overlay ---
+drawnow;  % finalize tiledlayout positions
+
+ov = axes('Parent',fA,'Position',[0 0 1 1],'Units','normalized', ...
+          'Color','none','XLim',[0 1],'YLim',[0 1], ...
+          'HitTest','off','Visible','off');  % overlay for connectors
+
+% tiles are reversed in tl.Children
+axes_in_order = flipud(tl.Children);
+
+for j = 1:ellA
+    ax = axes_in_order(j);
+
+    % magnifiers: warm-up + step~50 + step~100 (adjust windows/positions as desired)
+    add_magnifier_overlay(ax, [1 cfg.Twarm], [0.60 0.55 0.36 0.38], coeff_true.A{j}, ov);
+    add_magnifier_overlay(ax, [45 60],       [0.60 0.08 0.36 0.30], coeff_true.A{j}, ov);
+    add_magnifier_overlay(ax, [95 110],      [0.20 0.55 0.36 0.38], coeff_true.A{j}, ov);
+end
+
 
 % -------- B-blocks --------
 fB = figure('Name','LPV-ARX B','Color','w');
@@ -371,4 +399,80 @@ function write_metrics_csv(S, path)
             M.TV_u, M.Peak_u, M.Final_log10_EWMA_e2);
     end
     fclose(fid);
+end
+
+function add_magnifier_overlay(ax, xwin, inset_rel, true_val, ov)
+    fig = ancestor(ax,'figure');
+
+    % collect series (stairs + lines)
+    H = [flipud(findall(ax,'Type','Stair')); flipud(findall(ax,'Type','Line'))];
+    if isempty(H), return; end
+
+    xmin = xwin(1); xmax = xwin(2);
+
+    % window segments + y-lims
+    ylo = inf; yhi = -inf;
+    Xseg = cell(numel(H),1); Yseg = cell(numel(H),1);
+    for i = 1:numel(H)
+        x = get(H(i),'XData'); y = get(H(i),'YData');
+        if isempty(x) || isempty(y), continue; end
+        m = (x>=xmin) & (x<=xmax);
+        if any(m)
+            Xseg{i} = x(m); Yseg{i} = y(m);
+            ylo = min(ylo, min(Yseg{i}));
+            yhi = max(yhi, max(Yseg{i}));
+        end
+    end
+    if ~isfinite(ylo), return; end
+    pad = 0.05*(yhi - ylo + eps);
+    y0 = ylo - pad; y1 = yhi + pad;
+
+    % rectangle in data units on main axes
+    rectangle(ax,'Position',[xmin y0 (xmax-xmin) (y1-y0)], ...
+        'EdgeColor',[0.15 0.15 0.15],'LineWidth',0.6,'LineStyle','-','HitTest','off');
+
+    % inset position relative to tile
+    axpos = get(ax,'Position'); r = inset_rel;
+    inset_pos = [axpos(1)+r(1)*axpos(3), axpos(2)+r(2)*axpos(4), r(3)*axpos(3), r(4)*axpos(4)];
+
+    % inset axes (figure child)
+    iax = axes('Parent',fig,'Units','normalized','Position',inset_pos); hold(iax,'on')
+    set(iax,'Box','on','FontSize',max(get(ax,'FontSize')-1,6))
+    for i = 1:numel(H)
+        if isempty(Xseg{i}), continue; end
+        stairs(iax, Xseg{i}, Yseg{i}, ...
+            'LineStyle', get(H(i),'LineStyle'), ...
+            'Color',     get(H(i),'Color'), ...
+            'LineWidth', max(get(H(i),'LineWidth')-0.2,0.6));
+    end
+    if ~isempty(true_val)
+        ytrue = double((numel(true_val)==1)*true_val + (numel(true_val)~=1)*norm(true_val,'fro'));
+        yline(iax, ytrue, 'k--', 'LineWidth',0.6);
+    end
+    xlim(iax,[xmin xmax]); ylim(iax,[y0 y1]); xticks(iax,[]); yticks(iax,[]);
+    hold(iax,'off')
+
+    % connectors on overlay axes (normalized coords)
+    [x2n,y2n] = data2fignorm_plotbox(ax, xmax, y1);
+    [x3n,y3n] = data2fignorm_plotbox(ax, xmax, y0);
+    ix = inset_pos(1); iy = inset_pos(2); iw = inset_pos(3); ih = inset_pos(4);
+    line(ov,[x2n ix],[y2n iy+ih],'Color',[0.2 0.2 0.2],'LineWidth',0.6);
+    line(ov,[x3n ix],[y3n iy   ],'Color',[0.2 0.2 0.2],'LineWidth',0.6);
+end
+
+function [xn,yn] = data2fignorm_plotbox(ax, xd, yd)
+    pb = plotboxpos(ax); xl = xlim(ax); yl = ylim(ax);
+    if strcmpi(ax.XScale,'log'), xd = log10(xd); xl = log10(xl); end
+    if strcmpi(ax.YScale,'log'), yd = log10(yd); yl = log10(yl); end
+    fx = (xd - xl(1)) / max(xl(2)-xl(1), eps);
+    fy = (yd - yl(1)) / max(yl(2)-yl(1), eps);
+    xn = pb(1) + fx*pb(3);
+    yn = pb(2) + fy*pb(4);
+end
+
+function pb = plotboxpos(ax)
+    old = ax.Units; ax.Units = 'normalized';
+    op  = ax.OuterPosition; ti = ax.TightInset;
+    pb  = [op(1)+ti(1), op(2)+ti(2), op(3)-ti(1)-ti(3), op(4)-ti(2)-ti(4)];
+    ax.Units = old;
 end
