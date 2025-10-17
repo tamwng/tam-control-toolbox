@@ -57,11 +57,14 @@ end
 rng(cfg.seed);
 
 %% -------------------- Plant (ground truth) --------------------
-% y_{k+1} = 1.5 y_k - 0.7 y_{k-1} + 0.5 u_k + 0.3 u_{k-1}
+% y_k = 1.5 y_{k-1} - 0.7 y_{k-2} + 0.5 u_k + 0.3 u_{k-1}
 plant.a = [1.5; -0.7];
 plant.d  = 0.5;   % feedthrough on u_k
 plant.b1 = 0.3;   % on u_{k-1}
-theta_true = [plant.a(1); plant.a(2); plant.d; plant.b1]; % [y_k, y_{k-1}, u_k, u_{k-1}]
+coeff_true.A = {1.5, -0.7};
+coeff_true.B = {0.5, 0.3, 0.0};
+coeff_true.C = 0.0;
+
 
 %% -------------------- Preallocate --------------------
 u = zeros(T,1);   % applied input
@@ -79,6 +82,7 @@ ready_seen = false;
 yhat = nan(T,1);     % one-step prediction before update
 e    = nan(T,1);     % one-step prediction error
 theta_hist = [];     % store θ for unitary kernel
+lpv_coeff = struct('Ak', cell(T,1), 'Bk', cell(T,1), 'Ck', []);
 
 %% -------------------- Simulation loop --------------------
 for t = 1:(T-1)
@@ -110,16 +114,19 @@ for t = 1:(T-1)
         theta_hist(:,end+1) = stR.theta(:);
     end
 
+    % Basis and operators for multi-step prediction
+    gamma = kernel('eval', spec, s_k);
+    Theta = theta_vec_to_matrix(stR.theta, cfg.p);
+    [y_hist, u_hist] = histories(y, u, t, cfg.ell);
+    [Ty, Tu, sigma_k, meta_tp] = toeplitz(Theta, gamma, y_hist, u_hist, N, cfg.ell);
+    lpv_coeff(t).Ak = meta_tp.Ak;
+    lpv_coeff(t).Bk = meta_tp.Bk;
+    lpv_coeff(t).Ck = meta_tp.Ck;
+
     % After warm-up: ABRLS-PC, unconstrained, apply first move + dither
     if t >= cfg.Twarm
         % Reference stack over horizon
         R = ref_stack(r, t, N);
-
-        % Basis and operators for multi-step prediction
-        gamma = kernel('eval', spec, s_k);
-        Theta = theta_vec_to_matrix(stR.theta, cfg.p);
-        [y_hist, u_hist] = histories(y, u, t, cfg.ell);
-        [Ty, Tu, sigma_k, ~] = toeplitz(Theta, gamma, y_hist, u_hist, N, cfg.ell);
 
         % Assemble cost and solve via Cholesky; apply first control block
         C = cost_assemble(Ty, Tu, sigma_k, Qy, Ru, R, ...
@@ -158,8 +165,10 @@ Results.metrics = struct('RMSE_PhaseII', rmse2, ...
                          'Peak_u',       peak_u, ...
                          'Final_log10_EWMA_e2', final_log10_ew);
 Results.series  = struct('y', y, 'u', u, 'r', r, 'e', e(cfg.ell+1:T-1), ...
-                         'log10_ew', log10_ew, 'theta_hist', theta_hist);
+                         'log10_ew', log10_ew, 'theta_hist', theta_hist, ...
+                         'lpv_coeff', lpv_coeff);
 Results.meta    = run_metadata();
+Results.coeff_true = coeff_true;
 
 fname = fullfile(outdir, filename_ex1a(spec, seed));
 save(fname, 'Results');

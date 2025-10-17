@@ -1,13 +1,13 @@
-% run_ex1app_sensitivity.m
-% One-kernel runner for Example 1b (unconstrained baseline).
+% run_ex2a_kernel.m
+% One-kernel runner for Example 1a (unconstrained baseline).
 % Saves a standardized Results struct for plotting and tables.
 %
 % Usage:
-%   run_ex1app_sensitivity(struct('type','linear'), 42, 'results');
-%   run_ex1app_sensitivity(struct('type','poly','degree',2), 42, 'results');
-%   run_ex1app_sensitivity(struct('type','rbf','sigma',1.0), 42, 'results');
+%   run_ex2a_kernel(struct('type','linear'), 42, 'results');
+%   run_ex2a_kernel(struct('type','poly','degree',2), 42, 'results');
+%   run_ex2a_kernel(struct('type','rbf','sigma',1.0), 42, 'results');
 
-function run_ex1app_sensitivity(spec, seed, outdir)
+function run_ex2a_kernel(spec, seed, outdir)
 
 if nargin < 1, spec = struct('type','linear'); end
 if nargin < 2, seed = 42; end
@@ -19,8 +19,9 @@ cfg = struct();
 cfg.p = 1;                                          % outputs
 cfg.m = 1;                                          % inputs
 cfg.ell = 2;                                        % known lag (regressor length)
-cfg.N_total = 250;                                 % total simulation length (can adjust ad hoc)
-cfg.Twarm = 50;                                     % warm-up to fill window (no long Phase I)
+cfg.N_total = 500;                                 % total simulation length (can adjust ad hoc)
+% cfg.Twarm = 50;                                     % warm-up to fill window (no long Phase I)
+cfg.Twarm = 5;                                     % warm-up to fill window (no long Phase I)
 cfg.lambda = 1.0;                                   % no forgetting (time-invariant, noise-free)
 cfg.ridge  = 1e-9;                                  % small ridge for numerical stability
 cfg.eps    = 1e-12;                                 % numeric jitter
@@ -30,18 +31,15 @@ cfg.d_flat = cfg.p*cfg.ell + cfg.m*(cfg.ell+1);     % |s| = |vec(y_{t-1:ℓ})| +
 
 % Horizon and weights (single horizon: N_c = N)
 N = 16;                             % covers ≈95% decay for |p|=0.837
-rho = spec.rho;                     % differential-u penalty; keep small to avoid SSE
+rho = 1.5*1e5;                          % differential-u penalty; keep small to avoid SSE
+% rho = 1e-3;                        % differential-u penalty; keep small to avoid SSE
 Qy = speye(cfg.p * N);              % unit tracking weight
 Ru = rho * speye(cfg.m * N);        % small effort weight
 
 % Reference: three 300-step steps after warm-up
 T = cfg.N_total;
-segment = 50;
-N_phase2 = 3 * segment;                      % three 100-step segments
+N_phase2 = T - cfg.Twarm;                      % three 100-step segments
 r = zeros(T,1);
-r((cfg.Twarm+1):(cfg.Twarm+segment))   = 1.0;
-r((cfg.Twarm+segment+1):(cfg.Twarm+2*segment)) = -0.5;
-r((cfg.Twarm+2*segment+1):(cfg.Twarm+3*segment)) = 0.75;
 
 % Dither (APRBS): higher during warm-up, smaller thereafter
 dither.phase1_amp = 0.10;
@@ -57,13 +55,11 @@ end
 rng(cfg.seed);
 
 %% -------------------- Plant (ground truth) --------------------
-% y_{k+1} = 1.5 y_k - 0.7 y_{k-1} + 0.5 u_k + 0.3 u_{k-1}
-plant.a = [1.5; -0.7];
+% y_{k+1} = 2.0 y_k - 1.01 y_{k-1} + 0.5 u_k - 0.65 u_{k-1}
+plant.a = [2.0; -1.01];
 plant.d  = 0.5;   % feedthrough on u_k
-plant.b1 = 0.3;   % on u_{k-1}
+plant.b1 = -0.1;   % on u_{k-1}
 theta_true = [plant.a(1); plant.a(2); plant.d; plant.b1]; % [y_k, y_{k-1}, u_k, u_{k-1}]
-umax = 0.5;
-umin = -umax;
 
 %% -------------------- Preallocate --------------------
 u = zeros(T,1);   % applied input
@@ -127,12 +123,12 @@ for t = 1:(T-1)
         C = cost_assemble(Ty, Tu, sigma_k, Qy, Ru, R, ...
             struct('assert',true,'eps',cfg.eps,'m',cfg.m,'N',N,'u_k',u(t)));
         Sln = solve_cholesky(C.H, C.h, struct('assert',true,'J0',C.J0));
-        u(t+1) = Sln.U(1:cfg.m);  % clipping in 1b
+        % u(t+1) = Sln.U(1:cfg.m) + p(t+1);  % NO clipping in 1a
+        u(t+1) = Sln.U(1:cfg.m);  % NO clipping in 1a
     else
         % During warm-up, just dither (keeps window filling simple)
         u(t+1) = p(t+1);
     end
-    u(t+1) = max(min(u(t+1), umax), umin);
 end
 
 % Final sample y(T) for completeness
@@ -163,7 +159,7 @@ Results.series  = struct('y', y, 'u', u, 'r', r, 'e', e(cfg.ell+1:T-1), ...
                          'log10_ew', log10_ew, 'theta_hist', theta_hist);
 Results.meta    = run_metadata();
 
-fname = fullfile(outdir, filename_ex1app(spec, seed));
+fname = fullfile(outdir, filename_ex2a(spec, seed));
 save(fname, 'Results');
 fprintf('Saved %s\n', fname);
 
@@ -184,11 +180,10 @@ end
 function [y_hist, u_hist] = histories(y,u,t,ell)
     y_hist = zeros(1,ell);
     u_hist = zeros(1,ell);
-    for i=1:ell
-        yi = t-(ell-i);
-        ui = t-(ell-i);
-        y_hist(i) = getv(y, yi);
-        u_hist(i) = getv(u, ui);
+    for j = 1:ell
+        idx = t - (ell - j); % j=1→k-ell+1, j=ell→k
+        y_hist(j) = getv(y, idx);
+        u_hist(j) = getv(u, idx);
     end
 end
 
@@ -245,7 +240,7 @@ function meta = run_metadata()
     try, meta.host = char(java.net.InetAddress.getLocalHost.getHostName); catch, meta.host = ''; end
 end
 
-function name = filename_ex1app(spec, seed)
+function name = filename_ex2a(spec, seed)
     switch lower(spec.type)
         case 'ones'
             tag = 'ones';
@@ -259,7 +254,7 @@ function name = filename_ex1app(spec, seed)
         otherwise
             tag = 'unknown';
     end
-    name = sprintf('ex1app_%s_seed%d_rho%s.mat', tag, seed, num2str(spec.rho,'%0.3g'));
+    name = sprintf('ex2a_%s_seed%d.mat', tag, seed);
 end
 
 function Theta = theta_vec_to_matrix(theta_vec, p)

@@ -161,6 +161,7 @@ Results.metrics = struct('RMSE_PhaseII', rmse2, ...
                          'Final_log10_EWMA_e2', final_log10_ew);
 Results.series  = struct('y', y, 'u', u, 'r', r, 'e', e(cfg.ell+1:T-1), ...
                          'log10_ew', log10_ew, 'theta_hist', theta_hist);
+Results.coeff_true = coeff_true;
 Results.meta    = run_metadata();
 
 fname = fullfile(outdir, filename_ex1b(spec, seed));

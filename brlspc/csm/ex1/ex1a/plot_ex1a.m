@@ -1,7 +1,7 @@
 close all; clc; clear;
 
 clear; clc; close all; %% ---- Config ---- 
-cfg.linewidth = 2.5; 
+cfg.linewidth = 3.0; 
 cfg.zoomN = 80; % zoom-in prefix length 
 cfg.figdir = 'brlspc/csm/ex1/ex1a/figs'; 
 cfg.tbldir = 'brlspc/csm/ex1/ex1a/tables'; 
@@ -50,7 +50,8 @@ set(groot,'defaultAxesFontSize',14)
 set(groot,'defaultTextFontSize',14)
 set(groot,'defaultLegendFontSize',16)
 set(groot,'defaultAxesLineWidth',0.9)
-set(groot,'DefaultStairLineWidth',2.0)
+set(groot,'DefaultStairLineWidth',cfg.linewidth)
+set(groot,'DefaultLineLineWidth',cfg.linewidth)
 set(groot,'defaultAxesTickDir','out')
 set(groot,'defaultAxesBox','off')
 set(groot,'defaultAxesColorOrder',colors)
@@ -77,11 +78,11 @@ for i=1:numel(S)
 end
 yspan = ymax - ymin; pad = 0.05*max(yspan,1e-9);
 yl = [ymin-pad, ymax+pad];
-styles = {'-','-','--','--'};   % RBF dashed
+styles = {'-','-.',':','--'};   % RBF dashed
 
 % Panel A: full
 nexttile; hold on
-for i=1:numel(S), stairs(t, S{i}.series.y,'LineStyle',styles{i}); end
+for i=1:numel(S),stairs(t, S{i}.series.y,'LineStyle',styles{i}); end
 stairs(t, S{1}.series.r,'k--')
 xlabel('$k$'); ylabel('$y_k$')
 xlim([1 T]); ylim(yl)
@@ -149,10 +150,8 @@ exportgraphics(f13, fullfile(cfg.figdir, 'ex1a_output_log_error.pdf'), 'ContentT
 
 
 % ---- Figure 3: error (all) + theta error (unitary only) ----
-f21 = figure('Units','centimeters','Position',[2 2 13 7],'Color','w');
+fPred = figure('Units','centimeters','Position',[2 2 15 10],'Color','w');
 % tiledlayout(2,1,'TileSpacing','compact','Padding','compact')
-
-styles = {'-','-','-','-'};      % e.g., RBF dashed
 
 % Panel (a): |yhat - y|, log scale
 nexttile; hold on
@@ -164,43 +163,125 @@ end
 set(gca,'YScale','log','TickDir','out','Box','off')
 xlabel('$k$'); ylabel('$|\hat{y}_k-y_k|$')
 % xlim([1 T])
-legend(legend_names(S),'NumColumns',2,'Location','southoutside'); legend boxoff
+% legend(legend_names(S),'NumColumns',2,'Location','southoutside'); legend boxoff
+ylim([1e-13,1])
 yL = ylim;
 x_patch = [1 cfg.Twarm cfg.Twarm 1];
 y_patch = [yL(1) yL(1) yL(2) yL(2)];
 fill(x_patch, y_patch, [0.85 0.93 1.0], ...
      'EdgeColor','none','FaceAlpha',0.6);
 uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
+legend boxoff
 legend([{'PRBS'}, names], 'NumColumns', 2, 'Location', 'southoutside');
 
-% Panel (b): ||theta - theta*||_2 for unitary kernel only
-f22 = figure('Units','centimeters','Position',[2 2 7 5.7],'Color','w');
-nexttile; hold on
-iu = find(strcmpi(extract_types(S),'ones'),1);
-if ~isempty(iu) && ~isempty(S{iu}.series.theta_hist)
-    th = S{iu}.series.theta_hist;             % columns align with updates
-    theta_star = S{iu}.cfg_to_true(:);        % [1.5;-0.7;0.5;0.3]
-    k0 = find(~isnan(S{iu}.series.e),1,'first');
-    perr = vecnorm(th(2:5,:) - theta_star,2,1).';
-    kk = (k0:(k0+numel(perr)-1)).';
-    stairs(kk, max(perr, 1e-14));
-    set(gca,'YScale','log')
+% Assume S{i}.series.lpv_coeff(t).Ak{j}, .Bk{j}, .Ck
+% and S{1}.coeff_true.A{j}, .B{j}, .C
+
+K = numel(S);
+T = numel(S{1}.series.lpv_coeff);
+tt = S{1}.cfg.ell+1:T-1;
+
+coeff_true = S{1}.coeff_true;
+ellA = numel(coeff_true.A);
+ellB = numel(coeff_true.B);
+hasC = ~isempty(coeff_true.C);
+
+val_or_fro = @(M) (numel(M)==1) .* double(M) + (numel(M)~=1) .* norm(M,'fro');
+
+% -------- A-blocks (handles scalar or matrix) --------
+fA = figure('Name','LPV-ARX A','Color','w');
+set(fA,'Units','centimeters','Position',[2 2 6.5 7])
+
+tl = tiledlayout(ellA,1,'Padding','compact','TileSpacing','compact');
+
+for j = 1:ellA
+    nexttile(tl); hold on
+    for i = 1:K
+        v = zeros(length(tt),1);
+        l = 1;
+        for k = tt   % avoid shadowing; was: for t = tt
+            v(l) = val_or_fro(S{i}.series.lpv_coeff(k).Ak{j});
+            l = l + 1;
+        end
+        stairs(tt, v, 'LineStyle', styles{i}, 'DisplayName', names{i});
+    end
+    yline(val_or_fro(coeff_true.A{j}), 'k--', 'DisplayName','true', 'LineWidth', cfg.linewidth-1.0);
+    grid on; xlabel('$k$'); ylabel(sprintf('$A_{k,%d}$', j));
+    xlim([1 T]);
+
+    yL = ylim;
+    x_patch = [1 cfg.Twarm cfg.Twarm 1];
+    y_patch = [yL(1) yL(1) yL(2) yL(2)];
+    fill(x_patch, y_patch, [0.85 0.93 1.0], ...
+        'EdgeColor','none','FaceAlpha',0.6);
+    uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
+    hold off
 end
-set(gca,'TickDir','out','Box','off')
-xlabel('$k$'); ylabel('$\|\theta_k-\theta^\ast\|_2$')
-xlim([1 T])
 
-yL = ylim;
-x_patch = [1 cfg.Twarm cfg.Twarm 1];
-y_patch = [yL(1) yL(1) yL(2) yL(2)];
-fill(x_patch, y_patch, [0.85 0.93 1.0], ...
-     'EdgeColor','none','FaceAlpha',0.6);
-uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
-legend([{'PRBS'}, names{1}], 'NumColumns', 2, 'Location', 'southoutside');
-legend boxoff;
+% -------- B-blocks --------
+fB = figure('Name','LPV-ARX B','Color','w');
+set(fB,'Units','centimeters','Position',[2 2 6.5 10])
 
-exportgraphics(f21, fullfile(cfg.figdir,'ex1a_err_prediction.pdf'), 'ContentType','vector')
-exportgraphics(f22, fullfile(cfg.figdir,'ex1a_err_theta.pdf'), 'ContentType','vector')
+tl = tiledlayout(ellB,1,'Padding','compact','TileSpacing','compact');
+
+for j = 1:ellB
+    nexttile(tl); hold on
+    for i = 1:K
+        v = zeros(length(tt),1);
+        l = 1;
+        for k = tt   % avoid shadowing
+            v(l) = val_or_fro(S{i}.series.lpv_coeff(k).Bk{j});
+            l = l + 1;
+        end
+        stairs(tt, v, 'LineStyle', styles{i}, 'DisplayName', names{i});
+    end
+    grid on
+    xlabel('$k$'); ylabel(sprintf('$B_{k,%d}$', j-1));
+    xlim([1 T]);
+    yL = ylim;
+    x_patch = [1 cfg.Twarm cfg.Twarm 1];
+    y_patch = [yL(1) yL(1) yL(2) yL(2)];
+    fill(x_patch, y_patch, [0.85 0.93 1.0], ...
+        'EdgeColor','none','FaceAlpha',0.6);
+    uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
+    yline(val_or_fro(coeff_true.B{j}), 'k--', 'DisplayName','true', 'LineWidth', cfg.linewidth-1.0);
+    hold off
+end
+
+% -------- C-block --------
+if hasC
+    fC = figure('Name','LPV-ARX C','Color','w'); hold on
+    set(fC,'Units','centimeters','Position',[2 2 17 6])
+    for i = 1:K
+        v = zeros(length(tt),1);
+        l = 1;
+        for t = tt
+            v(l) = val_or_fro(S{i}.series.lpv_coeff(t).Ck);
+            l = l + 1;
+        end
+        stairs(tt, v, 'LineStyle', styles{i}, 'DisplayName', names{i});
+    end
+    grid on; xlabel('$k$'); ylabel('$C_k$');
+    xlim([1,T])
+
+    ylim([-0.05, 0.3])
+    yL = ylim;
+    x_patch = [1 cfg.Twarm cfg.Twarm 1];
+    y_patch = [yL(1) yL(1) yL(2) yL(2)];
+    fill(x_patch, y_patch, [0.85 0.93 1.0], ...
+        'EdgeColor','none','FaceAlpha',0.6);
+    uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
+    yline(val_or_fro(coeff_true.C), 'k--', 'DisplayName', 'true', 'LineWidth',cfg.linewidth-1.0);
+    legend boxoff
+    legend([{'PRBS'}, names], 'NumColumns', 2, 'Location', 'westoutside');
+    hold off
+end
+
+
+exportgraphics(fPred, fullfile(cfg.figdir,'ex1a_err_prediction.pdf'), 'ContentType','vector')
+exportgraphics(fA, fullfile(cfg.figdir,'ex1a_err_Ak.pdf'), 'ContentType','vector')
+exportgraphics(fB, fullfile(cfg.figdir,'ex1a_err_Bk.pdf'), 'ContentType','vector')
+exportgraphics(fC, fullfile(cfg.figdir,'ex1a_err_Ck.pdf'), 'ContentType','vector')
 
 %% ---- Metrics CSV (Phase II) ----
 % recompute if missing; write tidy CSV
@@ -215,7 +296,6 @@ function S = load_all(files)
     for i=1:numel(files)
         R = load(files{i}, 'Results'); R = R.Results;
         % stash true theta for plotting convenience
-        R.cfg_to_true = [1.5; -0.7; 0.5; 0.3];
         % ensure metrics exist; otherwise compute from series
         if ~isfield(R,'metrics') || isempty(R.metrics)
             R.metrics = compute_metrics_from_series(R.series, R.cfg);

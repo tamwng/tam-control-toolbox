@@ -1,16 +1,14 @@
-close all; clc; clear;
-
-clear; clc; close all; %% ---- Config ---- 
+%% ---- Config ---- 
 cfg.linewidth = 2.5; 
 cfg.zoomN = 80; % zoom-in prefix length 
-cfg.figdir = 'brlspc/csm/ex1/ex1app/figs'; 
-cfg.tbldir = 'brlspc/csm/ex1/ex1app/tables'; 
-cfg.resdir = 'brlspc/csm/ex1/ex1app/results'; 
+cfg.figdir = 'brlspc/csm/ex2/ex2a/figs'; 
+cfg.tbldir = 'brlspc/csm/ex2/ex2a/tables'; 
+cfg.resdir = 'brlspc/csm/ex2/ex2a/results'; 
 cfg.files = { ... 
-    fullfile(cfg.resdir,'ex1app_poly_deg2_seed42_rho0.001.mat'), ... 
-    fullfile(cfg.resdir,'ex1app_poly_deg2_seed42_rho0.01.mat'), ... 
-    fullfile(cfg.resdir,'ex1app_poly_deg2_seed42_rho0.1.mat'), ... 
-    fullfile(cfg.resdir,'ex1app_poly_deg2_seed42_rho1.mat') }; 
+    fullfile(cfg.resdir,'ex2a_ones_seed42.mat'), ... 
+    fullfile(cfg.resdir,'ex2a_linear_seed42.mat'), ... 
+    fullfile(cfg.resdir,'ex2a_poly_deg2_seed42.mat'), ... 
+    fullfile(cfg.resdir,'ex2a_rbf_sig1e+03_seed42.mat') }; 
 if ~exist(cfg.figdir,'dir'), mkdir(cfg.figdir); end 
 if ~exist(cfg.tbldir,'dir'), mkdir(cfg.tbldir); end
 
@@ -61,15 +59,13 @@ T = numel(S{1}.series.y);
 t = (1:T).'; 
 tclip = S{1}.cfg.ell+1:T-1;
 tZ = (1:min(cfg.zoomN,T)).'; 
-% names = legend_names(S);
-names = {'$\rho_u=10^{-3}$','$\rho_u=10^{-2}$','$\rho_u=10^{-1}$','$\rho_u=1.0$'};
+names = legend_names(S);
 cfg.Twarm = S{1,1}.cfg.Twarm;
-styles = {'-','-','-','-'};   % RBF dashed
 
-%% Figure 1: Output
+%% Figure 1: Output (Full + Zoom)
 
 % --- Figure size: single-column (≈8.6 cm) and compact height ---
-f11 = figure('Units','centimeters','Position',[2 2 20 6],'Color','w');
+f11 = figure('Units','centimeters','Position',[2 2 10 6],'Color','w');
 % tiledlayout(2,1,'TileSpacing','compact','Padding','compact')
 
 % Compute global y-lims for output
@@ -79,7 +75,9 @@ for i=1:numel(S)
 end
 yspan = ymax - ymin; pad = 0.05*max(yspan,1e-9);
 yl = [ymin-pad, ymax+pad];
+styles = {'-','-','--','--'};   % RBF dashed
 
+% Panel A: full
 nexttile; hold on
 for i=1:numel(S), stairs(t, S{i}.series.y,'LineStyle',styles{i}); end
 stairs(t, S{1}.series.r,'k--')
@@ -95,96 +93,116 @@ fill(x_patch, y_patch, [0.85 0.93 1.0], ...
      'EdgeColor','none','FaceAlpha',0.6);
 uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
 
-% Panel B: Log error (full range, stair plot)
-f13 = figure('Name','ex1app Log Error','Color','w');
-set(f13,'Units','centimeters','Position',[2 2 20 7])
-hold on
-
-lw = 0.9;                             % thinner linewidth
-for i = 1:numel(S)
-    r = S{i}.series.r(:);
-    y = S{i}.series.y(:);
-    e = abs(r - y);
-    stairs(t, max(e, eps), 'LineStyle', styles{i});
-end
-
-set(gca, 'YScale', 'log', 'TickDir', 'out', 'Box', 'off');
-xlabel('$k$'); ylabel('$|r_k - y_k|$');
-xlim([1 T]);
+% % Panel B: zoom (first 120)
+% f12 = figure('Name','Ex2a Output Zoom','Color','w');
+% set(f12,'Units','centimeters','Position',[2 2 10 6])
+% hold on
+% tZ = (1:min(cfg.zoomN,T)).';
+% nexttile; hold on
+% for i=1:numel(S), stairs(tZ, S{i}.series.y(1:numel(tZ)),'LineStyle',styles{i}); end
+% stairs(tZ, S{1}.series.r(1:numel(tZ)),'k--')
+% xlabel('$k$'); ylabel('$y_k$')
+% xlim([1 numel(tZ)]); ylim(yl)
+% legend('off')
+% % blue patch
+% yL = ylim;
+% x_patch = [1 cfg.Twarm cfg.Twarm 1];
+% y_patch = [yL(1) yL(1) yL(2) yL(2)];
+% fill(x_patch, y_patch, [0.85 0.93 1.0], ...
+%      'EdgeColor','none','FaceAlpha',0.6);
+% uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
+% 
+% % Panel C: Log error (full range, stair plot)
+% f13 = figure('Name','Ex2a Log Error','Color','w');
+% set(f13,'Units','centimeters','Position',[2 2 20 10])
+% hold on
+% 
+% lw = 0.9;                             % thinner linewidth
+% for i = 1:numel(S)
+%     r = S{i}.series.r(:);
+%     y = S{i}.series.y(:);
+%     e = abs(r - y);
+%     stairs(t, max(e, eps), 'LineStyle', styles{i});
+% end
+% 
+% set(gca, 'YScale', 'log', 'TickDir', 'out', 'Box', 'off');
+% xlabel('$k$'); ylabel('$|r_k - y_k|$');
+% xlim([1 T]);
 % legend boxoff;
-grid on;
-% blue patch
+% grid on;
+% % blue patch
 % ylim([1e-14 1]);
-yL = ylim;
-x_patch = [1 cfg.Twarm cfg.Twarm 1];
-y_patch = [yL(1) yL(1) yL(2) yL(2)];
-fill(x_patch, y_patch, [0.85 0.93 1.0], ...
-     'EdgeColor','none','FaceAlpha',0.6);
-uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
+% yL = ylim;
+% x_patch = [1 cfg.Twarm cfg.Twarm 1];
+% y_patch = [yL(1) yL(1) yL(2) yL(2)];
+% fill(x_patch, y_patch, [0.85 0.93 1.0], ...
+%      'EdgeColor','none','FaceAlpha',0.6);
+% uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
 % legend([{'PRBS'}, names], 'NumColumns', 2, 'Location', 'southoutside');
-
-% Vector export, exact size
-exportgraphics(f11, fullfile(cfg.figdir,'ex1app_output.pdf'), 'ContentType','vector')
-exportgraphics(f13, fullfile(cfg.figdir, 'ex1app_output_log_error.pdf'), 'ContentType', 'vector');
-
-%% ---- Figure 2: Input (full + zoom) ----
-f2 = figure('Name','ex1app Input','Color','w');
-styles = {'-','-','-','-'};   % RBF dashed
-set(f2,'Units','centimeters','Position',[2 2 20 8])
-
-nexttile; hold on
-for i=1:numel(S), stairs(t, S{i}.series.u, 'LineStyle', styles{i}); end
-umax = 0.5;
-umin = -umax;
-stairs(t, umax * ones(length(t),1),'LineStyle','--','Color',[0.839, 0.153, 0.157])
-stairs(t, -umax * ones(length(t),1),'LineStyle','--','Color',[0.839, 0.153, 0.157])
-xlabel('k'); ylabel('$u_k$')
-% title('Applied input (full range)')
-xlim([1 T]); legend(names,'Location','best')
-% blue patch
-ylim([-0.6,0.6]);
-yL = ylim;
-x_patch = [1 cfg.Twarm cfg.Twarm 1];
-y_patch = [yL(1) yL(1) yL(2) yL(2)];
-fill(x_patch, y_patch, [0.85 0.93 1.0], ...
-     'EdgeColor','none','FaceAlpha',0.6);
-uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
-legend([{'PRBS'}, names, {'Saturation'}], 'NumColumns', 2, 'Location', 'southoutside');
-legend boxoff;
-
-exportgraphics(f2, fullfile(cfg.figdir,'ex1app_input.pdf'), 'ContentType','vector')
-
-% ---- Figure 3: error (all) + theta error (unitary only) ----
-f21 = figure('Units','centimeters','Position',[2 2 20 10],'Color','w');
-% tiledlayout(2,1,'TileSpacing','compact','Padding','compact')
-
-styles = {'-','-','-','-'};      % e.g., RBF dashed
-
-% Panel (a): |yhat - y|, log scale
-nexttile; hold on
-for i=1:numel(S)
-    e = S{i}.series.e(:);
-    ae = max(abs(e), 1e-14);
-    stairs(tclip, ae, 'LineStyle', styles{i});
-end
-set(gca,'YScale','log','TickDir','out','Box','off')
-xlabel('$k$'); ylabel('$|\hat{y}_k-y_k|$')
+% 
+% % Vector export, exact size
+% exportgraphics(f11, fullfile(cfg.figdir,'ex2a_output.pdf'), 'ContentType','vector')
+% exportgraphics(f12, fullfile(cfg.figdir,'ex2a_output_zoom.pdf'), 'ContentType','vector')
+% exportgraphics(f13, fullfile(cfg.figdir, 'ex2a_output_log_error.pdf'), 'ContentType', 'vector');
+% 
+% 
+% % ---- Figure 3: error (all) + theta error (unitary only) ----
+% f21 = figure('Units','centimeters','Position',[2 2 13 7],'Color','w');
+% % tiledlayout(2,1,'TileSpacing','compact','Padding','compact')
+% 
+% styles = {'-','-','-','-'};      % e.g., RBF dashed
+% 
+% % Panel (a): |yhat - y|, log scale
+% nexttile; hold on
+% for i=1:numel(S)
+%     e = S{i}.series.e(:);
+%     ae = max(abs(e), 1e-14);
+%     stairs(tclip, ae, 'LineStyle', styles{i});
+% end
+% set(gca,'YScale','log','TickDir','out','Box','off')
+% xlabel('$k$'); ylabel('$|\hat{y}_k-y_k|$')
+% % xlim([1 T])
+% legend(legend_names(S),'NumColumns',2,'Location','southoutside'); legend boxoff
+% yL = ylim;
+% x_patch = [1 cfg.Twarm cfg.Twarm 1];
+% y_patch = [yL(1) yL(1) yL(2) yL(2)];
+% fill(x_patch, y_patch, [0.85 0.93 1.0], ...
+%      'EdgeColor','none','FaceAlpha',0.6);
+% uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
+% legend([{'PRBS'}, names], 'NumColumns', 2, 'Location', 'southoutside');
+% 
+% % Panel (b): ||theta - theta*||_2 for unitary kernel only
+% f22 = figure('Units','centimeters','Position',[2 2 7 5.7],'Color','w');
+% nexttile; hold on
+% iu = find(strcmpi(extract_types(S),'ones'),1);
+% if ~isempty(iu) && ~isempty(S{iu}.series.theta_hist)
+%     th = S{iu}.series.theta_hist;             % columns align with updates
+%     theta_star = S{iu}.cfg_to_true(:);        % [1.5;-0.7;0.5;0.3]
+%     k0 = find(~isnan(S{iu}.series.e),1,'first');
+%     perr = vecnorm(th(2:5,:) - theta_star,2,1).';
+%     kk = (k0:(k0+numel(perr)-1)).';
+%     stairs(kk, max(perr, 1e-14));
+%     set(gca,'YScale','log')
+% end
+% set(gca,'TickDir','out','Box','off')
+% xlabel('$k$'); ylabel('$\|\theta_k-\theta^\ast\|_2$')
 % xlim([1 T])
-legend(legend_names(S),'NumColumns',2,'Location','southoutside'); legend boxoff
-ylim([1e-14 1]);
-yL = ylim;
-x_patch = [1 cfg.Twarm cfg.Twarm 1];
-y_patch = [yL(1) yL(1) yL(2) yL(2)];
-fill(x_patch, y_patch, [0.85 0.93 1.0], ...
-     'EdgeColor','none','FaceAlpha',0.6);
-uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
-legend([{'PRBS'}, names], 'NumColumns', 2, 'Location', 'southoutside');
-
-exportgraphics(f21, fullfile(cfg.figdir,'ex1app_err_prediction.pdf'), 'ContentType','vector')
-
-%% ---- Metrics CSV (Phase II) ----
-% recompute if missing; write tidy CSV
-write_metrics_csv(S, fullfile(cfg.tbldir,'ex1app_phaseII_metrics.csv'))
+% 
+% yL = ylim;
+% x_patch = [1 cfg.Twarm cfg.Twarm 1];
+% y_patch = [yL(1) yL(1) yL(2) yL(2)];
+% fill(x_patch, y_patch, [0.85 0.93 1.0], ...
+%      'EdgeColor','none','FaceAlpha',0.6);
+% uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
+% legend([{'PRBS'}, names{1}], 'NumColumns', 2, 'Location', 'southoutside');
+% legend boxoff;
+% 
+% exportgraphics(f21, fullfile(cfg.figdir,'ex2a_err_prediction.pdf'), 'ContentType','vector')
+% exportgraphics(f22, fullfile(cfg.figdir,'ex2a_err_theta.pdf'), 'ContentType','vector')
+% 
+% %% ---- Metrics CSV (Phase II) ----
+% % recompute if missing; write tidy CSV
+% write_metrics_csv(S, fullfile(cfg.tbldir,'ex2a_phaseII_metrics.csv'))
 
 disp('Done.')
 

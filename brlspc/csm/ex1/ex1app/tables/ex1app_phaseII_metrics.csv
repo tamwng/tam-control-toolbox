@@ -1,5 +1,0 @@
-Method,RMSE_PhaseII,IAE_PhaseII,TV_u,Peak_u,Final_log10_EWMA_e2
-Polynomial-2,0.216092,20.6644,53.8475,0.5,-15.6536
-Polynomial-2,0.15491,10.3193,32.6724,0.5,-15.6536
-Polynomial-2,0.142706,11.6003,20.5709,0.5,-15.6536
-Polynomial-2,0.223615,25.1449,9.79868,0.5,-15.6536
