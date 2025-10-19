@@ -56,6 +56,8 @@ set(groot,'defaultAxesTickDir','out')
 set(groot,'defaultAxesBox','off')
 set(groot,'defaultAxesColorOrder',colors)
 
+styles = {'-','-.',':','--'}; 
+
 %% ---- Load ---- 
 S = load_all(cfg.files); 
 T = numel(S{1}.series.y); 
@@ -78,7 +80,6 @@ for i=1:numel(S)
 end
 yspan = ymax - ymin; pad = 0.05*max(yspan,1e-9);
 yl = [ymin-pad, ymax+pad];
-styles = {'-','-.',':','--'};   % RBF dashed
 
 % Panel A: full
 nexttile; hold on
@@ -144,10 +145,9 @@ uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
 legend([{'PRBS'}, names], 'NumColumns', 2, 'Location', 'southoutside');
 
 % Vector export, exact size
-exportgraphics(f11, fullfile(cfg.figdir,'ex1a_output.pdf'), 'ContentType','vector')
-exportgraphics(f12, fullfile(cfg.figdir,'ex1a_output_zoom.pdf'), 'ContentType','vector')
-exportgraphics(f13, fullfile(cfg.figdir, 'ex1a_output_log_error.pdf'), 'ContentType', 'vector');
-
+save_pdf_noscale(f11, fullfile(cfg.figdir,'ex1a_output.pdf'));
+save_pdf_noscale(f12, fullfile(cfg.figdir,'ex1a_output_zoom.pdf'));
+save_pdf_noscale(f13, fullfile(cfg.figdir,'ex1a_output_log_error.pdf'));
 
 % ---- Figure 3: error (all) + theta error (unitary only) ----
 fPred = figure('Units','centimeters','Position',[2 2 15 10],'Color','w');
@@ -192,12 +192,12 @@ val_or_fro = @(M) (numel(M)==1) .* double(M) + (numel(M)~=1) .* norm(M,'fro');
 % Assumes: S, K, ellA, tt, T, cfg, coeff_true, styles, names, val_or_fro
 
 fA = figure('Name','LPV-ARX A','Color','w');
-set(fA,'Units','centimeters','Position',[2 2 7 7])
+set(fA,'Units','centimeters','Position',[2 2 13 13])
 tl = tiledlayout(ellA,1,'Padding','compact','TileSpacing','compact');
 
 for j = 1:ellA
     ax = nexttile(tl); hold(ax,'on')
-    ax.PositionConstraint = 'innerposition';
+    % ax.PositionConstraint = 'innerposition';
 
     % series
     for i = 1:K
@@ -235,20 +235,18 @@ ov = axes('Parent',fA,'Position',[0 0 1 1],'Units','normalized', ...
 
 % tiles are reversed in tl.Children
 axes_in_order = flipud(tl.Children);
+ax = axes_in_order(1);
+add_magnifier_overlay(ax, [3 cfg.Twarm-25], [0.30 0.08 0.7 0.48], coeff_true.A{1}, ov);
+add_magnifier_overlay(ax, [45 110],       [0.50 0.78 0.46 0.30], coeff_true.A{1}, ov);
 
-for j = 1:ellA
-    ax = axes_in_order(j);
-
-    % magnifiers: warm-up + step~50 + step~100 (adjust windows/positions as desired)
-    add_magnifier_overlay(ax, [1 cfg.Twarm], [0.60 0.55 0.36 0.38], coeff_true.A{j}, ov);
-    add_magnifier_overlay(ax, [45 60],       [0.60 0.08 0.36 0.30], coeff_true.A{j}, ov);
-    add_magnifier_overlay(ax, [95 110],      [0.20 0.55 0.36 0.38], coeff_true.A{j}, ov);
-end
+ax = axes_in_order(2);
+add_magnifier_overlay(ax, [3 cfg.Twarm-25], [0.30 0.65 0.7 0.44], coeff_true.A{2}, ov);
+add_magnifier_overlay(ax, [45 110],       [0.50 0.25 0.46 0.30], coeff_true.A{2}, ov);
 
 
 % -------- B-blocks --------
 fB = figure('Name','LPV-ARX B','Color','w');
-set(fB,'Units','centimeters','Position',[2 2 6.5 10])
+set(fB,'Units','centimeters','Position',[2 2 13 13])
 
 tl = tiledlayout(ellB,1,'Padding','compact','TileSpacing','compact');
 
@@ -276,10 +274,34 @@ for j = 1:ellB
     hold off
 end
 
+% --- 2) Freeze layout, then add insets/connectors on an overlay ---
+drawnow;  % finalize tiledlayout positions
+
+ov = axes('Parent',fB,'Position',[0 0 1 1],'Units','normalized', ...
+          'Color','none','XLim',[0 1],'YLim',[0 1], ...
+          'HitTest','off','Visible','off');  % overlay for connectors
+
+% tiles are reversed in tl.Children
+axes_in_order = flipud(tl.Children);
+ax = axes_in_order(1);
+add_magnifier_overlay(ax, [3 cfg.Twarm-20], [0.30 0.08 0.66 0.58], coeff_true.B{1}, ov);
+add_magnifier_overlay(ax, [45 110],       [0.60 0.87 0.36 0.30], coeff_true.B{1}, ov);
+
+ax = axes_in_order(2);
+add_magnifier_overlay(ax, [3 cfg.Twarm-20], [0.20 0.07 0.66 0.54], coeff_true.B{2}, ov);
+add_magnifier_overlay(ax, [45 110],       [0.60 0.83 0.36 0.40], coeff_true.B{2}, ov);
+
+ax = axes_in_order(3);
+add_magnifier_overlay(ax, [3 cfg.Twarm-20], [0.30 0.57 0.66 0.54], coeff_true.B{3}, ov);
+add_magnifier_overlay(ax, [45 110],       [0.60 0.17 0.36 0.35], coeff_true.B{3}, ov);
+
 % -------- C-block --------
 if hasC
     fC = figure('Name','LPV-ARX C','Color','w'); hold on
     set(fC,'Units','centimeters','Position',[2 2 17 6])
+    tl = tiledlayout(1,1,'Padding','compact','TileSpacing','compact');
+    nexttile(tl);
+    hold on
     for i = 1:K
         v = zeros(length(tt),1);
         l = 1;
@@ -305,11 +327,22 @@ if hasC
     hold off
 end
 
+% --- 2) Freeze layout, then add insets/connectors on an overlay ---
+drawnow;  % finalize tiledlayout positions
 
-exportgraphics(fPred, fullfile(cfg.figdir,'ex1a_err_prediction.pdf'), 'ContentType','vector')
-exportgraphics(fA, fullfile(cfg.figdir,'ex1a_err_Ak.pdf'), 'ContentType','vector')
-exportgraphics(fB, fullfile(cfg.figdir,'ex1a_err_Bk.pdf'), 'ContentType','vector')
-exportgraphics(fC, fullfile(cfg.figdir,'ex1a_err_Ck.pdf'), 'ContentType','vector')
+ov = axes('Parent',fC,'Position',[0 0 1 1],'Units','normalized', ...
+          'Color','none','XLim',[0 1],'YLim',[0 1], ...
+          'HitTest','off','Visible','off');  % overlay for connectors
+
+% tiles are reversed in tl.Children
+axes_in_order = flipud(tl.Children);
+ax = axes_in_order(1);
+add_magnifier_overlay(ax, [3 cfg.Twarm-20], [0.20 0.30 0.83 0.58], coeff_true.C, ov);
+
+save_pdf_noscale(fPred, fullfile(cfg.figdir,'ex1a_err_prediction.pdf'));
+save_pdf_noscale(fA,    fullfile(cfg.figdir,'ex1a_err_Ak.pdf'));
+save_pdf_noscale(fB,    fullfile(cfg.figdir,'ex1a_err_Bk.pdf'));
+save_pdf_noscale(fC,    fullfile(cfg.figdir,'ex1a_err_Ck.pdf'));
 
 %% ---- Metrics CSV (Phase II) ----
 % recompute if missing; write tidy CSV
@@ -475,4 +508,22 @@ function pb = plotboxpos(ax)
     op  = ax.OuterPosition; ti = ax.TightInset;
     pb  = [op(1)+ti(1), op(2)+ti(2), op(3)-ti(1)-ti(3), op(4)-ti(2)-ti(4)];
     ax.Units = old;
+end
+
+function save_pdf_noscale(fig, filename)
+    % Lock figure size
+    set(fig,'Renderer','painters');                  % vector
+    set(fig,'InvertHardcopy','off');                 % keep background
+    % Use centimeters for 1:1 mapping
+    oldU = get(fig,'Units'); set(fig,'Units','centimeters');
+    pos  = get(fig,'Position');                     % [x y w h] in cm
+    % Paper = exactly the on-screen size
+    set(fig,'PaperUnits','centimeters');
+    set(fig,'PaperPositionMode','manual');
+    set(fig,'PaperPosition',[0 0 pos(3) pos(4)]);
+    set(fig,'PaperSize',[pos(3) pos(4)]);
+    % Important: no '-bestfit' or '-fillpage'
+    print(fig, filename, '-dpdf', '-painters', '-r300');
+    % restore
+    set(fig,'Units',oldU);
 end
