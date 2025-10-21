@@ -56,7 +56,7 @@ set(groot,'defaultAxesTickDir','out')
 set(groot,'defaultAxesBox','off')
 set(groot,'defaultAxesColorOrder',colors)
 
-styles = {'-','-.',':','--'}; 
+styles = {'-','-.',':',':'}; 
 
 %% ---- Load ---- 
 S = load_all(cfg.files); 
@@ -106,7 +106,7 @@ nexttile; hold on
 for i=1:numel(S), stairs(tZ, S{i}.series.y(1:numel(tZ)),'LineStyle',styles{i}); end
 stairs(tZ, S{1}.series.r(1:numel(tZ)),'k--')
 xlabel('$k$'); ylabel('$y_k$')
-xlim([1 numel(tZ)]); ylim(yl)
+xlim([50 60]); ylim(yl)
 legend('off')
 % blue patch
 yL = ylim;
@@ -135,7 +135,7 @@ xlim([1 T]);
 legend boxoff;
 grid on;
 % blue patch
-ylim([1e-14 1]);
+ylim([1e-17 1]);
 yL = ylim;
 x_patch = [1 cfg.Twarm cfg.Twarm 1];
 y_patch = [yL(1) yL(1) yL(2) yL(2)];
@@ -164,7 +164,7 @@ set(gca,'YScale','log','TickDir','out','Box','off')
 xlabel('$k$'); ylabel('$|\hat{y}_k-y_k|$')
 % xlim([1 T])
 % legend(legend_names(S),'NumColumns',2,'Location','southoutside'); legend boxoff
-ylim([1e-13,1])
+ylim([1e-15,1])
 yL = ylim;
 x_patch = [1 cfg.Twarm cfg.Twarm 1];
 y_patch = [yL(1) yL(1) yL(2) yL(2)];

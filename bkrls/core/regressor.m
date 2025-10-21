@@ -6,8 +6,8 @@ function [phi_k, meta, z_k] = regressor(s_k, spec, p_opt, m_opt)
 %   construct the block-structured regressor used by RLS:
 %       ψ_k  = [ 1 ; vec(y_{k-1},...,y_{k-ℓ}) ; vec(u_k,...,u_{k-ℓ}) ]
 %       g_k  = kernel('eval', spec, s_k)
-%       z_k  = g_k ⊗ ψ_k
-%       φ_k  = z_k' ⊗ I_p   ∈ R^{p × (p·q·d0)}
+%       z_k  = (intercept-aware; see below)
+%       φ_k  = z_k' ⊗ I_p   ∈ R^{p × (p·effective_width)}
 %
 % Usage
 %   [φ_k, meta]        = regressor(s_k, spec)
@@ -23,17 +23,18 @@ function [phi_k, meta, z_k] = regressor(s_k, spec, p_opt, m_opt)
 %   m_opt : (optional) expected m; checked against size(s_k.u,1)
 %
 % Outputs
-%   φ_k   : p × d    where d = p·q·d0
+%   φ_k   : p × d    where d = p·(length of z_k)
 %   meta  : struct with fields
 %           .p, .m, .ell, .d0, .q, .d
 %           .shapes.y, .shapes.u
 %           .notes  (string) brief description
-%   z_k   : (optional) q·d0 × 1 vector equal to g_k ⊗ ψ_k
+%   z_k   : column vector; intercept-aware construction (see below)
 %
 % Notes
 %   - Requires a READY window (no NaNs). Upstream window.m enforces this.
-%   - Uses simple, readable formulas. For speed, replace kron() with
-%     block-scaling or preallocated patterns later (unchanged API).
+%   - Intercept-aware z_k:
+%         if has_const:   z_k = [ g_1·ψ_k ; (g_{2:q} ⊗ ψ_k(2:end)) ]
+%         else:            z_k = (g_k ⊗ ψ_k(2:end))
 
     % ---- shape extraction and basic checks ----
     y = s_k.y;  u = s_k.u;
@@ -62,58 +63,59 @@ function [phi_k, meta, z_k] = regressor(s_k, spec, p_opt, m_opt)
     d0    = numel(psi_k);
 
     % ---- kernel evaluation g_k ----
-    % Deterministic; spec may include center/scale for conditioning.
     g_k = kernel('eval', spec, s_k);
     q   = numel(g_k);
 
-    % ---- z_k = g_k ⊗ ψ_k ----
-    % NEW: intercept-aware construction using a structural flag (no numeric test).
-    has_const = kernel_has_const(spec);  % true for ones/linear/poly or mix containing 'ones'
+    % ---- z_k (intercept-aware) ----
+    has_const = kernel_has_const(spec);  % structural flag
 
     if has_const
-        % assume constant is the first feature in g_k
+        % single C-block carried by g_1
         z_k  = [ g_k(1) * psi_k ; kron(g_k(2:end), psi_k(2:end)) ];
-        zlen = d0 + (numel(g_k)-1)*(d0-1);
+        zlen = d0 + (q-1)*(d0-1);
     else
-        % standard Kronecker
-        z_k  = kron(g_k, psi_k);
-        zlen = numel(g_k) * d0;
+        % no C anywhere → drop ψ_k(1)
+        psi_bar = psi_k(2:end);
+        z_k  = kron(g_k, psi_bar);
+        zlen = q * (d0-1);
     end
 
-
     % ---- φ_k = z_k' ⊗ I_p ----
-    % Size: p × (p·q·d0). Keeps the model linear in parameters.
     phi_k = kron(z_k.', eye(p));
 
-    % ---- metadata for assertions and logging ----
+    % ---- metadata ----
     meta = struct();
     meta.p     = p;
     meta.m     = m;
     meta.ell   = ell;
     meta.d0    = d0;
     meta.q     = q;
-    meta.d     = p * zlen;  % effective width with intercept-aware z_k
+    meta.d     = p * zlen;
     meta.shapes = struct('y', [p, ell], 'u', [m, ell+1]);
-    meta.notes  = "φ_k = (g_k ⊗ ψ_k)' ⊗ I_p; intercept-aware z_k when a constant kernel feature is present.";
-
-    % Optional: lightweight self-check in debug scenarios
-    % (disable in hot paths if needed)
-    % Theta_dbg = randn(p, zlen);
-    % lhs = Theta_dbg * z_k;
-    % rhs = phi_k * Theta_dbg(:);
-    % assert(norm(lhs - rhs) <= 1e-10*(1+norm(lhs)), 'regressor: kron identity failed.');
+    meta.notes  = "φ_k uses intercept-aware z_k; drop ψ_k(1) when dictionary has no constant.";
 
 end
 
-% helper
+% ---------- helper ----------
 function tf = kernel_has_const(spec)
-switch lower(spec.type)
-    case {'ones','linear','poly'}
-        tf = true;
-    case 'mix'
-        parts = getfield(spec,'parts',[]);
-        tf = ~isempty(parts) && any(cellfun(@kernel_has_const, parts));
-    otherwise
-        tf = false;  % rbf, etc.
-end
+% True iff the dictionary includes a constant feature in the FIRST block.
+    t = lower(spec.type);
+    switch t
+        case 'ones'
+            tf = true;
+        case 'linear'
+            % legacy linear often includes [1;s]; keep true
+            tf = true;
+        case 'poly'
+            % legacy poly often includes constant; keep true
+            tf = true;
+        case 'rbf'
+            tf = false;
+        case 'mix'
+            parts = getfield(spec,'parts',{});
+            assert(~isempty(parts), 'regressor: mix.parts must be nonempty.');
+            tf = kernel_has_const(parts{1});  % ONLY first sub-kernel may carry the 1
+        otherwise
+            tf = false;
+    end
 end

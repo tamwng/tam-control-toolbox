@@ -2,33 +2,6 @@ function [Ty, Tu, sigma_k, meta] = toeplitz(Theta, gamma, y_hist, u_hist, N, ell
 %TOEPLITZ  Build LPV-ARX stacked prediction operators (paper-exact form).
 %
 %   [Ty, Tu, sigma_k, meta] = toeplitz(Theta, gamma, y_hist, u_hist, N, ell)
-%
-%Inputs
-%   Theta : (p x W) parameter matrix at step k+1, horizontally concatenated as
-%           [ C^(1) ... C^(q) | A_1^(1) ... A_1^(q) | ... | A_ell^(1) ... A_ell^(q) | ... | B_0^(1) ... B_ell^(q) ]
-%           where C^(j)∈R^{p×1}, A_i^(j)∈R^{p×p}, B_i^(j)∈R^{p×m}.
-%   gamma : (q x 1) kernel basis evaluations γ_j(s_k), frozen over the horizon.
-%   y_hist: (p x ell) past outputs in chronological order [y_{k-ell+1}, ..., y_k].
-%   u_hist: (m x ell) past inputs  in chronological order [u_{k-ell+1}, ..., u_k].
-%   N     : prediction horizon (integer ≥ 1).
-%   ell   : ARX lag/order (integer ≥ 1).
-%
-%Outputs
-%   Ty      : (pN x pN) strictly block lower-triangular matrix \sum_{i=1}^ell S_i ⊗ A_{k,i}.
-%   Tu      : (pN x mN) block lower-triangular matrix \sum_{i=0}^ell S_i ⊗ B_{k,i}.
-%   sigma_k : (pN x 1) offset vector (\mathbf{1}_N ⊗ C_k) + Σ (F_i ⊗ A_{k,i})Y_init^{(i)} + Σ (F_i ⊗ B_{k,i})U_init^{(i)}.
-%   meta    : struct with fields p,m,q,Ck,Ak,Bk,S,F for diagnostics (lightweight where possible).
-%
-%Notes
-% - This function implements the paper equations verbatim:
-%     T_y     = Σ_{i=1}^ell S_i ⊗ A_{k,i},  T_u = Σ_{i=0}^ell S_i ⊗ B_{k,i},
-%     sigma_k = (1_N ⊗ C_k) + Σ (F_i ⊗ A_{k,i})Y_init^{(i)} + Σ (F_i ⊗ B_{k,i})U_init^{(i)}.
-%   It does not form (I - T_y)^{-1}. Forward solves can be done by callers.
-% - y_hist, u_hist must cover exactly ell past samples up to time k (inclusive for u, y).
-% - All large Kronecker matrices are built as sparse for efficiency.
-%
-%Copyright
-%   BSD-3-Clause. Intended for clarity and reuse.
 
 % ---------- Basic validation ----------
 [p, W] = size(Theta);
@@ -38,53 +11,49 @@ if size(y_hist,2) ~= ell, error('y_hist must have ell columns (chronological).')
 m = size(u_hist,1);
 if size(u_hist,2) ~= ell, error('u_hist must have ell columns (chronological).'); end
 
-cols1 = 1 + ell*p + (ell+1)*m;   % d0
-colsR = cols1 - 1;               % d0-1
+cols1 = 1 + ell*p + (ell+1)*m;   % d0  = [C | A_1..A_ell | B_0..B_ell]
+colsR = cols1 - 1;               % d0-1 = [A_1..A_ell | B_0..B_ell]
 if isrow(gamma), gamma = gamma.'; end
-qg = length(gamma);
+qg = length(gamma);  q = qg;
 
+% ---------- Infer C-block layout from Θ width ----------
 if W == cols1 + (qg-1)*colsR
-    has_const = true;  q = qg;           % intercept-aware layout
+    has_const = true;            % C only in block j=1  ("head")
+elseif W == qg*colsR
+    has_const = false;           % no C anywhere        ("none", e.g., RBF)
 elseif W == qg*cols1
-    has_const = (qg == 1);  q = qg;      % tie-break: unitary => constant
+    has_const = true;            % C in every block     ("each", discouraged)
+    warning('toeplitz:ConstInEveryBlock','Θ has a C-block in every j (layout="each"). Ensure this is intended.');
 else
     error('Theta width incompatible with (p,m,ell). W=%d.', W);
 end
 
-% Build per-block indexer
+% ---------- Per-block indexer ----------
 if has_const
     cols_per_j_vec = [cols1, repmat(colsR,1,q-1)];   % j=1: d0; j>=2: d0-1
 else
-    cols_per_j_vec = repmat(cols1,1,q);              % uniform
+    cols_per_j_vec = repmat(colsR,1,q);              % all blocks: d0-1
 end
 col_start = [0, cumsum(cols_per_j_vec(1:end-1))];
 block_j   = @(j) (col_start(j)+1):(col_start(j)+cols_per_j_vec(j));
 
-% ---------- Partition Theta into basis blocks ----------
-% NOTE: In intercept-aware layout, only block j=1 contains C^(1) (p×1).
-C_hat = cell(q,1);                 % each p×1 (C_hat{j>=2} will be zeros)
-A_hat = cell(ell,1);               % each cell: {q blocks of p×p}
-B_hat = cell(ell+1,1);             % each cell: {q blocks of p×m}
-for i = 1:ell,     A_hat{i}   = cell(q,1); end
-for i = 0:ell,     B_hat{i+1} = cell(q,1); end
+% ---------- Partition Θ ----------
+C_hat = cell(q,1);
+A_hat = cell(ell,1);     for i = 1:ell,     A_hat{i}   = cell(q,1); end
+B_hat = cell(ell+1,1);   for i = 0:ell,     B_hat{i+1} = cell(q,1); end
 
 for j = 1:q
-    J = block_j(j);
-    pos = 1;
+    J = block_j(j); pos = 1;
     if has_const && j==1
-        % C^(1) : p×1
         C_hat{1} = Theta(:, J(pos)); pos = pos + 1;
     else
-        % no C-block in this j
         C_hat{j} = zeros(p,1);
     end
-    % A_i^(j) : p×p for i=1..ell
     for i = 1:ell
         cols = J(pos:(pos+p-1)); pos = pos + p;
         A_hat{i}{j} = Theta(:, cols); % p×p
         if ~isequal(size(A_hat{i}{j}), [p,p]), error('A_{%d}^{(%d)} size error.', i, j); end
     end
-    % B_i^(j) : p×m for i=0..ell
     for i = 0:ell
         cols = J(pos:(pos+m-1)); pos = pos + m;
         B_hat{i+1}{j} = Theta(:, cols); % p×m
@@ -92,35 +61,25 @@ for j = 1:q
     end
 end
 
-% ---------- Compile LPV coefficients at step k ----------
+% ---------- Compile LPV coefficients ----------
 Ck  = zeros(p,1);
-Ak  = cell(ell,1);
-Bk  = cell(ell+1,1);
-for i = 1:ell,  Ak{i}   = zeros(p,p); end
-for i = 0:ell,  Bk{i+1} = zeros(p,m); end
+Ak  = cell(ell,1);  for i = 1:ell,  Ak{i}   = zeros(p,p); end
+Bk  = cell(ell+1,1);for i = 0:ell,  Bk{i+1} = zeros(p,m); end
 
 for j = 1:q
     gj = gamma(j);
     Ck = Ck + gj * C_hat{j};
-    for i = 1:ell
-        Ak{i} = Ak{i} + gj * A_hat{i}{j};
-    end
-    for i = 0:ell
-        Bk{i+1} = Bk{i+1} + gj * B_hat{i+1}{j};
-    end
+    for i = 1:ell, Ak{i}   = Ak{i}   + gj * A_hat{i}{j}; end
+    for i = 0:ell, Bk{i+1} = Bk{i+1} + gj * B_hat{i+1}{j}; end
 end
 
-% ---------- Build shift S_i and selector F_i ----------
+% ---------- Build shifts and selectors ----------
 S = cell(ell+1,1); F = cell(ell,1);
 S{1} = speye(N);
 for i = 1:ell
-    % Shift S_i: zero if i>N
-    if i <= N
-        S{i+1} = spdiags(ones(N-i,1), -i, N, N);
-    else
-        S{i+1} = sparse(N, N);
+    if i <= N, S{i+1} = spdiags(ones(N-i,1), -i, N, N);
+    else,      S{i+1} = sparse(N, N);
     end
-    % Selector F_i ∈ R^{N×i}: picks first i rows; when i>N, use [I_N 0]
     r = min(N, i);
     Fi_top = [speye(r), sparse(r, i-r)];
     F{i}   = [Fi_top; sparse(N-r, i)];
@@ -130,61 +89,36 @@ end
 pN = p*N; mN = m*N;
 Ty = sparse(pN, pN);
 Tu = sparse(pN, mN);
-for i = 1:ell
-    Ty = Ty + kron(S{i+1}, Ak{i}); % i≥1 → S_{i}
-end
-for i = 0:ell
-    Tu = Tu + kron(S{i+1}, Bk{i+1}); % i=0..ell → S_{i}
-end
+for i = 1:ell, Ty = Ty + kron(S{i+1}, Ak{i});    end
+for i = 0:ell, Tu = Tu + kron(S{i+1}, Bk{i+1});  end
 
-% ---------- Assemble offset sigma_k ----------
-% Y_init^{(i)} = [ y_{k+1-i}; ... ; y_k ]  ∈ R^{pi}
-% U_init^{(i)} = [ u_{k+1-i}; ... ; u_k ]  ∈ R^{mi}
+% ---------- Assemble offset σ_k ----------
 onesN = ones(N,1);
-s_ofs = kron(onesN, Ck); % (1_N ⊗ C_k)
-
-% Past outputs terms
+s_ofs = kron(onesN, Ck);  % (1_N ⊗ C_k); if no-const, Ck≡0
 for i = 1:ell
-    Yi = stack_recent(y_hist, i);      % (p*i)×1
-    s_ofs = s_ofs + kron(F{i}, Ak{i}) * Yi;
+    Yi = stack_recent(y_hist, i);
+    s_ofs = s_ofs + kron(F{i}, Ak{i})   * Yi;
 end
-% Past inputs terms (exclude i=0 per paper; i=0 is direct feedthrough handled in Tu)
 for i = 1:ell
-    Ui = stack_recent(u_hist, i);      % (m*i)×1
-    s_ofs = s_ofs + kron(F{i}, Bk{i+1}) * Ui; % note index: B_{k,i}
+    Ui = stack_recent(u_hist, i);
+    s_ofs = s_ofs + kron(F{i}, Bk{i+1}) * Ui;  % B_{k,i}
 end
-
-% Output naming aligned with paper
 sigma_k = s_ofs;
 
-% ---------- Diagnostics meta ----------
+% ---------- Diagnostics ----------
 meta = struct();
 meta.p = p; meta.m = m; meta.q = q; meta.N = N; meta.ell = ell;
 meta.has_const = has_const;
 meta.Ck = Ck; meta.Ak = Ak; meta.Bk = Bk;
-meta.S = S;  meta.F = F; %#ok<STRNU>
-
-% ---------- Sanity checks ----------
-% Strict block lower-triangular for Ty (zero diagonal blocks)
-blkdiag_Ty = zeros(p, p);
-for b = 1:N
-    rows = (b-1)*p + (1:p);
-    cols = (b-1)*p + (1:p);
-    blkdiag_Ty = blkdiag_Ty + full(Ty(rows, cols));
+meta.S = S; meta.F = F;
 end
-if norm(blkdiag_Ty, 'fro') > 1e-12
-    warning('toeplitz:TyDiagNonzero', 'Ty has nonzero diagonal blocks above tolerance.');
-end
-
-end % function toeplitz
 
 % ===== helpers =====
 function vec = stack_recent(X, i)
 %STACK_RECENT Stack the most recent i columns of X vertically in chronological order.
-%   X: r×L with columns [x_{k-L+1}, ..., x_k]. Returns [x_{k+1-i}; ... ; x_k].
     if size(X,2) < i
         error('Not enough history: need %d columns, have %d.', i, size(X,2));
     end
-    Xi = X(:, end-i+1:end);     % r×i, chronological
-    vec = reshape(Xi, [], 1);   % (r*i)×1, column-stacked
+    Xi = X(:, end-i+1:end);
+    vec = reshape(Xi, [], 1);
 end

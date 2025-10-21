@@ -56,7 +56,7 @@ set(groot,'defaultAxesTickDir','out')
 set(groot,'defaultAxesBox','off')
 set(groot,'defaultAxesColorOrder',colors)
 
-styles = {'-','-.',':','--'}; 
+styles = {'-','-.',':',':'}; 
 
 %% ---- Load ---- 
 S = load_all(cfg.files); 

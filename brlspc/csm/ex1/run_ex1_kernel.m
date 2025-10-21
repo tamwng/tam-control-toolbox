@@ -269,15 +269,46 @@ function name = filename_ex1(spec, seed)
     name = sprintf('ex1_%s_seed%d.mat', tag, seed);
 end
 
-function Theta = theta_vec_to_matrix(theta_vec, p)
+function [Theta, meta] = theta_vec_to_matrix(theta_vec, p, ell, m, gamma_len)
 % Map RLS vector θ to matrix Θ with p rows.
-% Column order must match the regressor construction used in your codebase.
-% This template assumes φ_k * θ == Θ * z_k with column-major vec.
+% Optional validation if ell, m, and gamma_len (q) are provided.
+
     d = numel(theta_vec);
     W = d / p;
     if abs(W - round(W)) > 1e-12
         error('theta_vec length not divisible by p.');
     end
+    W = round(W);
+
+    % Default: simple reshape, no extra checks
     Theta = reshape(theta_vec, p, W);
+    meta = struct('validated', false);
+
+    % Optional validation/inference
+    if nargin >= 4 && ~isempty(ell) && ~isempty(m)
+        cols1 = 1 + ell*p + (ell+1)*m;   % with C
+        colsR = cols1 - 1;               % without C
+
+        % Try layouts
+        q_none = W / colsR; ok_none = abs(q_none - round(q_none)) < 1e-12 && q_none >= 1;
+        q_head = (W - cols1)/colsR + 1;  ok_head = abs(q_head - round(q_head)) < 1e-12 && q_head >= 1;
+        q_each = W / cols1;              ok_each = abs(q_each - round(q_each)) < 1e-12 && q_each >= 1;
+
+        if     ok_head, layout = "head"; has_const = true;  q = round(q_head);
+        elseif ok_none, layout = "none"; has_const = false; q = round(q_none);
+        elseif ok_each, layout = "each"; has_const = true;  q = round(q_each);
+        else
+            error('theta_vec_to_matrix: incompatible sizes. W=%d, cols1=%d, colsR=%d.', W, cols1, colsR);
+        end
+
+        % Optional cross-check with provided gamma_len
+        if nargin >= 5 && ~isempty(gamma_len) && gamma_len ~= q
+            warning('theta_vec_to_matrix:qMismatch', 'Inferred q=%d differs from gamma_len=%d.', q, gamma_len);
+        end
+
+        meta = struct('validated', true, 'W', W, 'q', q, 'has_const', has_const, 'layout', char(layout), ...
+                      'cols1', cols1, 'colsR', colsR);
+    end
 end
+
 
