@@ -77,17 +77,26 @@ function g = op_eval(spec, s_k)
 
     switch lower(spec.type)
         case 'ones'
+            % single global intercept feature
             g = ones(1,1);
 
         case 'linear'
-            % [1; s]
-            g = [1; s];
+            % [1; s]  (intercept controlled via spec.bias)
+            use_bias = getfield_with_default(spec,'bias',true);
+            if use_bias
+                g = [1; s];
+            else
+                g = s;
+            end
 
         case 'poly'
+            % polynomial features WITHOUT constant; prepend 1 if spec.bias
             deg   = getfield_with_default(spec,'degree',2);
             cross = getfield_with_default(spec,'cross','none');
             validate_degree_cross(deg, cross);
-            g = poly_features(s, deg, cross);
+            use_bias = getfield_with_default(spec,'bias',true);
+            g = poly_features_nobias(s, deg, cross);
+            if use_bias, g = [1; g]; end
 
         case 'rbf'
             % centers: (q×d), sigma: scalar or (q×1)
@@ -104,6 +113,19 @@ function g = op_eval(spec, s_k)
         case 'mix'
             parts = getfield_with_default(spec,'parts',{});
             assert(iscell(parts) && ~isempty(parts), 'mix.parts must be a nonempty cell array of specs.');
+            % enforce single global intercept: only first part may include it
+            for i = 1:numel(parts)
+                if i == 1
+                    if ~strcmpi(getfield_with_default(parts{i},'type',''), 'ones')
+                        parts{i}.bias = getfield_with_default(parts{i},'bias',true);
+                    else
+                        % first part is 'ones'; all later parts must have no bias
+                        parts{i}.bias = true; % harmless for 'ones'
+                    end
+                else
+                    parts{i}.bias = false;
+                end
+            end
             % concatenate sub-features
             g_list = cellfun(@(sp) op_eval(sp, s_k), parts, 'UniformOutput', false);
             g = vertcat(g_list{:});
@@ -122,13 +144,15 @@ function q = op_dim(spec)
         case 'linear'
             % 1 + d (bias plus all coordinates)
             d = infer_d_from_spec(spec);
-            q = 1 + d;
+            use_bias = getfield_with_default(spec,'bias',true);
+            q = d + (use_bias);
 
         case 'poly'
             deg   = getfield_with_default(spec,'degree',2);
             cross = getfield_with_default(spec,'cross','none');
             d = infer_d_from_spec(spec);
-            q = poly_dim(d, deg, cross);
+            use_bias = getfield_with_default(spec,'bias',true);
+            q = poly_dim_nobias(d, deg, cross) + (use_bias);
 
         case 'rbf'
             C = getfield_with_default(spec,'centers',[]);
@@ -138,6 +162,18 @@ function q = op_dim(spec)
         case 'mix'
             parts = getfield_with_default(spec,'parts',{});
             assert(iscell(parts) && ~isempty(parts),'mix.parts must be a nonempty cell array.');
+            % mirror intercept enforcement from eval
+            for i = 1:numel(parts)
+                if i == 1
+                    if ~strcmpi(getfield_with_default(parts{i},'type',''), 'ones')
+                        parts{i}.bias = getfield_with_default(parts{i},'bias',true);
+                    else
+                        parts{i}.bias = true;
+                    end
+                else
+                    parts{i}.bias = false;
+                end
+            end
             q = 0;
             for i=1:numel(parts)
                 q = q + op_dim(parts{i});
@@ -210,47 +246,44 @@ function validate_degree_cross(deg, cross)
     assert(valid, 'poly.cross ∈ {"none","pairwise","full"}.');
 end
 
-function g = poly_features(s, degree, cross)
-% Build polynomial features deterministically.
-% Ordering:
-%   degree 1: [1; s]
-%   degree 2, cross=none    : [1; s; s.^2]
-%   degree 2, pairwise      : [1; s; s.^2; {s_i*s_j}_{i<j}]
-%   degree r, full          : all monomials up to r, in graded lex order
+function g = poly_features_nobias(s, degree, cross)
+% Build polynomial features deterministically, WITHOUT the constant term.
+% Ordering (conceptual):
+%   degree 1: [s]
+%   degree 2, cross=none    : [s; s.^2]
+%   degree 2, pairwise      : [s; s.^2; {s_i*s_j}_{i<j}]
+%   degree r, full          : all monomials up to r except the constant
     d = numel(s);
 
     switch lower(string(cross))
         case "none"
-            % independent powers per coordinate
             G = cell(degree,1);
             G{1} = s;
             for r=2:degree
                 G{r} = s.^r;
             end
-            g = [1; vertcat(G{:})];
+            g = vertcat(G{:});
 
         case "pairwise"
             assert(degree<=2, 'pairwise implemented for degree ≤ 2.');
-            % 1, linear, squares, and all i<j interactions
             squares = s.^2;
             inter = [];
             for i=1:d-1
                 inter = [inter; s(i)*s(i+1:d)]; %#ok<AGROW>
             end
-            g = [1; s; squares; inter];
+            g = [s; squares; inter];
 
         case "full"
-            % Full monomial basis up to total degree 'degree'.
-            % Use graded lexicographic order via recursive enumeration.
-            exps = enumerate_exponents(d, degree); % rows: exponent vectors
+            % enumerate all monomials up to 'degree', drop the all-zero exponent
+            exps = enumerate_exponents(d, degree); % first row is zeros
+            exps = exps(2:end,:);                  % remove constant
             vals = ones(size(exps,1),1);
+            srow = s(:)'.';
             for k=1:size(exps,1)
                 e = exps(k,:);               % 1×d
-                vals(k) = prod( s(:)'.^e );  % scalar
+                vals(k) = prod( srow'.^e );  % scalar
             end
             g = vals;
-            % ensure leading 1 is first (the all-zero exponent)
-            % enumerate_exponents already starts with zeros row.
 
         otherwise
             error('Unexpected poly.cross value.');
@@ -258,17 +291,17 @@ function g = poly_features(s, degree, cross)
     g = g(:);
 end
 
-function q = poly_dim(d, degree, cross)
-% Closed-form size where possible; otherwise compute via enumeration.
+function q = poly_dim_nobias(d, degree, cross)
+% Closed-form size without the constant term.
     switch lower(string(cross))
         case "none"
-            q = 1 + d*degree;
+            q = d*degree;
         case "pairwise"
             assert(degree<=2,'pairwise implemented for degree ≤ 2.');
-            q = 1 + d + d + nchoosek(d,2); % 1 + linear + squares + pairs
+            q = d + d + nchoosek(d,2); % linear + squares + pairs
         case "full"
-            % number of monomials in d vars up to degree r = C(d+r, r)
-            q = nchoosek(d + degree, degree);
+            % total monomials up to degree r minus the constant
+            q = nchoosek(d + degree, degree) - 1;
         otherwise
             error('Unexpected poly.cross value.');
     end
