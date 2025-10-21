@@ -1,13 +1,13 @@
-% run_ex1a_kernel.m
-% One-kernel runner for Example 1a (unconstrained baseline).
+% run_ex1_kernel.m
+% One-kernel runner for Example 1 (unconstrained baseline).
 % Saves a standardized Results struct for plotting and tables.
 %
 % Usage:
-%   run_ex1a_kernel(struct('type','linear'), 42, 'results');
-%   run_ex1a_kernel(struct('type','poly','degree',2), 42, 'results');
-%   run_ex1a_kernel(struct('type','rbf','sigma',1.0), 42, 'results');
+%   run_ex1_kernel(struct('type','linear'), 42, 'results');
+%   run_ex1_kernel(struct('type','poly','degree',2), 42, 'results');
+%   run_ex1_kernel(struct('type','rbf','sigma',1.0), 42, 'results');
 
-function run_ex1a_kernel(spec, seed, outdir)
+function run_ex1_kernel(spec, seed, outdir)
 
 if nargin < 1, spec = struct('type','linear'); end
 if nargin < 2, seed = 42; end
@@ -132,8 +132,8 @@ for t = 1:(T-1)
         C = cost_assemble(Ty, Tu, sigma_k, Qy, Ru, R, ...
             struct('assert',true,'eps',cfg.eps,'m',cfg.m,'N',N,'u_k',u(t)));
         Sln = solve_cholesky(C.H, C.h, struct('assert',true,'J0',C.J0));
-        % u(t+1) = Sln.U(1:cfg.m) + p(t+1);  % NO clipping in 1a
-        u(t+1) = Sln.U(1:cfg.m);  % NO clipping in 1a
+        % u(t+1) = Sln.U(1:cfg.m) + p(t+1);  % NO clipping in 1
+        u(t+1) = Sln.U(1:cfg.m);  % NO clipping in 1
     else
         % During warm-up, just dither (keeps window filling simple)
         u(t+1) = p(t+1);
@@ -170,7 +170,7 @@ Results.series  = struct('y', y, 'u', u, 'r', r, 'e', e(cfg.ell+1:T-1), ...
 Results.meta    = run_metadata();
 Results.coeff_true = coeff_true;
 
-fname = fullfile(outdir, filename_ex1a(spec, seed));
+fname = fullfile(outdir, filename_ex1(spec, seed));
 save(fname, 'Results');
 fprintf('Saved %s\n', fname);
 
@@ -252,7 +252,7 @@ function meta = run_metadata()
     try, meta.host = char(java.net.InetAddress.getLocalHost.getHostName); catch, meta.host = ''; end
 end
 
-function name = filename_ex1a(spec, seed)
+function name = filename_ex1(spec, seed)
     switch lower(spec.type)
         case 'ones'
             tag = 'ones';
@@ -266,7 +266,7 @@ function name = filename_ex1a(spec, seed)
         otherwise
             tag = 'unknown';
     end
-    name = sprintf('ex1a_%s_seed%d.mat', tag, seed);
+    name = sprintf('ex1_%s_seed%d.mat', tag, seed);
 end
 
 function Theta = theta_vec_to_matrix(theta_vec, p)

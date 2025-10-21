@@ -3,14 +3,14 @@ close all; clc; clear;
 clear; clc; close all; %% ---- Config ---- 
 cfg.linewidth = 3.0; 
 cfg.zoomN = 80; % zoom-in prefix length 
-cfg.figdir = 'brlspc/csm/ex1/ex1a/figs'; 
-cfg.tbldir = 'brlspc/csm/ex1/ex1a/tables'; 
-cfg.resdir = 'brlspc/csm/ex1/ex1a/results'; 
+cfg.figdir = 'brlspc/csm/ex1/figs'; 
+cfg.tbldir = 'brlspc/csm/ex1/tables'; 
+cfg.resdir = 'brlspc/csm/ex1/results'; 
 cfg.files = { ... 
-    fullfile(cfg.resdir,'ex1a_ones_seed42.mat'), ... 
-    fullfile(cfg.resdir,'ex1a_linear_seed42.mat'), ... 
-    fullfile(cfg.resdir,'ex1a_poly_deg2_seed42.mat'), ... 
-    fullfile(cfg.resdir,'ex1a_rbf_sig1e+03_seed42.mat') }; 
+    fullfile(cfg.resdir,'ex1_ones_seed42.mat'), ... 
+    fullfile(cfg.resdir,'ex1_linear_seed42.mat'), ... 
+    fullfile(cfg.resdir,'ex1_poly_deg2_seed42.mat'), ... 
+    fullfile(cfg.resdir,'ex1_rbf_sig1e+03_seed42.mat') }; 
 if ~exist(cfg.figdir,'dir'), mkdir(cfg.figdir); end 
 if ~exist(cfg.tbldir,'dir'), mkdir(cfg.tbldir); end
 
@@ -98,7 +98,7 @@ fill(x_patch, y_patch, [0.85 0.93 1.0], ...
 uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
 
 % Panel B: zoom (first 120)
-f12 = figure('Name','Ex1a Output Zoom','Color','w');
+f12 = figure('Name','Ex1 Output Zoom','Color','w');
 set(f12,'Units','centimeters','Position',[2 2 10 6])
 hold on
 tZ = (1:min(cfg.zoomN,T)).';
@@ -117,7 +117,7 @@ fill(x_patch, y_patch, [0.85 0.93 1.0], ...
 uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
 
 % Panel C: Log error (full range, stair plot)
-f13 = figure('Name','Ex1a Log Error','Color','w');
+f13 = figure('Name','Ex1 Log Error','Color','w');
 set(f13,'Units','centimeters','Position',[2 2 20 10])
 hold on
 
@@ -145,9 +145,9 @@ uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
 legend([{'PRBS'}, names], 'NumColumns', 2, 'Location', 'southoutside');
 
 % Vector export, exact size
-save_pdf_noscale(f11, fullfile(cfg.figdir,'ex1a_output.pdf'));
-save_pdf_noscale(f12, fullfile(cfg.figdir,'ex1a_output_zoom.pdf'));
-save_pdf_noscale(f13, fullfile(cfg.figdir,'ex1a_output_log_error.pdf'));
+save_pdf_noscale(f11, fullfile(cfg.figdir,'ex1_output.pdf'));
+save_pdf_noscale(f12, fullfile(cfg.figdir,'ex1_output_zoom.pdf'));
+save_pdf_noscale(f13, fullfile(cfg.figdir,'ex1_output_log_error.pdf'));
 
 % ---- Figure 3: error (all) + theta error (unitary only) ----
 fPred = figure('Units','centimeters','Position',[2 2 15 10],'Color','w');
@@ -339,14 +339,14 @@ axes_in_order = flipud(tl.Children);
 ax = axes_in_order(1);
 add_magnifier_overlay(ax, [3 cfg.Twarm-20], [0.20 0.30 0.83 0.58], coeff_true.C, ov);
 
-save_pdf_noscale(fPred, fullfile(cfg.figdir,'ex1a_err_prediction.pdf'));
-save_pdf_noscale(fA,    fullfile(cfg.figdir,'ex1a_err_Ak.pdf'));
-save_pdf_noscale(fB,    fullfile(cfg.figdir,'ex1a_err_Bk.pdf'));
-save_pdf_noscale(fC,    fullfile(cfg.figdir,'ex1a_err_Ck.pdf'));
+save_pdf_noscale(fPred, fullfile(cfg.figdir,'ex1_err_prediction.pdf'));
+save_pdf_noscale(fA,    fullfile(cfg.figdir,'ex1_err_Ak.pdf'));
+save_pdf_noscale(fB,    fullfile(cfg.figdir,'ex1_err_Bk.pdf'));
+save_pdf_noscale(fC,    fullfile(cfg.figdir,'ex1_err_Ck.pdf'));
 
 %% ---- Metrics CSV (Phase II) ----
 % recompute if missing; write tidy CSV
-write_metrics_csv(S, fullfile(cfg.tbldir,'ex1a_phaseII_metrics.csv'))
+write_metrics_csv(S, fullfile(cfg.tbldir,'ex1_phaseII_metrics.csv'))
 
 disp('Done.')
 
