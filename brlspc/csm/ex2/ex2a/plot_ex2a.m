@@ -387,13 +387,6 @@ function M = compute_metrics_from_series(series, cfg)
     M.IAE_PhaseII  = sum(abs(r(idx2)-y(idx2)));
     M.TV_u         = sum(abs(diff(u)));
     M.Peak_u       = max(abs(u));
-    % final EWMA(e^2) in log10 if available; else NaN
-    if isfield(series,'log10_ew') && ~isempty(series.log10_ew)
-        v = series.log10_ew(:);
-        M.Final_log10_EWMA_e2 = v(find(~isnan(v),1,'last'));
-    else
-        M.Final_log10_EWMA_e2 = NaN;
-    end
 end
 
 function M = normalize_metric_names(M)
@@ -402,9 +395,6 @@ function M = normalize_metric_names(M)
     if isfield(M,'iae2'),  M.IAE_PhaseII  = M.iae2;  end
     if isfield(M,'tv_u'),  M.TV_u         = M.tv_u;  end
     if isfield(M,'peak_u'),M.Peak_u       = M.peak_u;end
-    if isfield(M,'final_log10_ew')
-        M.Final_log10_EWMA_e2 = M.final_log10_ew;
-    end
 end
 
 function names = legend_names(S)
@@ -430,10 +420,10 @@ end
 
 function write_metrics_csv(S, path)
     fid = fopen(path,'w');
-    fprintf(fid,'Method,RMSE_PhaseII,IAE_PhaseII,TV_u,Peak_u,Final_log10_EWMA_e2\n');
+    fprintf(fid,'Kernel,RMSE,IAE,TV_u,Peak_u\n');
     for i=1:numel(S)
         M = S{i}.metrics;
-        fprintf(fid,'%s,%.6g,%.6g,%.6g,%.6g,%.6g\n', ...
+        fprintf(fid,'%s,%.6g,%.6g,%.6g,%.6g\n', ...
             spec_name(S{i}.spec), M.RMSE_PhaseII, M.IAE_PhaseII, ...
             M.TV_u, M.Peak_u);
     end
