@@ -3,9 +3,9 @@ close all; clc; clear;
 clear; clc; close all; %% ---- Config ---- 
 cfg.linewidth = 3.0; 
 cfg.zoomN = 80; % zoom-in prefix length 
-cfg.figdir = 'brlspc/csm/ex2/ex2b/figs'; 
-cfg.tbldir = 'brlspc/csm/ex2/ex2b/tables'; 
-cfg.resdir = 'brlspc/csm/ex2/ex2b/results'; 
+cfg.figdir = 'brlspc/csm/ex2/ex2b/temporal/figs'; 
+cfg.tbldir = 'brlspc/csm/ex2/ex2b/temporal/tables'; 
+cfg.resdir = 'brlspc/csm/ex2/ex2b/temporal/results'; 
 cfg.files = dir(fullfile(cfg.resdir, '*.mat'));
 cfg.files = fullfile(cfg.resdir, {cfg.files.name});
 if ~exist(cfg.figdir,'dir'), mkdir(cfg.figdir); end 
