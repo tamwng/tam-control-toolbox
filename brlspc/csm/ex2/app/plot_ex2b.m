@@ -3,8 +3,8 @@ close all; clc; clear;
 clear; clc; close all; %% ---- Config ---- 
 cfg.linewidth = 3.0; 
 cfg.zoomN = 80; % zoom-in prefix length 
-cfg.figdir = 'brlspc/csm/ex2/ex2b/frequency/figs'; 
-cfg.resdir = 'brlspc/csm/ex2/ex2b/frequency/results'; 
+cfg.figdir = 'brlspc/csm/ex2/app/figs'; 
+cfg.resdir = 'brlspc/csm/ex2/app/results'; 
 cfg.files = dir(fullfile(cfg.resdir, '*.mat'));
 cfg.files = fullfile(cfg.resdir, {cfg.files.name});
 if ~exist(cfg.figdir,'dir'), mkdir(cfg.figdir); end 
@@ -76,7 +76,7 @@ xlabel('$\omega$')
 legend(names, 'Location','southoutside','Interpreter','latex'); legend boxoff;
 
 % Vector export, exact size
-save_pdf_noscale(f,  fullfile(cfg.figdir,'ex2b_frequency.pdf'));
+save_pdf_noscale(f,  fullfile(cfg.figdir,'ex2b_app_frequency.pdf'));
 
 disp('Done.')
 
