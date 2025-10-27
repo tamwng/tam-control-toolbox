@@ -71,7 +71,7 @@ end
 xticks([0, pi/4, pi/2, 3*pi/4, pi])
 xticklabels({'$0$', '$\pi/4$','$\pi/2$','$3\pi/4$','$\pi$'})
 xlim([0,pi])
-ylabel('$\mathrm{RMSE}$')
+ylabel('$\log_{10}(\mathrm{RMSE})$')
 xlabel('$\omega$')
 legend(names, 'Location','southoutside','Interpreter','latex'); legend boxoff;
 

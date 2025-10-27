@@ -93,6 +93,7 @@ function [phi_k, meta, z_k] = regressor(s_k, spec, p_opt, m_opt)
     meta.d     = p * zlen;
     meta.shapes = struct('y', [p, ell], 'u', [m, ell+1]);
     meta.notes  = "φ_k uses intercept-aware z_k; drop ψ_k(1) when dictionary has no constant.";
+    meta.zk     = z_k;
 
 end
 
