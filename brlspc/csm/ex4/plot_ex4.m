@@ -3,16 +3,13 @@ close all; clc; clear;
 clear; clc; close all; %% ---- Config ---- 
 cfg.linewidth = 3.0; 
 cfg.zoomN = 80; % zoom-in prefix length 
-cfg.figdir = 'brlspc/csm/ex1/figs'; 
-cfg.tbldir = 'brlspc/csm/ex1/tables'; 
-cfg.resdir = 'brlspc/csm/ex1/results'; 
-cfg.files = { ... 
-    fullfile(cfg.resdir,'ex1_ones_seed42.mat'), ... 
-    fullfile(cfg.resdir,'ex1_linear_seed42.mat'), ... 
-    fullfile(cfg.resdir,'ex1_poly_deg2_seed42.mat'), ... 
-    fullfile(cfg.resdir,'ex1_rbf_sig1e+03_seed42.mat') }; 
+cfg.figdir = 'brlspc/csm/ex4/figs'; 
+cfg.tbldir = 'brlspc/csm/ex4/tables'; 
+cfg.resdir = 'brlspc/csm/ex4/results'; 
+cfg.files = dir(fullfile(cfg.resdir, '*.mat'));
+cfg.files = fullfile(cfg.resdir, {cfg.files.name});
 if ~exist(cfg.figdir,'dir'), mkdir(cfg.figdir); end 
-if ~exist(cfg.tbldir,'dir'), mkdir(cfg.tbldir); end
+if ~exist(cfg.tbldir,'dir'), mkdir(cfg.tbldir); end 
 
 % --- Global aesthetics (put before plotting) ---
 set(groot,'defaultTextInterpreter','latex')
@@ -67,26 +64,14 @@ tZ = (1:min(cfg.zoomN,T)).';
 names = legend_names(S);
 cfg.Twarm = S{1,1}.cfg.Twarm;
 
-%% Figure 1: Output (Full + Zoom)
-
-% --- Figure size: single-column (≈8.6 cm) and compact height ---
-f11 = figure('Units','centimeters','Position',[2 2 10 6],'Color','w');
-% tiledlayout(2,1,'TileSpacing','compact','Padding','compact')
-
-% Compute global y-lims for output
-ymin = inf; ymax = -inf;
-for i=1:numel(S)
-    yi = S{i}.series.y; ymin = min(ymin, min(yi)); ymax = max(ymax, max(yi));
-end
-yspan = ymax - ymin; pad = 0.05*max(yspan,1e-9);
-yl = [ymin-pad, ymax+pad];
-
-% Panel A: full
-nexttile; hold on
+%% --- Output trace figure ---
+f_output = figure('Units','centimeters','Position',[2 2 20 10],'Color','w');
+tl = tiledlayout(1,1,'Padding','compact','TileSpacing','compact');
+nexttile(tl); hold on
 for i=1:numel(S),stairs(t, S{i}.series.y,'LineStyle',styles{i}); end
 stairs(t, S{1}.series.r,'k--')
 xlabel('$k$'); ylabel('$y_k$')
-xlim([1 T]); ylim(yl)
+xlim([1 T]);
 legend('off')
 % blue patch
 yL = ylim;
@@ -96,28 +81,21 @@ fill(x_patch, y_patch, [0.85 0.93 1.0], ...
      'EdgeColor','none','FaceAlpha',0.6);
 uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
 
-% Panel B: zoom (first 120)
-f12 = figure('Name','Ex1 Output Zoom','Color','w');
-set(f12,'Units','centimeters','Position',[2 2 10 6])
-hold on
-tZ = (1:min(cfg.zoomN,T)).';
-nexttile; hold on
-for i=1:numel(S), stairs(tZ, S{i}.series.y(1:numel(tZ)),'LineStyle',styles{i}); end
-stairs(tZ, S{1}.series.r(1:numel(tZ)),'k--')
-xlabel('$k$'); ylabel('$y_k$')
-xlim([50 60]); ylim(yl)
-legend('off')
-% blue patch
-yL = ylim;
-x_patch = [1 cfg.Twarm cfg.Twarm 1];
-y_patch = [yL(1) yL(1) yL(2) yL(2)];
-fill(x_patch, y_patch, [0.85 0.93 1.0], ...
-     'EdgeColor','none','FaceAlpha',0.6);
-uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
+drawnow;  % finalize tiledlayout positions
 
-% Panel C: Log error (full range, stair plot)
-f13 = figure('Name','Ex1 Log Error','Color','w');
-set(f13,'Units','centimeters','Position',[2 2 20 10])
+ov = axes('Parent',f_output,'Position',[0 0 1 1],'Units','normalized', ...
+          'Color','none','XLim',[0 1],'YLim',[0 1], ...
+          'HitTest','off','Visible','off');  % overlay for connectors
+
+% tiles are reversed in tl.Children
+axes_in_order = flipud(tl.Children);
+ax = axes_in_order(1);
+add_magnifier_overlay(ax, [cfg.Twarm+1, cfg.Twarm+20], [0.35 0.75 0.4 0.28], [], ov);
+add_magnifier_overlay(ax, [251, 275], [0.7 0.08 0.3 0.28], [], ov);
+
+%% --- Output error log figure ---
+f_err_log = figure('Name','Log Error','Color','w');
+set(f_err_log,'Units','centimeters','Position',[2 2 20 10])
 hold on
 
 lw = 0.9;                             % thinner linewidth
@@ -134,7 +112,6 @@ xlim([1 T]);
 legend boxoff;
 grid on;
 % blue patch
-ylim([1e-17 1]);
 yL = ylim;
 x_patch = [1 cfg.Twarm cfg.Twarm 1];
 y_patch = [yL(1) yL(1) yL(2) yL(2)];
@@ -143,16 +120,9 @@ fill(x_patch, y_patch, [0.85 0.93 1.0], ...
 uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
 legend([{'PRBS'}, names], 'NumColumns', 2, 'Location', 'southoutside');
 
-% Vector export, exact size
-save_pdf_noscale(f11, fullfile(cfg.figdir,'ex1_output.pdf'));
-save_pdf_noscale(f12, fullfile(cfg.figdir,'ex1_output_zoom.pdf'));
-save_pdf_noscale(f13, fullfile(cfg.figdir,'ex1_output_log_error.pdf'));
+%% ---- Prediction error ----
+fPred = figure('Units','centimeters','Position',[2 2 20 11],'Color','w');
 
-% ---- Figure 3: error (all) + theta error (unitary only) ----
-fPred = figure('Units','centimeters','Position',[2 2 15 10],'Color','w');
-% tiledlayout(2,1,'TileSpacing','compact','Padding','compact')
-
-% Panel (a): |yhat - y|, log scale
 nexttile; hold on
 for i=1:numel(S)
     e = S{i}.series.e(:);
@@ -163,7 +133,6 @@ set(gca,'YScale','log','TickDir','out','Box','off')
 xlabel('$k$'); ylabel('$|\hat{y}_k-y_k|$')
 % xlim([1 T])
 % legend(legend_names(S),'NumColumns',2,'Location','southoutside'); legend boxoff
-ylim([1e-15,1])
 yL = ylim;
 x_patch = [1 cfg.Twarm cfg.Twarm 1];
 y_patch = [yL(1) yL(1) yL(2) yL(2)];
@@ -173,23 +142,14 @@ uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
 legend boxoff
 legend([{'PRBS'}, names], 'NumColumns', 2, 'Location', 'southoutside');
 
-% Assume S{i}.series.lpv_coeff(t).Ak{j}, .Bk{j}, .Ck
-% and S{1}.coeff_true.A{j}, .B{j}, .C
-
 K = numel(S);
 T = numel(S{1}.series.lpv_coeff);
 tt = S{1}.cfg.ell+1:T-1;
 
-coeff_true = S{1}.coeff_true;
-ellA = numel(coeff_true.A);
-ellB = numel(coeff_true.B);
-hasC = ~isempty(coeff_true.C);
-
-val_or_fro = @(M) (numel(M)==1) .* double(M) + (numel(M)~=1) .* norm(M,'fro');
-
 % ===== LPV-ARX A (with magnifier insets) =====
 % Assumes: S, K, ellA, tt, T, cfg, coeff_true, styles, names, val_or_fro
 
+ellA = 2;
 fA = figure('Name','LPV-ARX A','Color','w');
 set(fA,'Units','centimeters','Position',[2 2 13 13])
 tl = tiledlayout(ellA,1,'Padding','compact','TileSpacing','compact');
@@ -202,15 +162,11 @@ for j = 1:ellA
     for i = 1:K
         v = zeros(numel(tt),1); l = 1;
         for k = tt
-            v(l) = val_or_fro(S{i}.series.lpv_coeff(k).Ak{j});
+            v(l) = S{i}.series.lpv_coeff(k).Ak{j};
             l = l + 1;
         end
         stairs(ax, tt, v, 'LineStyle', styles{i}, 'DisplayName', names{i});
     end
-
-    % truth
-    yline(ax, val_or_fro(coeff_true.A{j}), 'k--', 'DisplayName','true', ...
-          'LineWidth', max(cfg.linewidth-1.0,0.6));
 
     % PRBS shading BEHIND data
     yL = ylim(ax);
@@ -225,25 +181,8 @@ for j = 1:ellA
     hold(ax,'off')
 end
 
-% --- 2) Freeze layout, then add insets/connectors on an overlay ---
-drawnow;  % finalize tiledlayout positions
-
-ov = axes('Parent',fA,'Position',[0 0 1 1],'Units','normalized', ...
-          'Color','none','XLim',[0 1],'YLim',[0 1], ...
-          'HitTest','off','Visible','off');  % overlay for connectors
-
-% tiles are reversed in tl.Children
-axes_in_order = flipud(tl.Children);
-ax = axes_in_order(1);
-add_magnifier_overlay(ax, [3 cfg.Twarm-25], [0.30 0.08 0.7 0.48], coeff_true.A{1}, ov);
-add_magnifier_overlay(ax, [45 110],       [0.50 0.78 0.46 0.30], coeff_true.A{1}, ov);
-
-ax = axes_in_order(2);
-add_magnifier_overlay(ax, [3 cfg.Twarm-25], [0.30 0.65 0.7 0.44], coeff_true.A{2}, ov);
-add_magnifier_overlay(ax, [45 110],       [0.50 0.25 0.46 0.30], coeff_true.A{2}, ov);
-
-
 % -------- B-blocks --------
+ellB = 3;
 fB = figure('Name','LPV-ARX B','Color','w');
 set(fB,'Units','centimeters','Position',[2 2 13 13])
 
@@ -255,7 +194,7 @@ for j = 1:ellB
         v = zeros(length(tt),1);
         l = 1;
         for k = tt   % avoid shadowing
-            v(l) = val_or_fro(S{i}.series.lpv_coeff(k).Bk{j});
+            v(l) = S{i}.series.lpv_coeff(k).Bk{j};
             l = l + 1;
         end
         stairs(tt, v, 'LineStyle', styles{i}, 'DisplayName', names{i});
@@ -269,83 +208,47 @@ for j = 1:ellB
     fill(x_patch, y_patch, [0.85 0.93 1.0], ...
         'EdgeColor','none','FaceAlpha',0.6);
     uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
-    yline(val_or_fro(coeff_true.B{j}), 'k--', 'DisplayName','true', 'LineWidth', cfg.linewidth-1.0);
     hold off
 end
-
-% --- 2) Freeze layout, then add insets/connectors on an overlay ---
-drawnow;  % finalize tiledlayout positions
-
-ov = axes('Parent',fB,'Position',[0 0 1 1],'Units','normalized', ...
-          'Color','none','XLim',[0 1],'YLim',[0 1], ...
-          'HitTest','off','Visible','off');  % overlay for connectors
-
-% tiles are reversed in tl.Children
-axes_in_order = flipud(tl.Children);
-ax = axes_in_order(1);
-add_magnifier_overlay(ax, [3 cfg.Twarm-20], [0.30 0.08 0.66 0.58], coeff_true.B{1}, ov);
-add_magnifier_overlay(ax, [45 110],       [0.60 0.87 0.36 0.30], coeff_true.B{1}, ov);
-
-ax = axes_in_order(2);
-add_magnifier_overlay(ax, [3 cfg.Twarm-20], [0.20 0.07 0.66 0.54], coeff_true.B{2}, ov);
-add_magnifier_overlay(ax, [45 110],       [0.60 0.83 0.36 0.40], coeff_true.B{2}, ov);
-
-ax = axes_in_order(3);
-add_magnifier_overlay(ax, [3 cfg.Twarm-20], [0.30 0.57 0.66 0.54], coeff_true.B{3}, ov);
-add_magnifier_overlay(ax, [45 110],       [0.60 0.17 0.36 0.35], coeff_true.B{3}, ov);
 
 % -------- C-block --------
-if hasC
-    fC = figure('Name','LPV-ARX C','Color','w'); hold on
-    set(fC,'Units','centimeters','Position',[2 2 17 6])
-    tl = tiledlayout(1,1,'Padding','compact','TileSpacing','compact');
-    nexttile(tl);
-    hold on
-    for i = 1:K
-        v = zeros(length(tt),1);
-        l = 1;
-        for t = tt
-            v(l) = val_or_fro(S{i}.series.lpv_coeff(t).Ck);
-            l = l + 1;
-        end
-        stairs(tt, v, 'LineStyle', styles{i}, 'DisplayName', names{i});
+fC = figure('Name','LPV-ARX C','Color','w'); hold on
+set(fC,'Units','centimeters','Position',[2 2 17 6])
+tl = tiledlayout(1,1,'Padding','compact','TileSpacing','compact');
+nexttile(tl);
+hold on
+for i = 1:K
+    v = zeros(length(tt),1);
+    l = 1;
+    for t = tt
+        v(l) = S{i}.series.lpv_coeff(t).Ck;
+        l = l + 1;
     end
-    grid on; xlabel('$k$'); ylabel('$C_k$');
-    xlim([1,T])
-
-    ylim([-0.05, 0.3])
-    yL = ylim;
-    x_patch = [1 cfg.Twarm cfg.Twarm 1];
-    y_patch = [yL(1) yL(1) yL(2) yL(2)];
-    fill(x_patch, y_patch, [0.85 0.93 1.0], ...
-        'EdgeColor','none','FaceAlpha',0.6);
-    uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
-    yline(val_or_fro(coeff_true.C), 'k--', 'DisplayName', 'true', 'LineWidth',cfg.linewidth-1.0);
-    legend boxoff
-    legend([{'PRBS'}, names], 'NumColumns', 2, 'Location', 'westoutside');
-    hold off
+    stairs(tt, v, 'LineStyle', styles{i}, 'DisplayName', names{i});
 end
+grid on; xlabel('$k$'); ylabel('$C_k$');
+xlim([1,T])
 
-% --- 2) Freeze layout, then add insets/connectors on an overlay ---
-drawnow;  % finalize tiledlayout positions
+yL = ylim;
+x_patch = [1 cfg.Twarm cfg.Twarm 1];
+y_patch = [yL(1) yL(1) yL(2) yL(2)];
+fill(x_patch, y_patch, [0.85 0.93 1.0], ...
+    'EdgeColor','none','FaceAlpha',0.6);
+uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
+legend boxoff
+legend([{'PRBS'}, names], 'NumColumns', 2, 'Location', 'westoutside');
+hold off
 
-ov = axes('Parent',fC,'Position',[0 0 1 1],'Units','normalized', ...
-          'Color','none','XLim',[0 1],'YLim',[0 1], ...
-          'HitTest','off','Visible','off');  % overlay for connectors
-
-% tiles are reversed in tl.Children
-axes_in_order = flipud(tl.Children);
-ax = axes_in_order(1);
-add_magnifier_overlay(ax, [3 cfg.Twarm-20], [0.20 0.30 0.83 0.58], coeff_true.C, ov);
-
-save_pdf_noscale(fPred, fullfile(cfg.figdir,'ex1_err_prediction.pdf'));
-save_pdf_noscale(fA,    fullfile(cfg.figdir,'ex1_err_Ak.pdf'));
-save_pdf_noscale(fB,    fullfile(cfg.figdir,'ex1_err_Bk.pdf'));
-save_pdf_noscale(fC,    fullfile(cfg.figdir,'ex1_err_Ck.pdf'));
+save_pdf_noscale(f_output, fullfile(cfg.figdir,'ex4_output.pdf'));
+save_pdf_noscale(f_err_log, fullfile(cfg.figdir,'ex4_output_log_error.pdf'));
+save_pdf_noscale(fPred, fullfile(cfg.figdir,'ex4_err_prediction.pdf'));
+save_pdf_noscale(fA,    fullfile(cfg.figdir,'ex4_err_Ak.pdf'));
+save_pdf_noscale(fB,    fullfile(cfg.figdir,'ex4_err_Bk.pdf'));
+save_pdf_noscale(fC,    fullfile(cfg.figdir,'ex4_err_Ck.pdf'));
 
 %% ---- Metrics CSV (Phase II) ----
 % recompute if missing; write tidy CSV
-write_metrics_csv(S, fullfile(cfg.tbldir,'ex1_phaseII_metrics.csv'))
+write_metrics_csv(S, fullfile(cfg.tbldir,'ex4_phaseII_metrics.csv'))
 
 disp('Done.')
 
@@ -423,12 +326,12 @@ end
 
 function write_metrics_csv(S, path)
     fid = fopen(path,'w');
-    fprintf(fid,'Method,RMSE_PhaseII,IAE_PhaseII,TV_u,Peak_u,Final_log10_EWMA_e2\n');
+    fprintf(fid,'Method,RMSE_PhaseII,IAE_PhaseII,TV_u,Peak_u\n');
     for i=1:numel(S)
         M = S{i}.metrics;
-        fprintf(fid,'%s,%.6g,%.6g,%.6g,%.6g,%.6g\n', ...
+        fprintf(fid,'%s,%.6g,%.6g,%.6g,%.6g\n', ...
             spec_name(S{i}.spec), M.RMSE_PhaseII, M.IAE_PhaseII, ...
-            M.TV_u, M.Peak_u, M.Final_log10_EWMA_e2);
+            M.TV_u, M.Peak_u);
     end
     fclose(fid);
 end

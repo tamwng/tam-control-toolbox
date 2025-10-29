@@ -9,6 +9,7 @@ cfg.tbldir = 'brlspc/csm/ex3/tables';
 cfg.files = dir(fullfile(cfg.resdir, '*.mat'));
 cfg.files = fullfile(cfg.resdir, {cfg.files.name});
 if ~exist(cfg.figdir,'dir'), mkdir(cfg.figdir); end 
+if ~exist(cfg.tbldir,'dir'), mkdir(cfg.tbldir); end 
 
 % --- Global aesthetics (put before plotting) ---
 set(groot,'defaultTextInterpreter','latex')
