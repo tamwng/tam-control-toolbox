@@ -118,7 +118,7 @@ lg.String{1} = 'PRBS';
 legend boxoff;
 
 %% ---- Frobenius error ----
-f_fro  = figure('Units','centimeters','Position',[20 4 18 20],'Color','w');
+f_fro  = figure('Units','centimeters','Position',[20 4 18 25],'Color','w');
 tl = tiledlayout(3,1,'TileSpacing','compact','Padding','compact');
 
 ax = nexttile(tl); hold(ax,'on')
@@ -144,14 +144,134 @@ lg = legend(names, 'NumColumns', 2, 'Location', 'southoutside');
 legend boxoff;
 xlabel('$k$')
 
+%% ---- LPV-ARX coefficients ----
+
+f_lpv = plot_endrun_heatmaps_results(res, names);
+
+
 % Vector export, exact size
 save_pdf_noscale(f_output,  fullfile(cfg.figdir,'ex3_output.pdf'));
 save_pdf_noscale(f_error,  fullfile(cfg.figdir,'ex3_error.pdf'));
 save_pdf_noscale(f_fro,  fullfile(cfg.figdir,'ex3_frobenius.pdf'));
+save_pdf_noscale(f_lpv,  fullfile(cfg.figdir,'ex3_lpv.pdf'));
+
+write_effort_table(res, fullfile(cfg.tbldir,'ex3_phaseII_metrics.csv'))
 
 disp('Done.')
 
 %% ==================== Helpers ====================
+
+function f_lpv = plot_endrun_heatmaps_results(Results_list, names)
+% Results_list: 1xK cell array, each cell is a Results struct for a kernel
+% names: 1xK cell array of kernel names in display order
+% Uses the last identified LPV coefficients:
+%   Results.series.lpv_coeff(end).Ak  % size p×p×ell
+%   Results.series.lpv_coeff(end).Bk  % size p×m×(ell+1)
+%   Results.series.lpv_coeff(end).C   % size p×p  (optional)
+% Truth taken from the first entry:
+%   Results.coeff_true.A, .B, .C      % sizes as above
+
+K = numel(Results_list);
+R1 = Results_list{1};
+hasC = isfield(R1.series.lpv_coeff(end-1), 'Ck') && ~isempty(R1.series.lpv_coeff(end-1).Ck);
+p = size(R1.series.lpv_coeff(end).Ak,1);
+kLab = '299';
+
+% Collect estimated final matrices for each kernel
+X = cell(K+1,1);  % last row = truth
+for i = 1:K
+    Ri = Results_list{i};
+    A_last = Ri.series.lpv_coeff(end-1).Ak;   % p×p×ell
+    B_last = Ri.series.lpv_coeff(end-1).Bk;   % p×m×(ell+1)
+    C_last = hasC * Ri.series.lpv_coeff(end-1).Ck;  %#ok<NASGU>
+    X{i} = struct( ...
+        'A1', A_last{1}, ...
+        'A2', A_last{2}, ...
+        'B0', B_last{1}, ...
+        'B1', B_last{2}, ...
+        'B2', B_last{3} ...
+    );
+    if hasC
+        X{i}.C = Ri.series.lpv_coeff(end-1).Ck;
+    end
+end
+
+% Truth
+Atrue = R1.coeff_true.A;   % p×p×ell
+Btrue = R1.coeff_true.B;   % p×m×(ell+1)
+X{K+1} = struct( ...
+    'A1', Atrue{1}, ...
+    'A2', Atrue{2}, ...
+    'B0', Btrue{1}, ...
+    'B1', Btrue{2}, ...
+    'B2', Btrue{3} ...
+);
+if isfield(R1.coeff_true,'C') && ~isempty(R1.coeff_true.C)
+    X{K+1}.C = R1.coeff_true.C;
+    hasC = true;
+end
+
+% Columns (include C if present)
+cols = {'A1','A2','B0','B1','B2'};
+if hasC, cols{end+1} = 'C'; end
+nCols = numel(cols);
+
+% Precompute symmetric color limits per column across all rows
+cl = cell(1,nCols);
+for j = 1:nCols
+    mx = 0;
+    for i = 1:(K+1)
+        if isfield(X{i}, cols{j}) && ~isempty(X{i}.(cols{j}))
+            mx = max(mx, max(abs(X{i}.(cols{j})(:))));
+        end
+    end
+    cl{j} = [-max(mx, 1e-12), max(mx, 1e-12)];
+end
+
+% Plot grid: rows = kernels + truth; cols = blocks
+f_lpv  = figure('Name','End-of-run heatmaps','Units','centimeters','Position',[2 4 40 20],'Color','w');
+tiledlayout(K+1, nCols, 'TileSpacing','compact', 'Padding','compact');
+
+for i = 1:(K+1)
+    for j = 1:nCols
+        ax = nexttile; 
+        if isfield(X{i}, cols{j}) && ~isempty(X{i}.(cols{j}))
+            imagesc(X{i}.(cols{j}));
+            axis image off; clim(cl{j}); colorbar('eastoutside');
+        else
+            axis off;
+        end
+        if i == 1
+            if (j < nCols)
+                title(sprintf('$%s_%s$%', cols{j}(1),cols{j}(2)));
+            else
+                title(sprintf('$%s$%', cols{j}));
+            end
+        end
+        if j==1
+            if i <= K
+                % lbl = sprintf('%s', Results_list{i}.spec.type);
+                lbl = sprintf('%s', names{i});
+            else
+                lbl = 'True';
+            end
+            % ax.Clipping = 'off';  % allow text outside axes
+            text(ax, -0.15, 0.5, lbl, 'Units','normalized', ...
+                'HorizontalAlignment','center', 'VerticalAlignment','middle', ...
+                'Rotation',90, 'FontWeight','normal');
+        end
+    end
+end
+
+% Optional: annotate first column with A_{k,·} style
+% (kept minimal to avoid clutter; uncomment if desired)
+% for i=1:K
+%     nexttile(i*nCols - (nCols-1)); % first column tile in row i
+%     text(0.5, -0.15, sprintf('A_{%s,\\cdot}', kLab), 'Units','normalized', ...
+%          'HorizontalAlignment','center', 'VerticalAlignment','top');
+% end
+
+end
 
 function S = load_all(files)
     S = cell(size(files));
@@ -187,6 +307,19 @@ function write_metrics_csv(S, path)
             S{i}.cfg.amp_dstb, ...
             S{i}.cfg.ell, ...
             M.RMSE_PhaseII, M.IAE_PhaseII, M.TV_u, M.Peak_u);
+    end
+    fclose(fid);
+end
+
+function write_effort_table(S, path)
+    % Write Phase-II input-effort metrics (TV_u and Peak_u) for each kernel
+    fid = fopen(path,'w');
+    fprintf(fid,'Kernel,TV_u,Peak_u\n');
+    for i = 1:numel(S)
+        M = S{i}.metrics;
+        fprintf(fid,'%s,%.6g,%.6g\n', ...
+            spec_name(S{i}.spec), ...
+            M.tv_u_all, M.peak_u_all);
     end
     fclose(fid);
 end
@@ -294,6 +427,10 @@ end
 
 function save_pdf_noscale(fig, filename)
     % Lock figure size
+    h = findobj(fig, 'Type', 'image');                % returns array of handles
+    for k = 1:numel(h)
+        set(h(k), 'Interpolation', 'nearest');
+    end
     set(fig,'Renderer','painters');                  % vector
     set(fig,'InvertHardcopy','off');                 % keep background
     % Use centimeters for 1:1 mapping
@@ -305,7 +442,7 @@ function save_pdf_noscale(fig, filename)
     set(fig,'PaperPosition',[0 0 pos(3) pos(4)]);
     set(fig,'PaperSize',[pos(3) pos(4)]);
     % Important: no '-bestfit' or '-fillpage'
-    print(fig, filename, '-dpdf', '-painters', '-r300');
+    print(fig, filename, '-dpdf', '-painters', '-r600');
     % restore
     set(fig,'Units',oldU);
 end
