@@ -54,6 +54,8 @@ plant.a1 = [1.5; -0.7];
 plant.b1 = [0.5; 0.3; 0.0];
 plant.a2 = [-0.10; -0.05];
 plant.b2 = [0.20; 0.10; 0.00];
+theta_true = [0 1.5 -0.7 0.5 0.3 0 -0.10 -0.05 0.20 0.10]';
+theta_idx = [1 2 3 4 5 6 7 13 19 25];
 
 %% -------------------- Preallocate --------------------
 u = zeros(T,1);   % applied input
@@ -71,6 +73,7 @@ ready_seen = false;
 yhat = nan(T,1);     % one-step prediction before update
 e    = nan(T,1);     % one-step prediction error
 lpv_coeff = struct('Ak', cell(T,1), 'Bk', cell(T,1), 'Ck', []);
+theta_hist = cell(T,1);
 
 %% -------------------- Simulation loop --------------------
 for t = 1:(T-1)
@@ -102,6 +105,7 @@ for t = 1:(T-1)
     yhat(t) = (phi_k * stR.theta);
     e(t)    = y(t) - yhat(t);
     [stR, ~] = rls_update(stR, phi_k, y(t));
+    theta_hist{t} = stR.theta;
 
     % Basis and operators for multi-step prediction
     gamma = kernel('eval', spec, s_k);
@@ -157,8 +161,11 @@ Results.metrics = struct('RMSE_PhaseII', rmse2, ...
                          'TV_u',         tv_u, ...
                          'Peak_u',       peak_u);
 Results.series  = struct('y', y, 'u', u, 'r', r, 'e', e(cfg.ell+1:T-1), ...
-                         'lpv_coeff', lpv_coeff);
+                         'lpv_coeff', lpv_coeff, ...
+                         'theta', theta_hist);
 Results.meta    = run_metadata();
+Results.theta   = struct('true', theta_true, ...
+                         'idx', theta_idx);
 
 fname = fullfile(outdir, filename_ex1(spec, seed));
 save(fname, 'Results');
