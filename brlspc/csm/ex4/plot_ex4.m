@@ -106,7 +106,8 @@ for i = 1:numel(S)
     stairs(t, max(e, eps), 'LineStyle', styles{i});
 end
 
-set(gca, 'YScale', 'log', 'TickDir', 'out', 'Box', 'off');
+set(gca, 'YScale', 'log', 'TickDir', 'out', 'Box', 'off', 'YMinorTick','on', 'YLim',[1e-12 2e0], ...
+        'YTick',10.^(-12:3:0));
 xlabel('$k$'); ylabel('$|r_k - y_k|$');
 xlim([1 T]);
 legend boxoff;
@@ -239,12 +240,58 @@ legend boxoff
 legend([{'PRBS'}, names], 'NumColumns', 2, 'Location', 'westoutside');
 hold off
 
-save_pdf_noscale(f_output, fullfile(cfg.figdir,'ex4_output.pdf'));
+%% ---- Theta plot ----
+f_theta = figure('Units','centimeters','Position',[10 2 20 18],'Color','w');
+tl = tiledlayout(5,2,'Padding','compact','TileSpacing','compact');
+theta_idx = S{1}.theta.idx;
+names_th = {};
+s = cell(2);
+ii = 1;
+
+for k = 1:numel(S)
+    if (strcmp(S{k}.spec.type, 'linear') || strcmp(S{k}.spec.type, 'poly'))
+        names_th{end+1} = names{k};
+        for i=1:numel(S{1}.theta.true)
+            nexttile(tl,i); hold on
+
+            theta_plot = nan(1, T);  % preallocate with NaN for missing data
+
+            for j = 1:T
+                if numel(S{k}.theta_id(j).theta) >= i
+                    theta_plot(j) = S{k}.theta_id(j).theta(theta_idx(i));
+                end
+            end
+
+            s{ii} = stairs(1:T, theta_plot, 'LineStyle', styles{k});
+            s2 = stairs(1:T, ones(length(1:T),1) * S{1}.theta.true(i), ...
+                'LineStyle', ':', 'Color', 'black', 'LineWidth', 2.0);
+            xlim([1,T])
+            grid on; xlabel('$k$');
+            ylabel(sprintf('$\\beta_{%d}$',i));
+
+            yL = ylim;
+            x_patch = [1 cfg.Twarm cfg.Twarm 1];
+            y_patch = [yL(1) yL(1) yL(2) yL(2)];
+            p1 = fill(x_patch, y_patch, [0.85 0.93 1.0], ...
+                'EdgeColor','none','FaceAlpha',0.6);
+            uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
+        end
+        ii = ii + 1;
+    end
+end
+
+legend boxoff
+L = legend([p1, s{1}, s{2}, s2], [{'PRBS'}, names_th, {'True'}], 'NumColumns', 2);
+L.Layout.Tile = 'south';
+hold off
+
+save_pdf_noscale(f_output,  fullfile(cfg.figdir,'ex4_output.pdf'));
 save_pdf_noscale(f_err_log, fullfile(cfg.figdir,'ex4_output_log_error.pdf'));
-save_pdf_noscale(fPred, fullfile(cfg.figdir,'ex4_err_prediction.pdf'));
-save_pdf_noscale(fA,    fullfile(cfg.figdir,'ex4_err_Ak.pdf'));
-save_pdf_noscale(fB,    fullfile(cfg.figdir,'ex4_err_Bk.pdf'));
-save_pdf_noscale(fC,    fullfile(cfg.figdir,'ex4_err_Ck.pdf'));
+save_pdf_noscale(fPred,     fullfile(cfg.figdir,'ex4_err_prediction.pdf'));
+save_pdf_noscale(fA,        fullfile(cfg.figdir,'ex4_err_Ak.pdf'));
+save_pdf_noscale(fB,        fullfile(cfg.figdir,'ex4_err_Bk.pdf'));
+save_pdf_noscale(fC,        fullfile(cfg.figdir,'ex4_err_Ck.pdf'));
+save_pdf_noscale(f_theta,   fullfile(cfg.figdir,'ex4_theta.pdf'));
 
 %% ---- Metrics CSV (Phase II) ----
 % recompute if missing; write tidy CSV
