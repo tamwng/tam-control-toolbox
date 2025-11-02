@@ -262,7 +262,7 @@ for k = 1:numel(S)
                 end
             end
 
-            s{ii} = stairs(1:T, theta_plot, 'LineStyle', styles{k});
+            s{ii} = stairs(1:T, theta_plot, 'LineStyle', styles{k}, 'Color', colors(ii,:));
             s2 = stairs(1:T, ones(length(1:T),1) * S{1}.theta.true(i), ...
                 'LineStyle', ':', 'Color', 'black', 'LineWidth', 2.0);
             xlim([1,T])
@@ -281,9 +281,53 @@ for k = 1:numel(S)
 end
 
 legend boxoff
-L = legend([p1, s{1}, s{2}, s2], [{'PRBS'}, names_th, {'True'}], 'NumColumns', 2);
+L = legend(s2, 'True coefficient', 'NumColumns', 2);
 L.Layout.Tile = 'south';
 hold off
+
+%% ---- Theta residual ----
+
+f_res = figure('Units','centimeters','Position',[10 2 16 4],'Color','w');
+tl = tiledlayout(1,1,'Padding','compact','TileSpacing','compact');
+theta_residual_idx = setdiff(1:numel(S{1}.theta.true), theta_idx);
+nexttile(tl); hold on
+ii = 1;
+
+for k = 1:numel(S)
+    if (strcmp(S{k}.spec.type, 'linear') || strcmp(S{k}.spec.type, 'poly'))
+
+        theta_res_plot = nan(1, T);  % preallocate with NaN for missing data
+
+        for j = 1:T
+            if numel(S{k}.theta_id(j).theta) >= 1
+                theta_res_plot(j) = 0;
+                for i = 1:numel(theta_residual_idx)
+                    theta_res_plot(j) = theta_res_plot(j) + S{k}.theta_id(j).theta(theta_residual_idx(i))^2;
+                end
+                theta_res_plot(j) = sqrt(theta_res_plot(j));
+            end
+        end
+
+        s{ii} = stairs(1:T, log10(theta_res_plot), 'LineStyle', styles{k});
+        xlim([1,T])
+        grid on; xlabel('$k$');
+        ylabel('$\log_{10}||\beta_{\mathrm{res}}||$');
+
+        yL = ylim;
+        x_patch = [1 cfg.Twarm cfg.Twarm 1];
+        y_patch = [yL(1) yL(1) yL(2) yL(2)];
+        p1 = fill(x_patch, y_patch, [0.85 0.93 1.0], ...
+            'EdgeColor','none','FaceAlpha',0.6);
+        uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
+
+        ii = ii + 1;
+    end
+end
+L = legend([p1, s{1}, s{2}], [{'PRBS'}, names_th], 'NumColumns', 2);
+L.Layout.Tile = 'east';
+legend boxoff
+hold off
+drawnow;
 
 save_pdf_noscale(f_output,  fullfile(cfg.figdir,'ex4_output.pdf'));
 save_pdf_noscale(f_err_log, fullfile(cfg.figdir,'ex4_output_log_error.pdf'));
@@ -292,6 +336,7 @@ save_pdf_noscale(fA,        fullfile(cfg.figdir,'ex4_err_Ak.pdf'));
 save_pdf_noscale(fB,        fullfile(cfg.figdir,'ex4_err_Bk.pdf'));
 save_pdf_noscale(fC,        fullfile(cfg.figdir,'ex4_err_Ck.pdf'));
 save_pdf_noscale(f_theta,   fullfile(cfg.figdir,'ex4_theta.pdf'));
+save_pdf_noscale(f_res,     fullfile(cfg.figdir,'ex4_theta_res.pdf'));
 
 %% ---- Metrics CSV (Phase II) ----
 % recompute if missing; write tidy CSV
