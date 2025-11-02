@@ -267,7 +267,7 @@ for k = 1:numel(S)
                 'LineStyle', ':', 'Color', 'black', 'LineWidth', 2.0);
             xlim([1,T])
             grid on; xlabel('$k$');
-            ylabel(sprintf('$\\beta_{%d}$',i));
+            ylabel(sprintf('$\\hat{\\beta}_{k,%d}$',i));
 
             yL = ylim;
             x_patch = [1 cfg.Twarm cfg.Twarm 1];
@@ -311,7 +311,7 @@ for k = 1:numel(S)
         s{ii} = stairs(1:T, log10(theta_res_plot), 'LineStyle', styles{k});
         xlim([1,T])
         grid on; xlabel('$k$');
-        ylabel('$\log_{10}||\beta_{\mathrm{res}}||$');
+        ylabel('$\log_{10}||\hat{\beta}_{\mathrm{res},\,k}||$');
 
         yL = ylim;
         x_patch = [1 cfg.Twarm cfg.Twarm 1];
