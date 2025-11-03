@@ -81,7 +81,7 @@ end
 yspan = ymax - ymin; pad = 0.05*max(yspan,1e-9);
 yl = [ymin-pad, ymax+pad];
 
-% Panel A: full
+% Output response
 nexttile; hold on
 for i=1:numel(S),stairs(t, S{i}.series.y,'LineStyle',styles{i}); end
 stairs(t, S{1}.series.r,'k--')
@@ -97,26 +97,7 @@ fill(x_patch, y_patch, [0.85 0.93 1.0], ...
      'EdgeColor','none','FaceAlpha',0.6);
 uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
 
-% % Panel B: zoom (first 120)
-% f12 = figure('Name','ex2a Output Zoom','Color','w');
-% set(f12,'Units','centimeters','Position',[2 2 10 6])
-% hold on
-% tZ = (1:min(cfg.zoomN,T)).';
-% nexttile; hold on
-% for i=1:numel(S), stairs(tZ, S{i}.series.y(1:numel(tZ)),'LineStyle',styles{i}); end
-% stairs(tZ, S{1}.series.r(1:numel(tZ)),'k--')
-% xlabel('$k$'); ylabel('$y_k$')
-% xlim([1 numel(tZ)]); ylim(yl)
-% legend('off')
-% % blue patch
-% yL = ylim;
-% x_patch = [1 cfg.Twarm cfg.Twarm 1];
-% y_patch = [yL(1) yL(1) yL(2) yL(2)];
-% fill(x_patch, y_patch, [0.85 0.93 1.0], ...
-%      'EdgeColor','none','FaceAlpha',0.6);
-% uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
-
-% Panel C: Log error (full range, stair plot)
+% Log error (full range, stair plot)
 f13 = figure('Name','ex2a Log Error','Color','w');
 set(f13,'Units','centimeters','Position',[2 2 18 10])
 hold on
@@ -148,7 +129,7 @@ legend([{'PRBS'}, names], 'NumColumns', 2, 'Location', 'southoutside');
 save_pdf_noscale(f11, fullfile(cfg.figdir,'ex2a_output.pdf'));
 save_pdf_noscale(f13, fullfile(cfg.figdir,'ex2a_output_log_error.pdf'));
 
-% ---- Figure 3: error (all) + theta error (unitary only) ----
+% ---- Prediction error ----
 fPred = figure('Units','centimeters','Position',[2 2 15 10],'Color','w');
 % tiledlayout(2,1,'TileSpacing','compact','Padding','compact')
 
@@ -212,39 +193,41 @@ for j = 1:ellA
     yline(ax, val_or_fro(coeff_true.A{j}), 'k--', 'DisplayName','true', ...
           'LineWidth', max(cfg.linewidth-1.0,0.6));
 
-    % PRBS shading BEHIND data
-    yL = ylim(ax);
-    fill([1 cfg.Twarm cfg.Twarm 1],[yL(1) yL(1) yL(2) yL(2)], ...
-        [0.85 0.93 1.0],'EdgeColor','none','FaceAlpha',0.6,'Parent',ax);
-
     % axes cosmetics
     grid(ax,'on'); xlim(ax,[1 T]); xlabel(ax,'$k$'); ylabel(ax,sprintf('$A_{k,%d}$', j));
 
-    % bring data above shading
-    uistack(findall(ax,'Type','Stair','-or','Type','Line'),'top');
-    hold(ax,'off')
-
     xlim([3,60])
-    drawnow;
+    % drawnow;
 end
 
-% --- 2) Freeze layout, then add insets/connectors on an overlay ---
-% drawnow;  % finalize tiledlayout positions
-% 
-% ov = axes('Parent',fA,'Position',[0 0 1 1],'Units','normalized', ...
-%           'Color','none','XLim',[0 1],'YLim',[0 1], ...
-%           'HitTest','off','Visible','off');  % overlay for connectors
+drawnow;                                   % finalize tiledlayout positions
+axes_in_order = flipud(findall(tl,'Type','axes'));  % robust axes list
 
-% tiles are reversed in tl.Children
-% axes_in_order = flipud(tl.Children);
-% ax = axes_in_order(1);
-% add_magnifier_overlay(ax, [3 cfg.Twarm-25], [0.30 0.08 0.7 0.48], coeff_true.A{1}, ov);
-% add_magnifier_overlay(ax, [45 110],       [0.50 0.78 0.46 0.30], coeff_true.A{1}, ov);
-% 
-% ax = axes_in_order(2);
-% add_magnifier_overlay(ax, [3 cfg.Twarm-25], [0.30 0.65 0.7 0.44], coeff_true.A{2}, ov);
-% add_magnifier_overlay(ax, [45 110],       [0.50 0.25 0.46 0.30], coeff_true.A{2}, ov);
+for i = 1:numel(axes_in_order)
+    ax = axes_in_order(i);
+    hold(ax,'on');
 
+    % freeze limits so the patch cannot move them
+    set(ax,'XLimMode','manual','YLimMode','manual');
+    yl = ylim(ax);
+
+    % draw background patch that is ignored by autoscaling (when supported)
+    hPatch = patch('XData',[1 cfg.Twarm cfg.Twarm 1], ...
+                   'YData',[yl(1) yl(1) yl(2) yl(2)], ...
+                   'Parent',ax, ...
+                   'FaceColor',[0.85 0.93 1.0], ...
+                   'FaceAlpha',0.6, ...
+                   'EdgeColor','none', ...
+                   'HandleVisibility','off');   % keep it out of legend
+    try
+        set(hPatch,'XLimInclude','off','YLimInclude','off');
+    catch
+        % older releases: the manual X/YLim modes already prevent expansion
+    end
+
+    % send patch to back
+    uistack(hPatch,'bottom');
+end
 
 % -------- B-blocks --------
 fB = figure('Name','LPV-ARX B','Color','w');
@@ -265,39 +248,37 @@ for j = 1:ellB
     end
     grid on
     xlabel('$k$'); ylabel(sprintf('$B_{k,%d}$', j-1));
-    xlim([1 T]);
-    yL = ylim;
-    x_patch = [1 cfg.Twarm cfg.Twarm 1];
-    y_patch = [yL(1) yL(1) yL(2) yL(2)];
-    fill(x_patch, y_patch, [0.85 0.93 1.0], ...
-        'EdgeColor','none','FaceAlpha',0.6);
-    uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
-    yline(val_or_fro(coeff_true.B{j}), 'k--', 'DisplayName','true', 'LineWidth', cfg.linewidth-1.0);
-    hold off
     xlim([3,60])
-    drawnow;
 end
 
-% --- 2) Freeze layout, then add insets/connectors on an overlay ---
-drawnow;  % finalize tiledlayout positions
+drawnow;
+axes_in_order = flipud(findall(tl,'Type','axes'));  % robust axes list
 
-ov = axes('Parent',fB,'Position',[0 0 1 1],'Units','normalized', ...
-          'Color','none','XLim',[0 1],'YLim',[0 1], ...
-          'HitTest','off','Visible','off');  % overlay for connectors
+for i = 1:numel(axes_in_order)
+    ax = axes_in_order(i);
+    hold(ax,'on');
 
-% tiles are reversed in tl.Children
-% axes_in_order = flipud(tl.Children);
-% ax = axes_in_order(1);
-% add_magnifier_overlay(ax, [3 cfg.Twarm-20], [0.30 0.08 0.66 0.58], coeff_true.B{1}, ov);
-% add_magnifier_overlay(ax, [45 110],       [0.60 0.87 0.36 0.30], coeff_true.B{1}, ov);
-% 
-% ax = axes_in_order(2);
-% add_magnifier_overlay(ax, [3 cfg.Twarm-20], [0.20 0.07 0.66 0.54], coeff_true.B{2}, ov);
-% add_magnifier_overlay(ax, [45 110],       [0.60 0.83 0.36 0.40], coeff_true.B{2}, ov);
-% 
-% ax = axes_in_order(3);
-% add_magnifier_overlay(ax, [3 cfg.Twarm-20], [0.30 0.57 0.66 0.54], coeff_true.B{3}, ov);
-% add_magnifier_overlay(ax, [45 110],       [0.60 0.17 0.36 0.35], coeff_true.B{3}, ov);
+    % freeze limits so the patch cannot move them
+    set(ax,'XLimMode','manual','YLimMode','manual');
+    yl = ylim(ax);
+
+    % draw background patch that is ignored by autoscaling (when supported)
+    hPatch = patch('XData',[1 cfg.Twarm cfg.Twarm 1], ...
+                   'YData',[yl(1) yl(1) yl(2) yl(2)], ...
+                   'Parent',ax, ...
+                   'FaceColor',[0.85 0.93 1.0], ...
+                   'FaceAlpha',0.6, ...
+                   'EdgeColor','none', ...
+                   'HandleVisibility','off');   % keep it out of legend
+    try
+        set(hPatch,'XLimInclude','off','YLimInclude','off');
+    catch
+        % older releases: the manual X/YLim modes already prevent expansion
+    end
+
+    % send patch to back
+    uistack(hPatch,'bottom');
+end
 
 % -------- C-block --------
 if hasC
@@ -322,9 +303,10 @@ if hasC
     yL = ylim;
     x_patch = [1 cfg.Twarm cfg.Twarm 1];
     y_patch = [yL(1) yL(1) yL(2) yL(2)];
-    fill(x_patch, y_patch, [0.85 0.93 1.0], ...
+    hPatch = fill(x_patch, y_patch, [0.85 0.93 1.0], ...
         'EdgeColor','none','FaceAlpha',0.6);
-    uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
+    % send patch to back
+    uistack(hPatch,'bottom');
     yline(val_or_fro(coeff_true.C), 'k--', 'DisplayName', 'true', 'LineWidth',cfg.linewidth-1.0);
     legend boxoff
     legend([{'PRBS'}, names], 'NumColumns', 2, 'Location', 'westoutside');
@@ -332,18 +314,6 @@ if hasC
     xlim([3,60])
     drawnow;
 end
-
-% --- 2) Freeze layout, then add insets/connectors on an overlay ---
-drawnow;  % finalize tiledlayout positions
-
-ov = axes('Parent',fC,'Position',[0 0 1 1],'Units','normalized', ...
-          'Color','none','XLim',[0 1],'YLim',[0 1], ...
-          'HitTest','off','Visible','off');  % overlay for connectors
-
-% tiles are reversed in tl.Children
-axes_in_order = flipud(tl.Children);
-ax = axes_in_order(1);
-% add_magnifier_overlay(ax, [3 cfg.Twarm-20], [0.20 0.30 0.83 0.58], coeff_true.C, ov);
 
 save_pdf_noscale(fPred, fullfile(cfg.figdir,'ex2a_err_prediction.pdf'));
 save_pdf_noscale(fA,    fullfile(cfg.figdir,'ex2a_err_Ak.pdf'));
