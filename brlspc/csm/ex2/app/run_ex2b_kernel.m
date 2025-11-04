@@ -58,7 +58,8 @@ coeff_true.C = 0.0;
 
 %% -------------------- Preallocate --------------------
 u = zeros(T,1);   % applied input
-y = zeros(T,1);   % output
+yn = zeros(T,1);   % output
+y = yn;
 p = aprbs_two_phase(T, dither.dwell_min, dither.dwell_max, ...
                     dither.phase1_amp, dither.phase2_amp, cfg.Twarm);
 u(1:cfg.Twarm) = p(1:cfg.Twarm);
@@ -85,16 +86,17 @@ for swp = 1:numel(cfg.omega_dstb)
     for t = 1:(T-1)
     
         % Plant update: y(t) from current/past u and past y (discrete-time)
-        y1 = getv(y, t-1);          % y_{t-1}
-        y2 = getv(y, t-2);          % y_{t-2}
+        y1 = getv(yn, t-1);          % y_{t-1}
+        y2 = getv(yn, t-2);          % y_{t-2}
         u0 = u(t);                  % u_{t}
         u1 = getv(u, t-1);          % u_{t-1}
         u2 = getv(u, t-2);          % u_{t-2}
         y(t) = plant.a(1)*y1 + plant.a(2)*y2 + plant.d*u0 + plant.b(1)*u1 ...
-            + plant.b(2)*u2 + dstb(t,cfg.omega_dstb(swp),cfg.amp_dstb) + cfg.noise_std*randn;
+            + plant.b(2)*u2 + dstb(t,cfg.omega_dstb(swp),cfg.amp_dstb);
+        yn(t) = y(t) + cfg.noise_std*randn;
     
         % Update window with applied u(t) and measured y(t)
-        [W, s_k, ready] = window('push', W, u(t), y(t));
+        [W, s_k, ready] = window('push', W, u(t), yn(t));
         if ~ready, continue; end
     
         % Build regressor, predict BEFORE update, then RLS update
@@ -105,8 +107,8 @@ for swp = 1:numel(cfg.omega_dstb)
             ready_seen = true;
         end
         yhat(t) = (phi_k * stR.theta);
-        e(t)    = y(t) - yhat(t);
-        [stR, ~] = rls_update(stR, phi_k, y(t));
+        e(t)    = yn(t) - yhat(t);
+        [stR, ~] = rls_update(stR, phi_k, yn(t));
     
         if strcmpi(spec.type,'ones')
             theta_hist(:,end+1) = stR.theta(:);
@@ -115,7 +117,7 @@ for swp = 1:numel(cfg.omega_dstb)
         % Basis and operators for multi-step prediction
         gamma = kernel('eval', spec, s_k);
         Theta = theta_vec_to_matrix(stR.theta, cfg.p);
-        [y_hist, u_hist] = histories(y, u, t, cfg.ell);
+        [y_hist, u_hist] = histories(yn, u, t, cfg.ell);
         [Ty, Tu, sigma_k, meta_tp] = toeplitz(Theta, gamma, y_hist, u_hist, N, cfg.ell);
         lpv_coeff(t).Ak = meta_tp.Ak;
         lpv_coeff(t).Bk = meta_tp.Bk;
@@ -139,9 +141,10 @@ for swp = 1:numel(cfg.omega_dstb)
     end
     
     % Final sample y(T) for completeness
-    y(T) = plant.a(1)*getv(y,T-1) + plant.a(2)*getv(y,T-2) ...
+    y(T) = plant.a(1)*getv(yn,T-1) + plant.a(2)*getv(yn,T-2) ...
          + plant.d*u(T) + plant.b(1)*getv(u,T-1) + plant.b(2)*getv(u,T-2) ...
-         + dstb(T,cfg.omega_dstb(swp),cfg.amp_dstb) + cfg.noise_std*randn;
+         + dstb(T,cfg.omega_dstb(swp),cfg.amp_dstb);
+    yn(T) = y(T) + cfg.noise_std*randn;
     
     %% -------------------- Metrics --------------------
     % Evaluate over the last Ne samples (20 periods; floor=400)
