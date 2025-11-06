@@ -66,16 +66,17 @@ for i=1:numel(S),stairs(t, S{i}.series.y,'LineStyle',styles{i}); end
 stairs(t, S{1}.series.r,'k--')
 xlabel('$k$'); ylabel('$y_k$')
 xlim([1 T]);
-legend('off')
+% legend('off')
 % blue patch
-yL = ylim;
-x_patch = [1 cfg.Twarm cfg.Twarm 1];
-y_patch = [yL(1) yL(1) yL(2) yL(2)];
-fill(x_patch, y_patch, [0.85 0.93 1.0], ...
-     'EdgeColor','none','FaceAlpha',0.6);
-uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
+% yL = ylim;
+% x_patch = [1 cfg.Twarm cfg.Twarm 1];
+% y_patch = [yL(1) yL(1) yL(2) yL(2)];
+% fill(x_patch, y_patch, [0.85 0.93 1.0], ...
+%      'EdgeColor','none','FaceAlpha',0.6);
+% uistack(findobj(gca,'Type','Stair'),'top'); % keep lines above
 
 drawnow;  % finalize tiledlayout positions
+legend(names, 'NumColumns', 2, 'Location', 'southoutside'); legend boxoff
 
 %% --- Output error log figure ---
 f_err_log = figure('Name','Log Error','Color','w');
