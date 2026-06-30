@@ -15,7 +15,7 @@ The codebase implements the main components used in the accompanying numerical s
 
 The repository is intended as a research artifact for reproducing the reported simulations. It does not provide general closed-loop stability, robustness, recursive-feasibility, or nonlinear approximation guarantees.
 
-## 🚀 Quick Start
+## Quick Start
 
 The examples used in the accompanying ArXiv paper are located in:
 
@@ -67,7 +67,7 @@ pc/
     ├── solve_cholesky.m  # Cholesky-based solution of the normal equations
     └── toeplitz.m        # Builds T_y, T_u, sigma_k from the frozen LPV--ARX predictor
 
-tests/                    # Unit tests
+tests/                    # Unit tests (test suite)
 ├── bkrls/
 │   └── core/
 │       ├── test_window.m
@@ -166,16 +166,6 @@ H = LL^\top, \qquad Lz=-h, \qquad L^\top U^\star=z.
 
 Only the first block of `U^star` is applied, yielding a receding-horizon implementation.
 
-## Installation and requirements
-
-The code is written for MATLAB and uses only standard MATLAB functionality and the MATLAB unit-testing framework.
-
-From the project root, add the repository to the MATLAB path:
-
-```matlab
-addpath(genpath(pwd));
-```
-
 ## Running tests
 
 Run the full test suite from the repository root:
@@ -187,23 +177,6 @@ table(results)
 ```
 
 The tests check dimensions, algebraic consistency, symmetry, positive-definiteness conditions, deterministic behavior, and agreement with direct linear-algebra solutions where applicable.
-
-## Running numerical examples
-
-The numerical examples are located in:
-
-```text
-brlspc/demos/
-```
-
-A typical workflow is:
-
-```matlab
-addpath(genpath(pwd));
-cd brlspc/demos
-```
-
-Then run the relevant demo script for the desired example. The examples use fixed random seeds and configuration files where applicable to support reproducibility.
 
 ## Configuration parameters
 
