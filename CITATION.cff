@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the associated arXiv manuscript."
+title: "Kernel--RLS Indirect Adaptive Predictive Control MATLAB Repository"
+type: software
+authors:
+  - family-names: "Nguyen"
+    given-names: "Tam W."
+license: "BSD-3-Clause"
+repository-code: "https://github.com/tamwng/tam-control-toolbox"
+date-released: "2026-06-30"
+preferred-citation:
+  type: article
+  title: "Adaptive Behavioral Predictive Control: State-Free Regulation Without Hankel Weights"
+  authors:
+    - family-names: "Nguyen"
+      given-names: "Tam W."
+  year: 2026
+  journal: "arXiv preprint arXiv:2602.12016"
+  doi: "10.48550/arXiv.2602.12016"
+  url: "https://arxiv.org/abs/2602.12016"

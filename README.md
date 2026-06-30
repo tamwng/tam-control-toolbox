@@ -1,139 +1,228 @@
-# Behavioral RLS-Predictive Control (BRLS-PC) MATLAB Pilot
+# Kernel--RLS Indirect Adaptive Predictive Control MATLAB Repository
 
-This repository implements and tests the **Behavioral RLS-Predictive Control (BRLS-PC)** framework.  
-It provides modular MATLAB code for both SISO and MIMO systems, designed for transparency, and reproducibility.
+This repository contains MATLAB code for finite-feature kernel--recursive-least-squares (kernel--RLS) input--output prediction embedded in an indirect adaptive predictive-control loop. The implementation is designed for numerical reproducibility, transparent inspection, and reuse in follow-up studies.
 
----
+The codebase implements the main components used in the accompanying numerical studies:
 
-## 📁 Folder Structure
-<pre>
+- finite-history input--output windowing,
+- finite feature dictionaries, including constant, linear, polynomial, radial-basis-function (RBF), and mixed dictionaries,
+- block-structured kernel--RLS regression,
+- LPV--ARX coefficient extraction from the identified predictor,
+- finite-horizon frozen-predictor propagation,
+- unconstrained quadratic predictive-control cost assembly,
+- direct Cholesky solution of the resulting positive-definite normal equations,
+- deterministic numerical examples and unit tests.
+
+The repository is intended as a research artifact for reproducing the reported simulations. It does not provide general closed-loop stability, robustness, recursive-feasibility, or nonlinear approximation guarantees.
+
+## Associated paper
+
+The public arXiv version associated with this implementation is:
+
+> Tam W. Nguyen, "Adaptive Behavioral Predictive Control: State-Free Regulation Without Hankel Weights," arXiv:2602.12016, 2026.
+
+The arXiv manuscript contains the full seven-example numerical study. The code in this repository provides the implementation and reproducibility infrastructure for those examples and related revised manuscripts.
+
+## Repository structure
+
+```text
 bkrls/
-└── core
-    ├── window.m # Manages signal windowing (y_{k-ℓ:k-1}, u_{k-ℓ:k})
-    ├── kernel.m # Kernel dictionary: ones, linear, polynomial, RBF, mixed
-    ├── regressor.m # Builds ψ_k, g_k, z_k, φ_k, and returns metadata
-    └── rls_update.m # RLS parameter update with forgetting, ridge, SPD checks
+└── core/
+    ├── window.m          # Signal windowing: y_{k-ell:k-1}, u_{k-ell:k}
+    ├── kernel.m          # Feature dictionaries: constant, linear, polynomial, RBF, mixed
+    ├── regressor.m       # Builds psi_k, g_k, z_k, phi_k, and metadata
+    └── rls_update.m      # RLS update with forgetting, ridge regularization, and checks
+
 brlspc/
-└── demos # all demos for the paper
+└── demos/                # Numerical examples used in the manuscript/preprint
+
 pc/
-└── core
-    ├── controller_step.m # computes next control (orchestration)
-    ├── cost_assemble.m # forms H≻0,ℎ for BRLS-PC
-    ├── solve_cholesky.m # Cholesky solve
-    └── toeplitz.m # builds 𝑇𝑦, 𝑇𝑢, 𝑠𝑘 from Θ, 𝑠𝑘, 𝑁, ℓ
+└── core/
+    ├── controller_step.m # Receding-horizon control step
+    ├── cost_assemble.m  # Forms H, h, and J0 for the predictive-control problem
+    ├── solve_cholesky.m # Cholesky-based solution of the normal equations
+    └── toeplitz.m       # Builds T_y, T_u, sigma_k from the frozen LPV--ARX predictor
+
 tests/
-├── bkrls
-|   └── core
-|       ├── test_window.m # Unit tests for alignment/readiness logic
-|       ├── test_kernel.m # Unit tests for kernel evaluation and dimension
-|       ├── test_regressor.m # Unit tests for regressor construction
-|       └── test_rls_update.m # Unit tests for RLS algebra, SPD, and determinism
-└── pc
-    └── core
+├── bkrls/
+│   └── core/
+│       ├── test_window.m
+│       ├── test_kernel.m
+│       ├── test_regressor.m
+│       └── test_rls_update.m
+└── pc/
+    └── core/
         ├── test_controller.m
         ├── test_cost_assemble.m
         ├── test_solve_cholesky.m
         └── test_toeplitz.m
-</pre>
-
-## 🧩 Conceptual Overview
-
-### Behavioral Kernel-Recursive Least Squares (BK-RLS)
-BK-RLS identifies a **state-free input–output model** directly from data.  
-It extends ARX structures with kernelized regressors while preserving linearity in parameters.
-
-At each step:
-<pre>
-1. A window of past signals is formed:  
-   \( s_k = (y_{k-\ell:k-1}, u_{k-\ell:k}) \)
-2. A kernel dictionary \( g_k = [\gamma_1(s_k), …, \gamma_q(s_k)]^\top \) is evaluated.
-3. The base signal vector \( \psi_k = [1; y_{k-1:\ell}; u_{k:\ell}] \) is built.
-4. The Kronecker product \( z_k = g_k \otimes \psi_k \) forms the regressor.
-5. Prediction: \( \hat{y}_k = \Theta z_k = \phi_k \theta \)
-6. RLS update:
-   \[
-   \begin{aligned}
-   L_k &= P_k / \lambda \\
-   P_{k+1} &= L_k - L_k \phi_k^\top (I + \phi_k L_k \phi_k^\top)^{-1} \phi_k L_k \\
-   \theta_{k+1} &= \theta_k + P_{k+1} \phi_k^\top (y_k - \phi_k \theta_k)
-   \end{aligned}
-   \]
-</pre>
-
-All operations are numerically guarded (SPD, finite checks, symmetry enforcement).
-
-### Cost Assembly and Cholesky Solution (BRLS-PC)
-
-This stage converts the identified behavioral model into an optimal control action.
-Given frozen Toeplitz operators from LPV-ARX propagation, it assembles the quadratic cost and solves it analytically.
-
-At each control step:
-
-<pre> 1. Construct prediction operators: \( S_k = (I - T_y)^{-1}\sigma_k,\quad G_k = (I - T_y)^{-1}T_u \) 
-2. Define tracking cost: \[ J(U) = \tfrac12\|S_k + G_kU - R\|_{Q_y}^2 + \tfrac12\|U\|_{R_u}^2 \] where \(Q_y \succeq 0\) and \(R_u \succ 0\). 
-3. Expand into canonical quadratic form: \[ J(U) = \tfrac12U^\top H U + h^\top U + J_0 \] with \(H = G_k^\top Q_y G_k + R_u\), \(h = G_k^\top Q_y(S_k - R)\). 
-4. Compute minimizer via Cholesky: \[ H = L L^\top,\quad L z = -h,\quad L^\top U^\star = z \] giving the closed-form solution \(U^\star = -H^{-1}h\). 
-5. Apply only the first control block \(u_k = E_1 U^\star\) (receding horizon). Numerical guards ensure \(H\) is symmetric positive definite. If \(R_u\) is strictly positive definite, the solution exists uniquely without requiring any QP solver.
-</pre>
-
-## 🧪 Testing
-
-### BKRLS
-
-All core components are covered by **MATLAB Unit Tests** (`matlab.unittest`).  
-Run the full suite from the project root:
-```matlab
-addpath(genpath('bkrls'));
-runtests('tests');
 ```
 
-Each test validates shape, algebraic consistency, and determinism.
+## Method summary
 
-| File | Purpose |
-|----------|----------|
-| **`test_window.m`** | Checks signal alignment and readiness flags |
-| **`test_kernel.m`** | Verifies all kernel types and error handling |
-| **`test_regressor.m`** | Confirms shape, Kronecker identity, and NaN handling |
-| **`test_rls_update.m`** | Tests algebra, SPD properties, and batch equivalence |
+### Finite-feature kernel--RLS identification
 
-### BRLS-PC
+At each time step, a finite input--output history is assembled as
 
-All predictive-control components are covered by **MATLAB Unit Tests** (`matlab.unittest`).
-Run the verification suite from the project root:
-```matlab
-addpath(genpath('pc'));
-runtests('tests');
+```math
+s_k = (y_{k-\ell:k-1}, u_{k-\ell:k}).
 ```
-Each test validates algebraic consistency, SPD guarantees, and closed-form equivalence with direct quadratic evaluation.
 
-| File | Purpose |
-|----------|----------|
-| **`test_cost_assemble.m`** | Verifies correct formation of 𝑆𝑘, 𝐺𝑘, 𝐻, ℎ, 𝐽_0; checks symmetry, dimensions, gradient and Hessian identities, and SPD behavior |
-| **`test_solve_cholesky.m`** | Confirms analytical solution 𝑈^⋆=−𝐻^−1ℎ; compares to MATLAB backslash; validates cost consistency, determinism, and non-SPD handling |
+A user-selected finite dictionary is evaluated on this history:
 
-Both modules are numerically guarded (symmetrization, SPD checks, NaN propagation) and operate in pure double precision.
+```math
+g_k = [\gamma_1(s_k), \ldots, \gamma_q(s_k)]^\top.
+```
 
-## ⚙️ Configuration
+The base signal vector is
 
-### BKRLS
+```math
+\psi_k = [1;\, y_{k-1};\, \ldots;\, y_{k-\ell};\, u_k;\, \ldots;\, u_{k-\ell}],
+```
 
-Edit `cfg` structures in demos to adjust:
-- `p, m, ell`: system dimensions and lag order
-- `lambda`: forgetting factor (0.98–1.0 typical)
-- `rho`: ridge regularization (10⁻⁴–10⁻⁶)
-- `noise_std`: output noise
-- `seed`: RNG reproducibility
-- `T`: data length
+and the block-structured regressor is formed using the Kronecker product or its intercept-aware variant. The one-step predictor is linear in parameters:
 
-### BRLS-PC
+```math
+\hat y_k = \Theta z_k = \phi_k \theta.
+```
 
-Edit `cfg` structures and weights in demos to adjust:
-- `assert`: logical for guards (`true` default)
-- `eps`: numeric tolerance (`1e-12` default)
-- `J0`: optional constant for logging optimal cost (passed to `solve_cholesky`)
+The parameter vector is updated by covariance-form RLS:
 
-Other parameters:
-- `N`: prediction horizon (e.g., 10–40)
-- `Q_y`: output-error weight (PSD). Typical: `kron(eye(N), diag(q_y))`
-- `R_u`: input-effort weight (PD). Typical: `rho*eye(m*N), rho∈[1e-4,1e-2]`
-- `R`: reference trajectory in 𝑅^𝑝𝑁 (stacked)
+```math
+\begin{aligned}
+L_k &= P_k/\lambda, \\
+P_{k+1} &= L_k - L_k\phi_k^\top(I+\phi_kL_k\phi_k^\top)^{-1}\phi_kL_k, \\
+\theta_{k+1} &= \theta_k + P_{k+1}\phi_k^\top(y_k-\phi_k\theta_k).
+\end{aligned}
+```
+
+### Frozen-predictor predictive control
+
+After the RLS update, the identified predictor is compiled into an LPV--ARX form and frozen over the prediction horizon. This gives the stacked affine predictor
+
+```math
+Y = S_k + G_k U.
+```
+
+The unconstrained finite-horizon cost is
+
+```math
+J(U)
+= \frac{1}{2}(S_k+G_kU-R)^\top Q_y(S_k+G_kU-R)
++ \frac{1}{2}\Delta U^\top R_u\Delta U,
+```
+
+where
+
+```math
+\Delta U = D U - d_k.
+```
+
+Expanding gives
+
+```math
+J(U) = \frac{1}{2}U^\top H U + h^\top U + J_0,
+```
+
+with
+
+```math
+H = G_k^\top Q_yG_k + D^\top R_uD,
+```
+
+```math
+h = G_k^\top Q_y(S_k-R) - D^\top R_ud_k.
+```
+
+When `H` is positive definite, the control sequence is computed by Cholesky factorization:
+
+```math
+H = LL^\top, \qquad Lz=-h, \qquad L^\top U^\star=z.
+```
+
+Only the first block of `U^star` is applied, yielding a receding-horizon implementation.
+
+## Installation and requirements
+
+The code is written for MATLAB and uses only standard MATLAB functionality and the MATLAB unit-testing framework.
+
+From the project root, add the repository to the MATLAB path:
+
+```matlab
+addpath(genpath(pwd));
+```
+
+## Running tests
+
+Run the full test suite from the repository root:
+
+```matlab
+addpath(genpath(pwd));
+results = runtests('tests');
+table(results)
+```
+
+The tests check dimensions, algebraic consistency, symmetry, positive-definiteness conditions, deterministic behavior, and agreement with direct linear-algebra solutions where applicable.
+
+## Running numerical examples
+
+The numerical examples are located in:
+
+```text
+brlspc/demos/
+```
+
+A typical workflow is:
+
+```matlab
+addpath(genpath(pwd));
+cd brlspc/demos
+```
+
+Then run the relevant demo script for the desired example. The examples use fixed random seeds and configuration files where applicable to support reproducibility.
+
+## Configuration parameters
+
+Common identification parameters include:
+
+- `p`, `m`: output and input dimensions,
+- `ell`: history length,
+- `lambda`: RLS forgetting factor,
+- `rho`: ridge regularization parameter,
+- `seed`: random-number seed,
+- `T`: simulation length.
+
+Common predictive-control parameters include:
+
+- `N`: prediction horizon,
+- `Q_y`: output tracking weight,
+- `R_u`: input-increment weight,
+- `R`: stacked reference trajectory,
+- numerical tolerances for symmetry and positive-definiteness checks.
+
+## Citation
+
+If you use this repository, please cite the associated arXiv manuscript:
+
+```bibtex
+@misc{nguyen2026adaptivebehavioral,
+  title         = {Adaptive Behavioral Predictive Control: State-Free Regulation Without Hankel Weights},
+  author        = {Nguyen, Tam W.},
+  year          = {2026},
+  eprint        = {2602.12016},
+  archivePrefix = {arXiv},
+  primaryClass  = {eess.SY},
+  doi           = {10.48550/arXiv.2602.12016},
+  url           = {https://arxiv.org/abs/2602.12016}
+}
+```
+
+A `CITATION.cff` file is also provided for GitHub citation metadata.
+
+## License
+
+This repository is released under the BSD 3-Clause License. See [`LICENSE.txt`](LICENSE.txt) for details.
+
+## Disclaimer
+
+This code is provided for academic research and reproducibility. It is supplied without warranty of any kind. Users are responsible for verifying suitability, numerical behavior, and safety before applying the methods to any physical system.
