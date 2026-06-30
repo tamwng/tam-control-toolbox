@@ -15,6 +15,28 @@ The codebase implements the main components used in the accompanying numerical s
 
 The repository is intended as a research artifact for reproducing the reported simulations. It does not provide general closed-loop stability, robustness, recursive-feasibility, or nonlinear approximation guarantees.
 
+## 🚀 Quick Start
+
+The examples used in the accompanying ArXiv paper are located in:
+
+```text
+brlspc/demos/arxiv/
+```
+
+To run Example 1:
+
+```matlab
+addpath(genpath('bkrls'));
+addpath(genpath('pc'));
+
+cd brlspc/demos/arxiv/ex1
+
+run_ex1_kernel
+```
+
+Other examples can be executed in the same way from their corresponding
+subdirectories.
+
 ## Associated paper
 
 The public arXiv version associated with this implementation is:
@@ -22,6 +44,8 @@ The public arXiv version associated with this implementation is:
 > Tam W. Nguyen, "Adaptive Behavioral Predictive Control: State-Free Regulation Without Hankel Weights," arXiv:2602.12016, 2026.
 
 The arXiv manuscript contains the full seven-example numerical study. The code in this repository provides the implementation and reproducibility infrastructure for those examples and related revised manuscripts.
+
+The paper is available in `paper/arXiv_2602.12016.pdf`.
 
 ## Repository structure
 
@@ -39,11 +63,11 @@ brlspc/
 pc/
 └── core/
     ├── controller_step.m # Receding-horizon control step
-    ├── cost_assemble.m  # Forms H, h, and J0 for the predictive-control problem
-    ├── solve_cholesky.m # Cholesky-based solution of the normal equations
-    └── toeplitz.m       # Builds T_y, T_u, sigma_k from the frozen LPV--ARX predictor
+    ├── cost_assemble.m   # Forms H, h, and J0 for the predictive-control problem
+    ├── solve_cholesky.m  # Cholesky-based solution of the normal equations
+    └── toeplitz.m        # Builds T_y, T_u, sigma_k from the frozen LPV--ARX predictor
 
-tests/
+tests/                    # Unit tests
 ├── bkrls/
 │   └── core/
 │       ├── test_window.m
