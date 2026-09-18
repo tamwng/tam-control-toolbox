@@ -1,0 +1,7 @@
+model,modelName,estimatedCoefficients,attemptedUpdates,acceptedUpdates,rejectedUpdates,scalingMinimum,scalingMaximum,lambdaMin,lambdaMax,finalCovarianceCondition
+A,Affine,3,200,200,0,0.709929573971954,1,1,1,10.5047893959708
+E,Exact sine,3,200,200,0,0.609809911872133,1,1,1,10.1755979830539
+O3,Odd cubic,4,200,200,0,0.701877700115912,1,1,1,29.6166435379484
+O5,Odd quintic,5,200,200,0,0.701877700115912,1,1,1,1186.04373639306
+P3,Complete cubic,10,200,200,0,0.47985458597371,1,1,1,4975.11329519894
+K,Known model,0,0,0,0,0.609809911872133,1,NaN,NaN,NaN

@@ -1,0 +1,22 @@
+model,modelName,estimatedCoefficients,phase,amplitude,index,component,estimate,target,error
+E,Exact sine,3,initialization,NaN,25,d,0.0299423465758563,0.03,-5.76534241437006e-05
+E,Exact sine,3,initialization,NaN,25,a,0.649717121849526,0.65,-0.000282878150473787
+E,Exact sine,3,initialization,NaN,25,b_sin,0.400039307701148,0.4,3.93077011475729e-05
+E,Exact sine,3,initialization,NaN,50,d,0.0300148259800232,0.03,1.48259800232184e-05
+E,Exact sine,3,initialization,NaN,50,a,0.649876267757961,0.65,-0.00012373224203921
+E,Exact sine,3,initialization,NaN,50,b_sin,0.400023406639761,0.4,2.340663976097e-05
+E,Exact sine,3,initialization,NaN,100,d,0.0299931225126609,0.03,-6.87748733908811e-06
+E,Exact sine,3,initialization,NaN,100,a,0.649931803063332,0.65,-6.81969366682633e-05
+E,Exact sine,3,initialization,NaN,100,b_sin,0.400014131563005,0.4,1.41315630051708e-05
+E,Exact sine,3,initialization,NaN,200,d,0.0299990970565871,0.03,-9.02943412917773e-07
+E,Exact sine,3,initialization,NaN,200,a,0.649959260934134,0.65,-4.07390658663243e-05
+E,Exact sine,3,initialization,NaN,200,b_sin,0.400005774758141,0.4,5.77475814056427e-06
+E,Exact sine,3,controlFinal,0.2,799,d,0.0300018979725779,0.03,1.89797257786617e-06
+E,Exact sine,3,controlFinal,0.2,799,a,0.649965921795646,0.65,-3.4078204353527e-05
+E,Exact sine,3,controlFinal,0.2,799,b_sin,0.4000066167012,0.4,6.61670119994628e-06
+E,Exact sine,3,controlFinal,0.6,799,d,0.0300006312492207,0.03,6.31249220655467e-07
+E,Exact sine,3,controlFinal,0.6,799,a,0.649981418008925,0.65,-1.85819910754059e-05
+E,Exact sine,3,controlFinal,0.6,799,b_sin,0.400009180504141,0.4,9.18050414122629e-06
+E,Exact sine,3,controlFinal,1,799,d,0.0300001693032054,0.03,1.69303205382193e-07
+E,Exact sine,3,controlFinal,1,799,a,0.649987063456223,0.65,-1.29365437768758e-05
+E,Exact sine,3,controlFinal,1,799,b_sin,0.400009435968314,0.4,9.43596831359805e-06

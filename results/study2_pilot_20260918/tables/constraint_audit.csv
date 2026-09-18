@@ -1,0 +1,5 @@
+model,modelName,estimatedCoefficients,completed,attemptedSteps,initialState,committedInput,outputBound,initialOutputViolation,firstPredictedState,firstPredictedUpperSlack,firstPredictedLowerSlack,actualNextState,actualNextOutputViolation,firstControlAccepted,nextCommittedInput,knownModelAlgebraicUpperSlackMinimum
+A,Affine,3,1,100,1.4,0,0.85,0.55,0.93544478336893,0.085444783369012,5.02389699033292e-07,0.94,0.09,1,0.088373840189287,NaN
+E,Exact sine,3,1,100,1.4,0,0.85,0.55,0.939942062364374,0.0899420623646208,9.0574056473744e-07,0.94,0.09,1,0.0512218852129997,NaN
+O3,Odd cubic,4,1,100,1.4,0,0.85,0.55,0.939932877830945,0.089932877831188,8.98456775810197e-07,0.94,0.09,1,0.0519621566450926,NaN
+K,Known model,0,1,100,1.4,0,0.85,0.55,0.94,0.0900000000002475,9.07806004452374e-07,0.94,0.09,1,0.0511059525752058,0.09
