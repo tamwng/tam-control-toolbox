@@ -24,6 +24,8 @@ The Study 2 pilot (Section 6.2.2) is available through `run_study2`. It saves a 
 
 `plot_study2_journal` reads the archived pilot only and writes the two-panel PDF/PNG, exact plotted values, and corrected conditioning report to `results/study2_journal`. The supplied rank cross-check CSV is retained there. The corrected report supersedes the archive's finite Gram-condition summaries: singular values must exceed 1e-10 times the largest to count toward rank, and deficient windows report `Inf`. Known-model identification diagnostics are N/A. The archive, original scores, and old diagnostic images remain unchanged; subsequent diagnostic plotting uses the deficient-window fraction.
 
-Only Study 1 and the Study 2 pilot are implemented. Other studies and complete paper reproduction remain outside this release. The earlier implementation and examples remain available in Git history.
+The Study 3 pilot is available through `run_study3`. It uses nominal Plant A with separate gain-step and gain-drift runs, then 40 paired mixed-noise gain-step trials for the prescribed shared-model comparisons. Inputs, independent noise streams, settings, and seeds are saved before control runs. The package retains raw trajectories, estimator/solver histories, corrected numerical-rank diagnostics, window scores, paired bootstrap comparisons, and simple diagnostic plots. Recovery uses 20 samples on the half-open interval [t,t+2), with t >= 50 s and t+2 <= 60 s; non-recovery remains right-censored. No drift recovery time or confirmation campaign is reported.
+
+Studies 1, 2, and 3 are implemented; Studies 2 and 3 retain pilot status. Other studies and complete paper reproduction remain outside this release. The earlier implementation and examples remain available in Git history.
 
 BSD 3-Clause License; see LICENSE.txt. The original preprint citation is retained in CITATION.cff.

@@ -1,0 +1,24 @@
+scenario,caseId,caseName,noise,attempted,completed,incomplete,identificationRejected,controlRejected,runsWithIdentificationRejections,runsWithControlRejections,mappingActivations
+abrupt,A_none,"Affine, no forgetting",0,1,1,0,0,0,0,0,0
+abrupt,A_fixed,"Affine, fixed forgetting",0,1,1,0,0,0,0,0,0
+abrupt,A_vrf,"Affine, variable forgetting",0,1,1,0,0,0,0,0,0
+abrupt,S_none,"Shared, no forgetting",0,1,1,0,0,0,0,0,0
+abrupt,S_none,"Shared, no forgetting",1,40,40,0,0,0,0,0,0
+abrupt,S_fixed,"Shared, fixed forgetting",0,1,1,0,0,0,0,0,0
+abrupt,S_fixed,"Shared, fixed forgetting",1,40,40,0,0,0,0,0,0
+abrupt,S_vrf,"Shared, variable forgetting",0,1,1,0,0,0,0,0,0
+abrupt,S_vrf,"Shared, variable forgetting",1,40,40,0,0,0,0,0,0
+abrupt,S_pretrained,"Shared, pretrained-frozen",0,1,1,0,0,0,0,0,0
+abrupt,S_pretrained,"Shared, pretrained-frozen",1,40,40,0,0,0,0,0,0
+abrupt,S_prior,"Shared, prior-frozen",0,1,1,0,0,0,0,0,0
+abrupt,K,"Known model",0,1,1,0,0,0,0,0,0
+abrupt,K,"Known model",1,40,40,0,0,0,0,0,0
+drift,A_none,"Affine, no forgetting",0,1,1,0,0,0,0,0,0
+drift,A_fixed,"Affine, fixed forgetting",0,1,1,0,0,0,0,0,0
+drift,A_vrf,"Affine, variable forgetting",0,1,1,0,0,0,0,0,0
+drift,S_none,"Shared, no forgetting",0,1,1,0,0,0,0,0,0
+drift,S_fixed,"Shared, fixed forgetting",0,1,1,0,0,0,0,0,0
+drift,S_vrf,"Shared, variable forgetting",0,1,1,0,0,0,0,0,0
+drift,S_pretrained,"Shared, pretrained-frozen",0,1,1,0,0,0,0,0,0
+drift,S_prior,"Shared, prior-frozen",0,1,1,0,0,0,0,0,0
+drift,K,"Known model",0,1,1,0,0,0,0,0,0

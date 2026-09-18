@@ -1,0 +1,219 @@
+scenario,caseId,caseName,model,mode,trial,noise,coefficientCount,applicable,status,recovered,recoveryTime,recoveryDelay,dwellEnd,rightCensored,censorTime,terminationBeforeCensor,terminationTime,threshold,dwellSamples,dwellSeconds
+abrupt,A_none,"Affine, no forgetting",A,adaptive,0,0,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,A_fixed,"Affine, fixed forgetting",A,adaptive,0,0,3,1,recovered,1,55.6,5.6,57.6,0,NaN,0,NaN,0.04,20,2
+abrupt,A_vrf,"Affine, variable forgetting",A,adaptive,0,0,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,0,0,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,1,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,2,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,3,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,4,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,5,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,6,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,7,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,8,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,9,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,10,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,11,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,12,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,13,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,14,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,15,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,16,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,17,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,18,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,19,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,20,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,21,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,22,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,23,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,24,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,25,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,26,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,27,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,28,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,29,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,30,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,31,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,32,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,33,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,34,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,35,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,36,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,37,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,38,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,39,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_none,"Shared, no forgetting",S,adaptive,40,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,0,0,3,1,recovered,1,55.8,5.8,57.8,0,NaN,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,1,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,2,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,3,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,4,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,5,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,6,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,7,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,8,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,9,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,10,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,11,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,12,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,13,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,14,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,15,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,16,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,17,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,18,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,19,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,20,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,21,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,22,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,23,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,24,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,25,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,26,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,27,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,28,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,29,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,30,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,31,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,32,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,33,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,34,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,35,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,36,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,37,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,38,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,39,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_fixed,"Shared, fixed forgetting",S,adaptive,40,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,0,0,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,1,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,2,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,3,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,4,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,5,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,6,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,7,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,8,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,9,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,10,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,11,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,12,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,13,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,14,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,15,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,16,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,17,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,18,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,19,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,20,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,21,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,22,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,23,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,24,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,25,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,26,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,27,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,28,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,29,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,30,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,31,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,32,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,33,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,34,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,35,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,36,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,37,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,38,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,39,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_vrf,"Shared, variable forgetting",S,adaptive,40,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,0,0,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,1,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,2,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,3,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,4,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,5,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,6,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,7,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,8,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,9,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,10,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,11,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,12,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,13,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,14,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,15,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,16,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,17,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,18,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,19,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,20,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,21,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,22,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,23,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,24,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,25,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,26,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,27,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,28,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,29,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,30,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,31,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,32,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,33,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,34,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,35,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,36,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,37,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,38,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,39,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_pretrained,"Shared, pretrained-frozen",S,pretrained,40,1,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,S_prior,"Shared, prior-frozen",S,prior,0,0,3,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,0,0,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,1,1,0,1,recovered,1,50.3,0.3,52.3,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,2,1,0,1,recovered,1,50.3,0.3,52.3,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,3,1,0,1,recovered,1,50.3,0.3,52.3,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,4,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,5,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,6,1,0,1,recovered,1,50.3,0.3,52.3,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,7,1,0,1,recovered,1,50.3,0.3,52.3,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,8,1,0,1,recovered,1,50.3,0.3,52.3,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,9,1,0,1,recovered,1,50.3,0.3,52.3,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,10,1,0,1,recovered,1,50.3,0.3,52.3,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,11,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,12,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,13,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,14,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,15,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,16,1,0,1,recovered,1,50.3,0.3,52.3,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,17,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,18,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,19,1,0,1,recovered,1,50.3,0.3,52.3,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,20,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,21,1,0,1,recovered,1,50.3,0.3,52.3,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,22,1,0,1,recovered,1,50.3,0.3,52.3,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,23,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,24,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,25,1,0,1,recovered,1,50.3,0.3,52.3,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,26,1,0,1,recovered,1,50.3,0.3,52.3,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,27,1,0,1,recovered,1,50.3,0.3,52.3,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,28,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,29,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,30,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,31,1,0,1,recovered,1,50.3,0.3,52.3,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,32,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,33,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,34,1,0,1,recovered,1,50.3,0.3,52.3,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,35,1,0,1,recovered,1,50.3,0.3,52.3,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,36,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,37,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,38,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,39,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+abrupt,K,"Known model",K,known,40,1,0,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2
+drift,A_none,"Affine, no forgetting",A,adaptive,0,0,3,0,notApplicable,0,NaN,NaN,NaN,0,NaN,0,NaN,0.04,20,2
+drift,A_fixed,"Affine, fixed forgetting",A,adaptive,0,0,3,0,notApplicable,0,NaN,NaN,NaN,0,NaN,0,NaN,0.04,20,2
+drift,A_vrf,"Affine, variable forgetting",A,adaptive,0,0,3,0,notApplicable,0,NaN,NaN,NaN,0,NaN,0,NaN,0.04,20,2
+drift,S_none,"Shared, no forgetting",S,adaptive,0,0,3,0,notApplicable,0,NaN,NaN,NaN,0,NaN,0,NaN,0.04,20,2
+drift,S_fixed,"Shared, fixed forgetting",S,adaptive,0,0,3,0,notApplicable,0,NaN,NaN,NaN,0,NaN,0,NaN,0.04,20,2
+drift,S_vrf,"Shared, variable forgetting",S,adaptive,0,0,3,0,notApplicable,0,NaN,NaN,NaN,0,NaN,0,NaN,0.04,20,2
+drift,S_pretrained,"Shared, pretrained-frozen",S,pretrained,0,0,3,0,notApplicable,0,NaN,NaN,NaN,0,NaN,0,NaN,0.04,20,2
+drift,S_prior,"Shared, prior-frozen",S,prior,0,0,3,0,notApplicable,0,NaN,NaN,NaN,0,NaN,0,NaN,0.04,20,2
+drift,K,"Known model",K,known,0,0,0,0,notApplicable,0,NaN,NaN,NaN,0,NaN,0,NaN,0.04,20,2
