@@ -22,6 +22,8 @@ The package includes clean common-query forecasts and separate within-run measur
 
 The Study 2 pilot (Section 6.2.2) is available through `run_study2`. It saves a new package containing 18 deterministic reference-amplitude runs, three independent held-out input ranges, and the separately labelled Plant B constraint audit. Raw records, fitted models, covariance and solver histories, numerical tables, and simple inspection plots are retained. Principal scores use 20 <= t < 80 s; whole-run scores are separate. Settings and pilot seeds are fixed before execution; no confirmation campaign or tuning is performed.
 
+`plot_study2_journal` reads the archived pilot only and writes the two-panel PDF/PNG, exact plotted values, and corrected conditioning report to `results/study2_journal`. The supplied rank cross-check CSV is retained there. The corrected report supersedes the archive's finite Gram-condition summaries: singular values must exceed 1e-10 times the largest to count toward rank, and deficient windows report `Inf`. Known-model identification diagnostics are N/A. The archive, original scores, and old diagnostic images remain unchanged; subsequent diagnostic plotting uses the deficient-window fraction.
+
 Only Study 1 and the Study 2 pilot are implemented. Other studies and complete paper reproduction remain outside this release. The earlier implementation and examples remain available in Git history.
 
 BSD 3-Clause License; see LICENSE.txt. The original preprint citation is retained in CITATION.cff.

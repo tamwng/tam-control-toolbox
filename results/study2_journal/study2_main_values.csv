@@ -1,0 +1,34 @@
+panel,model,modelId,horizontalVariable,horizontalValue,metric,metricValue,fittingTransitions,window,scoredSamples
+a,Affine,A,evaluationRange,0.25,predictionRMS,0.0088524743340493706,200,held-out,600
+a,Affine,A,evaluationRange,0.69999999999999996,predictionRMS,0.0142281087238812,200,held-out,600
+a,Affine,A,evaluationRange,1.1000000000000001,predictionRMS,0.0165872151819474,200,held-out,600
+b,Affine,A,amplitude,0.20000000000000001,trackingRMS,0.0114654097283664,NaN,20 <= t < 80 s,600
+b,Affine,A,amplitude,0.59999999999999998,trackingRMS,0.0133712911474522,NaN,20 <= t < 80 s,600
+b,Affine,A,amplitude,1,trackingRMS,0.0209847949559357,NaN,20 <= t < 80 s,600
+a,Exact sine,E,evaluationRange,0.25,predictionRMS,6.4610725047855299e-06,200,held-out,600
+a,Exact sine,E,evaluationRange,0.69999999999999996,predictionRMS,1.41672180175001e-05,200,held-out,600
+a,Exact sine,E,evaluationRange,1.1000000000000001,predictionRMS,2.0949307737624898e-05,200,held-out,600
+b,Exact sine,E,amplitude,0.20000000000000001,trackingRMS,2.8853594621270601e-06,NaN,20 <= t < 80 s,600
+b,Exact sine,E,amplitude,0.59999999999999998,trackingRMS,1.9100066356325701e-05,NaN,20 <= t < 80 s,600
+b,Exact sine,E,amplitude,1,trackingRMS,0.00013614989253900501,NaN,20 <= t < 80 s,600
+a,Odd cubic,O3,evaluationRange,0.25,predictionRMS,0.000201396975416701,200,held-out,600
+a,Odd cubic,O3,evaluationRange,0.69999999999999996,predictionRMS,0.00022815372002868699,200,held-out,600
+a,Odd cubic,O3,evaluationRange,1.1000000000000001,predictionRMS,0.00020526065061975899,200,held-out,600
+b,Odd cubic,O3,amplitude,0.20000000000000001,trackingRMS,0.00018837960119474101,NaN,20 <= t < 80 s,600
+b,Odd cubic,O3,amplitude,0.59999999999999998,trackingRMS,0.00018230293147562099,NaN,20 <= t < 80 s,600
+b,Odd cubic,O3,amplitude,1,trackingRMS,0.00043560432237445197,NaN,20 <= t < 80 s,600
+a,Odd quintic,O5,evaluationRange,0.25,predictionRMS,0.00028796926263257401,200,held-out,600
+a,Odd quintic,O5,evaluationRange,0.69999999999999996,predictionRMS,0.00032840165868171098,200,held-out,600
+a,Odd quintic,O5,evaluationRange,1.1000000000000001,predictionRMS,0.00029887101159541401,200,held-out,600
+b,Odd quintic,O5,amplitude,0.20000000000000001,trackingRMS,0.00017284822647816399,NaN,20 <= t < 80 s,600
+b,Odd quintic,O5,amplitude,0.59999999999999998,trackingRMS,0.00015097907174973699,NaN,20 <= t < 80 s,600
+b,Odd quintic,O5,amplitude,1,trackingRMS,0.00023677182766996399,NaN,20 <= t < 80 s,600
+a,Complete cubic,P3,evaluationRange,0.25,predictionRMS,0.00041073305537207703,200,held-out,600
+a,Complete cubic,P3,evaluationRange,0.69999999999999996,predictionRMS,0.00047353574183336299,200,held-out,600
+a,Complete cubic,P3,evaluationRange,1.1000000000000001,predictionRMS,0.00042711262546643299,200,held-out,600
+b,Complete cubic,P3,amplitude,0.20000000000000001,trackingRMS,0.00025706493588145999,NaN,20 <= t < 80 s,600
+b,Complete cubic,P3,amplitude,0.59999999999999998,trackingRMS,0.00021371797499379199,NaN,20 <= t < 80 s,600
+b,Complete cubic,P3,amplitude,1,trackingRMS,0.00040231972685269901,NaN,20 <= t < 80 s,600
+b,Known model,K,amplitude,0.20000000000000001,trackingRMS,5.79640427286167e-06,NaN,20 <= t < 80 s,600
+b,Known model,K,amplitude,0.59999999999999998,trackingRMS,2.9849636387745799e-05,NaN,20 <= t < 80 s,600
+b,Known model,K,amplitude,1,trackingRMS,0.00014592782379490099,NaN,20 <= t < 80 s,600

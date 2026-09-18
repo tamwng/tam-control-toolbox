@@ -1,0 +1,19 @@
+model,modelName,amplitude,applicable,status,runCompleted,parameterCount,relativeThreshold,rankMin,rankMax,deficientWindowCount,validFullWindowCount,recordedFullWindowCount,invalidFullWindowCount,fractionDeficient,conditionMin,conditionMax
+A,Affine,0.2,1,full numerical rank,1,3,1e-10,3,3,0,750,750,0,0,4909.39180683115,446704.716254779
+E,Exact sine,0.2,1,full numerical rank,1,3,1e-10,3,3,0,750,750,0,0,3949.39076145449,408864.959868951
+K,Known model,0.2,0,N/A,1,0,1e-10,NaN,NaN,0,0,0,0,NaN,NaN,NaN
+O3,Odd cubic,0.2,1,full numerical rank,1,4,1e-10,4,4,0,750,750,0,0,1536351.67182542,94127395.1515432
+O5,Odd quintic,0.2,1,numerically rank deficient,1,5,1e-10,4,4,750,750,750,0,1,Inf,Inf
+P3,Complete cubic,0.2,1,numerically rank deficient,1,10,1e-10,5,8,750,750,750,0,1,Inf,Inf
+A,Affine,0.6,1,full numerical rank,1,3,1e-10,3,3,0,750,750,0,0,3999.82904669366,1629270.9618846
+E,Exact sine,0.6,1,full numerical rank,1,3,1e-10,3,3,0,750,750,0,0,3867.88712116401,50678.8358756575
+K,Known model,0.6,0,N/A,1,0,1e-10,NaN,NaN,0,0,0,0,NaN,NaN,NaN
+O3,Odd cubic,0.6,1,full numerical rank,1,4,1e-10,4,4,0,750,750,0,0,6322.35469640095,4558613.72570937
+O5,Odd quintic,0.6,1,full numerical rank,1,5,1e-10,5,5,0,750,750,0,0,487841.578676399,111471583.992705
+P3,Complete cubic,0.6,1,numerically rank deficient,1,10,1e-10,6,8,750,750,750,0,1,Inf,Inf
+A,Affine,1,1,full numerical rank,1,3,1e-10,3,3,0,750,750,0,0,1494.68042985116,36239.9273800992
+E,Exact sine,1,1,full numerical rank,1,3,1e-10,3,3,0,750,750,0,0,2767.88813603511,28935.4715564885
+K,Known model,1,0,N/A,1,0,1e-10,NaN,NaN,0,0,0,0,NaN,NaN,NaN
+O3,Odd cubic,1,1,full numerical rank,1,4,1e-10,4,4,0,750,750,0,0,8249.17475056544,3401014.40817687
+O5,Odd quintic,1,1,full numerical rank,1,5,1e-10,5,5,0,750,750,0,0,12663.5122310139,4243830.58165023
+P3,Complete cubic,1,1,numerically rank deficient,1,10,1e-10,7,9,750,750,750,0,1,Inf,Inf

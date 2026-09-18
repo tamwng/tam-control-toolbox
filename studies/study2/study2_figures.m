@@ -112,9 +112,12 @@ end
 function diagnostic_plot(folder,cfg,summary,colors,markers,names)
 fig = new_figure([1250 800]);
 layout = tiledlayout(fig,2,3,'TileSpacing','compact','Padding','compact');
+% Read the archived matrices; enormous finite conditions are superseded by
+% numerical-rank reporting at relative threshold 1e-10. No archive is changed.
+rankReport = study2_gram_report(fileparts(folder));
 columns = {'covarianceConditionMax','gramConditionMax','qpConditionMax', ...
     'predictedSlackMax','primalResidualMax','controlTimeMedianSeconds'};
-labels = {'Maximum covariance condition number','Maximum Gram condition number', ...
+labels = {'Maximum covariance condition number','Numerically deficient window fraction', ...
     'Maximum QP Hessian condition number','Maximum predicted slack', ...
     'Maximum QP primal residual','Median control computation time (s)'};
 for panel = 1:6
@@ -123,11 +126,19 @@ for panel = 1:6
         if panel <= 2 && strcmp(cfg.modelIds{im},'K'), continue; end
         rows = summary.diagnostics(summary.diagnostics.model == cfg.modelIds{im} & ...
             summary.diagnostics.kind == "amplitude",:);
-        values = rows.(columns{panel});
+        if panel == 2
+            ranks = sortrows(rankReport(rankReport.model == cfg.modelIds{im},:),'amplitude');
+            assert(all(ranks.invalidFullWindowCount == 0), ...
+                'study2:InvalidGramWindows','Cannot plot a fraction while excluding invalid windows.');
+            values = ranks.fractionDeficient;
+        else
+            values = rows.(columns{panel});
+        end
         plot(ax,rows.amplitude,values,'Color',colors(im,:),'Marker',markers{im}, ...
             'LineStyle',line_style(im),'LineWidth',1.1,'MarkerSize',5,'DisplayName',names{im});
     end
-    if panel <= 3, ax.YScale = 'log'; end
+    if panel == 1 || panel == 3, ax.YScale = 'log'; end
+    if panel == 2, ylim(ax,[-.05 1.05]); ax.YTick = [0 .5 1]; end
     if panel == 4
         limits = ylim(ax); ylim(ax,[0 limits(2)]);
     end
@@ -135,7 +146,7 @@ for panel = 1:6
     ax.XTick = cfg.amplitudes; xlim(ax,[.15 1.05]); style_axes(ax);
     if panel == 3, horizontal_legend(ax,6); end
 end
-title(layout,{'Numerical pilot diagnostics; Gram matrices use 50 transitions', ...
+title(layout,{'Numerical pilot diagnostics; 50-transition Gram rank uses relative threshold 10^{-10}', ...
     'Full histories, eigenvalues, residuals, activity counts and failures are saved separately'});
 save_plot(fig,folder,'04_numerical_diagnostics');
 end
