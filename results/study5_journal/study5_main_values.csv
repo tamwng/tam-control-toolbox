@@ -1,0 +1,27 @@
+panel,series,horizontalVariable,horizontalValue,horizontalUnit,quantity,value,unit,sourceColumn,fittingTransitions,inputMode,queryCount
+a,RMS,Sampling interval Ts,0.025000000000000001,s,Normalized endpoint-quadrature residual,8.6858103102764594e-05,N m,trapezoidResidualRMS_Nm,0,offline audit,441
+a,RMS,Sampling interval Ts,0.050000000000000003,s,Normalized endpoint-quadrature residual,0.00032838562866506298,N m,trapezoidResidualRMS_Nm,0,offline audit,441
+a,RMS,Sampling interval Ts,0.10000000000000001,s,Normalized endpoint-quadrature residual,0.0011799676085212101,N m,trapezoidResidualRMS_Nm,0,offline audit,441
+a,Maximum,Sampling interval Ts,0.025000000000000001,s,Normalized endpoint-quadrature residual,0.00044129387694831501,N m,trapezoidResidualMax_Nm,0,offline audit,441
+a,Maximum,Sampling interval Ts,0.050000000000000003,s,Normalized endpoint-quadrature residual,0.0016527282475634101,N m,trapezoidResidualMax_Nm,0,offline audit,441
+a,Maximum,Sampling interval Ts,0.10000000000000001,s,Normalized endpoint-quadrature residual,0.0058351427720935304,N m,trapezoidResidualMax_Nm,0,offline audit,441
+b,Integrated physical,Forecast horizon H Ts,0.10000000000000001,s,Nonlinear prediction RMSE,1.4085755955526301e-05,rad/s,predictionRMS,200,rateLimited,29
+b,Integrated physical,Forecast horizon H Ts,0.20000000000000001,s,Nonlinear prediction RMSE,2.6550800118240199e-05,rad/s,predictionRMS,200,rateLimited,29
+b,Integrated physical,Forecast horizon H Ts,0.5,s,Nonlinear prediction RMSE,5.6266321016959901e-05,rad/s,predictionRMS,200,rateLimited,29
+b,Integrated physical,Forecast horizon H Ts,1,s,Nonlinear prediction RMSE,8.9625030282144004e-05,rad/s,predictionRMS,200,rateLimited,29
+b,Integrated physical,Forecast horizon H Ts,2,s,Nonlinear prediction RMSE,0.00012932083466557899,rad/s,predictionRMS,200,rateLimited,29
+b,Euler-informed direct,Forecast horizon H Ts,0.10000000000000001,s,Nonlinear prediction RMSE,0.00054265781662558995,rad/s,predictionRMS,200,rateLimited,29
+b,Euler-informed direct,Forecast horizon H Ts,0.20000000000000001,s,Nonlinear prediction RMSE,0.00096166989715430599,rad/s,predictionRMS,200,rateLimited,29
+b,Euler-informed direct,Forecast horizon H Ts,0.5,s,Nonlinear prediction RMSE,0.0018404007089480999,rad/s,predictionRMS,200,rateLimited,29
+b,Euler-informed direct,Forecast horizon H Ts,1,s,Nonlinear prediction RMSE,0.0025210693077373698,rad/s,predictionRMS,200,rateLimited,29
+b,Euler-informed direct,Forecast horizon H Ts,2,s,Nonlinear prediction RMSE,0.00287607189957536,rad/s,predictionRMS,200,rateLimited,29
+b,Affine,Forecast horizon H Ts,0.10000000000000001,s,Nonlinear prediction RMSE,0.0066764671329496601,rad/s,predictionRMS,200,rateLimited,29
+b,Affine,Forecast horizon H Ts,0.20000000000000001,s,Nonlinear prediction RMSE,0.012907261882470201,rad/s,predictionRMS,200,rateLimited,29
+b,Affine,Forecast horizon H Ts,0.5,s,Nonlinear prediction RMSE,0.029400669782985799,rad/s,predictionRMS,200,rateLimited,29
+b,Affine,Forecast horizon H Ts,1,s,Nonlinear prediction RMSE,0.050645530606056102,rad/s,predictionRMS,200,rateLimited,29
+b,Affine,Forecast horizon H Ts,2,s,Nonlinear prediction RMSE,0.088441785537907699,rad/s,predictionRMS,200,rateLimited,29
+b,Complete cubic,Forecast horizon H Ts,0.10000000000000001,s,Nonlinear prediction RMSE,0.000139174707121389,rad/s,predictionRMS,200,rateLimited,29
+b,Complete cubic,Forecast horizon H Ts,0.20000000000000001,s,Nonlinear prediction RMSE,0.000283978771732903,rad/s,predictionRMS,200,rateLimited,29
+b,Complete cubic,Forecast horizon H Ts,0.5,s,Nonlinear prediction RMSE,0.00069209311607571703,rad/s,predictionRMS,200,rateLimited,29
+b,Complete cubic,Forecast horizon H Ts,1,s,Nonlinear prediction RMSE,0.0012319768948331499,rad/s,predictionRMS,200,rateLimited,29
+b,Complete cubic,Forecast horizon H Ts,2,s,Nonlinear prediction RMSE,0.0018373549616849099,rad/s,predictionRMS,200,rateLimited,29
