@@ -1,0 +1,41 @@
+panel,plant,model,modelId,errorComponent,horizon,horizonSeconds,value,unit,sourceColumn,plotted,attemptedQueries,finiteQueries
+a,B,Exact sine,E,Nonlinear-model error,1,0.10000000000000001,2.0299247606006899e-05,dimensionless state,modelRMSE,1,29,29
+a,B,Exact sine,E,Nonlinear-model error,2,0.20000000000000001,3.3381743916491699e-05,dimensionless state,modelRMSE,1,29,29
+a,B,Exact sine,E,Nonlinear-model error,5,0.5,4.6880314426104597e-05,dimensionless state,modelRMSE,1,29,29
+a,B,Exact sine,E,Nonlinear-model error,10,1,5.6074699426891498e-05,dimensionless state,modelRMSE,1,29,29
+a,B,Exact sine,E,Nonlinear-model error,20,2,5.6229586827423799e-05,dimensionless state,modelRMSE,1,29,29
+a,B,Exact sine,E,Freezing error,1,0.10000000000000001,5.1540810002429501e-18,dimensionless state,freezingRMSE,0,29,29
+a,B,Exact sine,E,Freezing error,2,0.20000000000000001,0.0052769603816530198,dimensionless state,freezingRMSE,1,29,29
+a,B,Exact sine,E,Freezing error,5,0.5,0.061412894995133603,dimensionless state,freezingRMSE,1,29,29
+a,B,Exact sine,E,Freezing error,10,1,0.129263057678835,dimensionless state,freezingRMSE,1,29,29
+a,B,Exact sine,E,Freezing error,20,2,0.18392824102600999,dimensionless state,freezingRMSE,1,29,29
+a,B,Exact sine,E,Total prediction error,1,0.10000000000000001,2.0299247606007498e-05,dimensionless state,totalRMSE,1,29,29
+a,B,Exact sine,E,Total prediction error,2,0.20000000000000001,0.0052531174612147303,dimensionless state,totalRMSE,1,29,29
+a,B,Exact sine,E,Total prediction error,5,0.5,0.061384343335831003,dimensionless state,totalRMSE,1,29,29
+a,B,Exact sine,E,Total prediction error,10,1,0.12923087731083399,dimensionless state,totalRMSE,1,29,29
+a,B,Exact sine,E,Total prediction error,20,2,0.18391099472515901,dimensionless state,totalRMSE,1,29,29
+a,B,Affine,A,Affine baseline,1,0.10000000000000001,0.0131587907848628,dimensionless state,totalRMSE,1,29,29
+a,B,Affine,A,Affine baseline,2,0.20000000000000001,0.019908123140311401,dimensionless state,totalRMSE,1,29,29
+a,B,Affine,A,Affine baseline,5,0.5,0.032297037509721398,dimensionless state,totalRMSE,1,29,29
+a,B,Affine,A,Affine baseline,10,1,0.039229660500621197,dimensionless state,totalRMSE,1,29,29
+a,B,Affine,A,Affine baseline,20,2,0.037966273979536301,dimensionless state,totalRMSE,1,29,29
+b,C,Integrated physical,I,Nonlinear-model error,1,0.10000000000000001,1.4085755955526301e-05,rad/s,modelRMSE,1,29,29
+b,C,Integrated physical,I,Nonlinear-model error,2,0.20000000000000001,2.6550800118240199e-05,rad/s,modelRMSE,1,29,29
+b,C,Integrated physical,I,Nonlinear-model error,5,0.5,5.6266321016959901e-05,rad/s,modelRMSE,1,29,29
+b,C,Integrated physical,I,Nonlinear-model error,10,1,8.9625030282144004e-05,rad/s,modelRMSE,1,29,29
+b,C,Integrated physical,I,Nonlinear-model error,20,2,0.00012932083466557899,rad/s,modelRMSE,1,29,29
+b,C,Integrated physical,I,Freezing error,1,0.10000000000000001,1.5675525393199899e-17,rad/s,freezingRMSE,0,29,29
+b,C,Integrated physical,I,Freezing error,2,0.20000000000000001,8.1090240021849399e-05,rad/s,freezingRMSE,1,29,29
+b,C,Integrated physical,I,Freezing error,5,0.5,0.0021919665465292199,rad/s,freezingRMSE,1,29,29
+b,C,Integrated physical,I,Freezing error,10,1,0.0148368113795606,rad/s,freezingRMSE,1,29,29
+b,C,Integrated physical,I,Freezing error,20,2,0.059908071289029197,rad/s,freezingRMSE,1,29,29
+b,C,Integrated physical,I,Total prediction error,1,0.10000000000000001,1.4085755955526901e-05,rad/s,totalRMSE,1,29,29
+b,C,Integrated physical,I,Total prediction error,2,0.20000000000000001,9.7827166233204797e-05,rad/s,totalRMSE,1,29,29
+b,C,Integrated physical,I,Total prediction error,5,0.5,0.0022209884506088598,rad/s,totalRMSE,1,29,29
+b,C,Integrated physical,I,Total prediction error,10,1,0.0148866837730448,rad/s,totalRMSE,1,29,29
+b,C,Integrated physical,I,Total prediction error,20,2,0.059994743040113201,rad/s,totalRMSE,1,29,29
+b,C,Affine,A,Affine baseline,1,0.10000000000000001,0.0066764671329496601,rad/s,totalRMSE,1,29,29
+b,C,Affine,A,Affine baseline,2,0.20000000000000001,0.012907261882470201,rad/s,totalRMSE,1,29,29
+b,C,Affine,A,Affine baseline,5,0.5,0.029400669782985799,rad/s,totalRMSE,1,29,29
+b,C,Affine,A,Affine baseline,10,1,0.050645530606056102,rad/s,totalRMSE,1,29,29
+b,C,Affine,A,Affine baseline,20,2,0.088441785537907894,rad/s,totalRMSE,1,29,29
