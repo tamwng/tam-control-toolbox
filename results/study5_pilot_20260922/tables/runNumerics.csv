@@ -1,0 +1,6 @@
+model,modelId,coefficientCount,plantLocalRefinementMax,plantReplayRefinementMax,predictorLocalRefinementMax,stateJacobianRefinementMax,inputJacobianRefinementMax,zeroInputAnalyticalErrorMax
+Integrated physical,I,2,2.02060590481778e-14,1.9373391779709e-13,5.12234699101555e-12,6.28836982485836e-11,9.00599039788119e-11,1.1873835248366e-12
+Euler-informed direct,D,2,1.99840144432528e-14,1.92734717074927e-13,NaN,NaN,NaN,NaN
+Affine,A,3,1.68753899743024e-14,1.71640479607049e-13,NaN,NaN,NaN,NaN
+Complete cubic,P3,10,2.00950367457153e-14,1.93178806284777e-13,NaN,NaN,NaN,NaN
+Known-model reference,K,0,2.00950367457153e-14,1.93955962402015e-13,5.12689890541651e-12,6.30168139892362e-11,9.01560770483201e-11,1.18993703779324e-12
