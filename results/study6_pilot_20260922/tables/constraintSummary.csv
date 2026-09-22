@@ -1,0 +1,5 @@
+sourceStudy,model,sourceFile,unit,attemptedSteps,completed,initialViolation,firstActualFutureViolation,firstPredictedUpperSlack,firstPredictedLowerSlack,maxSubsequentViolation,futureViolationSamples,newControlRuns
+2,Affine,study2_pilot_20260918/runs/constraint_A.mat,dimensionless state,100,1,0.55,0.09,0.085444783369012,5.02389699033292e-07,0.09,1,0
+2,Odd cubic,study2_pilot_20260918/runs/constraint_O3.mat,dimensionless state,100,1,0.55,0.09,0.089932877831188,8.98456775810197e-07,0.09,1,0
+2,Exact sine,study2_pilot_20260918/runs/constraint_E.mat,dimensionless state,100,1,0.55,0.09,0.0899420623646208,9.0574056473744e-07,0.09,1,0
+2,Known-model reference,study2_pilot_20260918/runs/constraint_K.mat,dimensionless state,100,1,0.55,0.09,0.0900000000002475,9.07806004452374e-07,0.09,1,0
