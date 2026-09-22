@@ -1,0 +1,157 @@
+scenario,model,scenarioId,modelId,coefficientCount,completed,window,component,exactSamples,scoredSamples,lastEstimate,lastTarget,componentErrorRMS
+No change,Affine,no_change,A,3,1,whole,d,1200,1200,9.92497342307533e-07,0,3.29000022646328e-06
+No change,Affine,no_change,A,3,1,whole,a,1200,1200,0.650008747892677,0.65,1.22025167901239e-05
+No change,Affine,no_change,A,3,1,whole,b,1200,1200,0.449979653258546,0.45,2.66657574666719e-05
+No change,Affine,no_change,A,3,1,pre,d,100,100,1.83365952431934e-07,0,1.19883424825102e-06
+No change,Affine,no_change,A,3,1,pre,a,100,100,0.650005226425949,0.65,4.26954751343503e-06
+No change,Affine,no_change,A,3,1,pre,b,100,100,0.449972447565378,0.45,2.84547692371481e-05
+No change,Affine,no_change,A,3,1,event,d,100,100,2.03993026860275e-06,0,1.80665244180526e-06
+No change,Affine,no_change,A,3,1,event,a,100,100,0.650008369407457,0.65,8.03295554875831e-06
+No change,Affine,no_change,A,3,1,event,b,100,100,0.449975874147634,0.45,2.47033161629022e-05
+No change,Affine,no_change,A,3,1,late,d,100,100,1.18561650510476e-06,0,1.0889682027228e-06
+No change,Affine,no_change,A,3,1,late,a,100,100,0.650008954550784,0.65,8.85503988589724e-06
+No change,Affine,no_change,A,3,1,late,b,100,100,0.449979263110248,0.45,2.08869490796864e-05
+No change,Augmented affine,no_change,Aplus,4,1,whole,d,1200,1200,-5.2593064980765e-06,0,1.25021035954101e-05
+No change,Augmented affine,no_change,Aplus,4,1,whole,a,1200,1200,0.650005711996365,0.65,2.04759053692775e-05
+No change,Augmented affine,no_change,Aplus,4,1,whole,b,1200,1200,0.449971471891377,0.45,3.90696365988888e-05
+No change,Augmented affine,no_change,Aplus,4,1,whole,q_xx,1200,1200,2.94517528688298e-05,0,7.65533278734567e-05
+No change,Augmented affine,no_change,Aplus,4,1,pre,d,100,100,-1.13605609982209e-05,0,1.2037819847279e-05
+No change,Augmented affine,no_change,Aplus,4,1,pre,a,100,100,0.650003621535535,0.65,2.57817830173624e-06
+No change,Augmented affine,no_change,Aplus,4,1,pre,b,100,100,0.449961320576192,0.45,4.07583995791018e-05
+No change,Augmented affine,no_change,Aplus,4,1,pre,q_xx,100,100,4.80261994945635e-05,0,5.73636864575318e-05
+No change,Augmented affine,no_change,Aplus,4,1,event,d,100,100,-1.22132406151953e-05,0,1.20986226835875e-05
+No change,Augmented affine,no_change,Aplus,4,1,event,a,100,100,0.650000939345646,0.65,1.43374169385204e-06
+No change,Augmented affine,no_change,Aplus,4,1,event,b,100,100,0.449965818838188,0.45,3.4838349097737e-05
+No change,Augmented affine,no_change,Aplus,4,1,event,q_xx,100,100,5.36614475363164e-05,0,5.31298755265505e-05
+No change,Augmented affine,no_change,Aplus,4,1,late,d,100,100,-1.15537548743485e-05,0,1.19513901540131e-05
+No change,Augmented affine,no_change,Aplus,4,1,late,a,100,100,0.650002389772621,0.65,1.98226605433276e-06
+No change,Augmented affine,no_change,Aplus,4,1,late,b,100,100,0.449970767947864,0.45,2.94228845459436e-05
+No change,Augmented affine,no_change,Aplus,4,1,late,q_xx,100,100,4.96915950906106e-05,0,5.04705546925873e-05
+No change,Complete quadratic,no_change,P2,6,1,whole,d,1200,1200,-8.60914320856603e-06,0,2.35835304871131e-05
+No change,Complete quadratic,no_change,P2,6,1,whole,a,1200,1200,0.650007935996344,0.65,3.2218331386802e-05
+No change,Complete quadratic,no_change,P2,6,1,whole,b,1200,1200,0.449957493953058,0.45,5.61567382846448e-05
+No change,Complete quadratic,no_change,P2,6,1,whole,q_xx,1200,1200,3.97442725782066e-05,0,0.00011846344686172
+No change,Complete quadratic,no_change,P2,6,1,whole,q_xu,1200,1200,-8.83265958071418e-06,0,8.19065093955571e-05
+No change,Complete quadratic,no_change,P2,6,1,whole,q_uu,1200,1200,2.23267380063177e-05,0,7.20804867952716e-05
+No change,Complete quadratic,no_change,P2,6,1,pre,d,100,100,-2.39352197514481e-05,0,2.39942962599651e-05
+No change,Complete quadratic,no_change,P2,6,1,pre,a,100,100,0.650000131077337,0.65,4.84997379092363e-06
+No change,Complete quadratic,no_change,P2,6,1,pre,b,100,100,0.449946421994744,0.45,5.63005011710703e-05
+No change,Complete quadratic,no_change,P2,6,1,pre,q_xx,100,100,0.000117235949324242,0,0.000119752308441267
+No change,Complete quadratic,no_change,P2,6,1,pre,q_xu,100,100,-8.66479831989277e-05,0,7.0231290033034e-05
+No change,Complete quadratic,no_change,P2,6,1,pre,q_uu,100,100,7.30766526544196e-05,0,6.47341762759337e-05
+No change,Complete quadratic,no_change,P2,6,1,event,d,100,100,-2.56815372176592e-05,0,2.58220128378626e-05
+No change,Complete quadratic,no_change,P2,6,1,event,a,100,100,0.6499960935381,0.65,2.97884537886537e-06
+No change,Complete quadratic,no_change,P2,6,1,event,b,100,100,0.449951341126443,0.45,4.98413366380068e-05
+No change,Complete quadratic,no_change,P2,6,1,event,q_xx,100,100,0.0001165986933469,0,0.000123550204451633
+No change,Complete quadratic,no_change,P2,6,1,event,q_xu,100,100,-9.26767262341617e-05,0,0.000102222085489313
+No change,Complete quadratic,no_change,P2,6,1,event,q_uu,100,100,9.25632503789822e-05,0,9.39945602510402e-05
+No change,Complete quadratic,no_change,P2,6,1,late,d,100,100,-2.33237487542602e-05,0,2.43643012566367e-05
+No change,Complete quadratic,no_change,P2,6,1,late,a,100,100,0.64999920800896,0.65,2.0227691642404e-06
+No change,Complete quadratic,no_change,P2,6,1,late,b,100,100,0.449957454487951,0.45,4.26982127299423e-05
+No change,Complete quadratic,no_change,P2,6,1,late,q_xx,100,100,0.000104583276404873,0,0.000108954763843258
+No change,Complete quadratic,no_change,P2,6,1,late,q_xu,100,100,-7.9342914877704e-05,0,8.54832536025491e-05
+No change,Complete quadratic,no_change,P2,6,1,late,q_uu,100,100,8.26012357123334e-05,0,8.7183284810384e-05
+Represented nonlinear change,Affine,represented,A,3,1,whole,d,500,1200,0.0105521446426438,NaN,NaN
+Represented nonlinear change,Affine,represented,A,3,1,whole,a,500,1200,0.701329530419379,NaN,NaN
+Represented nonlinear change,Affine,represented,A,3,1,whole,b,500,1200,0.410029887152039,NaN,NaN
+Represented nonlinear change,Affine,represented,A,3,1,pre,d,100,100,1.83365952431934e-07,0,1.19883424825102e-06
+Represented nonlinear change,Affine,represented,A,3,1,pre,a,100,100,0.650005226425949,0.65,4.26954751343503e-06
+Represented nonlinear change,Affine,represented,A,3,1,pre,b,100,100,0.449972447565378,0.45,2.84547692371481e-05
+Represented nonlinear change,Affine,represented,A,3,1,event,d,0,100,0.00721958033629643,NaN,NaN
+Represented nonlinear change,Affine,represented,A,3,1,event,a,0,100,0.70996679957329,NaN,NaN
+Represented nonlinear change,Affine,represented,A,3,1,event,b,0,100,0.40473904372465,NaN,NaN
+Represented nonlinear change,Affine,represented,A,3,1,late,d,0,100,0.014719053234571,NaN,NaN
+Represented nonlinear change,Affine,represented,A,3,1,late,a,0,100,0.693659535198,NaN,NaN
+Represented nonlinear change,Affine,represented,A,3,1,late,b,0,100,0.41705109968678,NaN,NaN
+Represented nonlinear change,Augmented affine,represented,Aplus,4,1,whole,d,1200,1200,-0.000319960525178489,0,0.00650990043710547
+Represented nonlinear change,Augmented affine,represented,Aplus,4,1,whole,a,1200,1200,0.677260332659073,0.65,0.0170614152355749
+Represented nonlinear change,Augmented affine,represented,Aplus,4,1,whole,b,1200,1200,0.419609040073821,0.45,0.022930135536539
+Represented nonlinear change,Augmented affine,represented,Aplus,4,1,whole,q_xx,1200,1200,0.0512226448723923,0.08,0.0178331209681537
+Represented nonlinear change,Augmented affine,represented,Aplus,4,1,pre,d,100,100,-1.13605609982209e-05,0,1.2037819847279e-05
+Represented nonlinear change,Augmented affine,represented,Aplus,4,1,pre,a,100,100,0.650003621535535,0.65,2.57817830173624e-06
+Represented nonlinear change,Augmented affine,represented,Aplus,4,1,pre,b,100,100,0.449961320576192,0.45,4.07583995791018e-05
+Represented nonlinear change,Augmented affine,represented,Aplus,4,1,pre,q_xx,100,100,4.80261994945635e-05,0,5.73636864575318e-05
+Represented nonlinear change,Augmented affine,represented,Aplus,4,1,event,d,100,100,-0.0176824337541096,0,0.0128842783903832
+Represented nonlinear change,Augmented affine,represented,Aplus,4,1,event,a,100,100,0.670746476874437,0.65,0.0140821670608425
+Represented nonlinear change,Augmented affine,represented,Aplus,4,1,event,b,100,100,0.420956227259839,0.45,0.0202422941818015
+Represented nonlinear change,Augmented affine,represented,Aplus,4,1,event,q_xx,100,100,0.0809318587187777,0.08,0.0363672506898155
+Represented nonlinear change,Augmented affine,represented,Aplus,4,1,late,d,100,100,-0.000779783108978282,0,0.00202487471806885
+Represented nonlinear change,Augmented affine,represented,Aplus,4,1,late,a,100,100,0.677887207522494,0.65,0.0261396228080163
+Represented nonlinear change,Augmented affine,represented,Aplus,4,1,late,b,100,100,0.418340014470981,0.45,0.0314121904216403
+Represented nonlinear change,Augmented affine,represented,Aplus,4,1,late,q_xx,100,100,0.0525790188580708,0.08,0.0247539188069822
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,whole,d,1200,1200,0.00146788545725924,0,0.0045449460754075
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,whole,a,1200,1200,0.66820975004853,0.65,0.0125318221004306
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,whole,b,1200,1200,0.429282039896213,0.45,0.0159334556128795
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,whole,q_xx,1200,1200,0.109909141426813,0.08,0.0350878558084266
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,whole,q_xu,1200,1200,-0.0567836740449746,0,0.0648856396133088
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,whole,q_uu,1200,1200,-0.0507641633262893,0,0.0339538476279284
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,pre,d,100,100,-2.39352197514481e-05,0,2.39942962599651e-05
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,pre,a,100,100,0.650000131077337,0.65,4.84997379092363e-06
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,pre,b,100,100,0.449946421994744,0.45,5.63005011710703e-05
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,pre,q_xx,100,100,0.000117235949324242,0,0.000119752308441267
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,pre,q_xu,100,100,-8.66479831989277e-05,0,7.0231290033034e-05
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,pre,q_uu,100,100,7.30766526544196e-05,0,6.47341762759337e-05
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,event,d,100,100,-0.0139976217756428,0,0.0110088000424752
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,event,a,100,100,0.660677590250803,0.65,0.0106666057772967
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,event,b,100,100,0.434860284672782,0.45,0.0153110351335881
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,event,q_xx,100,100,0.159339714948153,0.08,0.0761761617261829
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,event,q_xu,100,100,-0.131902422110291,0,0.144034528723993
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,event,q_uu,100,100,0.0056343383986429,0,0.0212308946161702
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,late,d,100,100,0.00530394569471831,0,0.00425571534660124
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,late,a,100,100,0.671169498254957,0.65,0.0203155114682497
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,late,b,100,100,0.428792641450375,0.45,0.0218625301726713
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,late,q_xx,100,100,0.0996563372818056,0.08,0.0269850548207065
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,late,q_xu,100,100,-0.050560793925238,0,0.062208683832176
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,late,q_uu,100,100,-0.0632083912003661,0,0.0559142328571404
+Unrepresented nonlinear change,Affine,unrepresented,A,3,1,whole,d,500,1200,-0.00121571069832298,NaN,NaN
+Unrepresented nonlinear change,Affine,unrepresented,A,3,1,whole,a,500,1200,0.737520263900011,NaN,NaN
+Unrepresented nonlinear change,Affine,unrepresented,A,3,1,whole,b,500,1200,0.398777185980675,NaN,NaN
+Unrepresented nonlinear change,Affine,unrepresented,A,3,1,pre,d,100,100,1.83365952431934e-07,0,1.19883424825102e-06
+Unrepresented nonlinear change,Affine,unrepresented,A,3,1,pre,a,100,100,0.650005226425949,0.65,4.26954751343503e-06
+Unrepresented nonlinear change,Affine,unrepresented,A,3,1,pre,b,100,100,0.449972447565378,0.45,2.84547692371481e-05
+Unrepresented nonlinear change,Affine,unrepresented,A,3,1,event,d,0,100,0.00607620583616032,NaN,NaN
+Unrepresented nonlinear change,Affine,unrepresented,A,3,1,event,a,0,100,0.699828518063557,NaN,NaN
+Unrepresented nonlinear change,Affine,unrepresented,A,3,1,event,b,0,100,0.412207068525449,NaN,NaN
+Unrepresented nonlinear change,Affine,unrepresented,A,3,1,late,d,0,100,-0.00162534545400431,NaN,NaN
+Unrepresented nonlinear change,Affine,unrepresented,A,3,1,late,a,0,100,0.738746167003912,NaN,NaN
+Unrepresented nonlinear change,Affine,unrepresented,A,3,1,late,b,0,100,0.397296142937234,NaN,NaN
+Unrepresented nonlinear change,Augmented affine,unrepresented,Aplus,4,1,whole,d,500,1200,-0.00143576069870957,NaN,NaN
+Unrepresented nonlinear change,Augmented affine,unrepresented,Aplus,4,1,whole,a,500,1200,0.736691027594938,NaN,NaN
+Unrepresented nonlinear change,Augmented affine,unrepresented,Aplus,4,1,whole,b,500,1200,0.394346356370103,NaN,NaN
+Unrepresented nonlinear change,Augmented affine,unrepresented,Aplus,4,1,whole,q_xx,500,1200,0.00490769094701614,NaN,NaN
+Unrepresented nonlinear change,Augmented affine,unrepresented,Aplus,4,1,pre,d,100,100,-1.13605609982209e-05,0,1.2037819847279e-05
+Unrepresented nonlinear change,Augmented affine,unrepresented,Aplus,4,1,pre,a,100,100,0.650003621535535,0.65,2.57817830173624e-06
+Unrepresented nonlinear change,Augmented affine,unrepresented,Aplus,4,1,pre,b,100,100,0.449961320576192,0.45,4.07583995791018e-05
+Unrepresented nonlinear change,Augmented affine,unrepresented,Aplus,4,1,pre,q_xx,100,100,4.80261994945635e-05,0,5.73636864575318e-05
+Unrepresented nonlinear change,Augmented affine,unrepresented,Aplus,4,1,event,d,0,100,-0.0149261921399576,NaN,NaN
+Unrepresented nonlinear change,Augmented affine,unrepresented,Aplus,4,1,event,a,0,100,0.667956301551405,NaN,NaN
+Unrepresented nonlinear change,Augmented affine,unrepresented,Aplus,4,1,event,b,0,100,0.425264891515138,NaN,NaN
+Unrepresented nonlinear change,Augmented affine,unrepresented,Aplus,4,1,event,q_xx,0,100,0.0688712436135882,NaN,NaN
+Unrepresented nonlinear change,Augmented affine,unrepresented,Aplus,4,1,late,d,0,100,-0.0069282655476513,NaN,NaN
+Unrepresented nonlinear change,Augmented affine,unrepresented,Aplus,4,1,late,a,0,100,0.73365571811521,NaN,NaN
+Unrepresented nonlinear change,Augmented affine,unrepresented,Aplus,4,1,late,b,0,100,0.393297381113425,NaN,NaN
+Unrepresented nonlinear change,Augmented affine,unrepresented,Aplus,4,1,late,q_xx,0,100,0.0223744646605649,NaN,NaN
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,whole,d,500,1200,-0.00159932374838273,NaN,NaN
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,whole,a,500,1200,0.73278056470883,NaN,NaN
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,whole,b,500,1200,0.399945023802154,NaN,NaN
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,whole,q_xx,500,1200,0.0527951622773522,NaN,NaN
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,whole,q_xu,500,1200,-0.0648466315186982,NaN,NaN
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,whole,q_uu,500,1200,-0.0116795505157218,NaN,NaN
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,pre,d,100,100,-2.39352197514481e-05,0,2.39942962599651e-05
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,pre,a,100,100,0.650000131077337,0.65,4.84997379092363e-06
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,pre,b,100,100,0.449946421994744,0.45,5.63005011710703e-05
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,pre,q_xx,100,100,0.000117235949324242,0,0.000119752308441267
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,pre,q_xu,100,100,-8.66479831989277e-05,0,7.0231290033034e-05
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,pre,q_uu,100,100,7.30766526544196e-05,0,6.47341762759337e-05
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,event,d,0,100,-0.0131425527361643,NaN,NaN
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,event,a,0,100,0.660307912357918,NaN,NaN
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,event,b,0,100,0.435330422985617,NaN,NaN
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,event,q_xx,0,100,0.15050439366688,NaN,NaN
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,event,q_xu,0,100,-0.136570125906111,NaN,NaN
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,event,q_uu,0,100,0.0182340914284609,NaN,NaN
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,late,d,0,100,-0.0105065268727501,NaN,NaN
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,late,a,0,100,0.727258974334511,NaN,NaN
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,late,b,0,100,0.399225387104339,NaN,NaN
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,late,q_xx,0,100,0.0988944841159142,NaN,NaN
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,late,q_xu,0,100,-0.115740703969542,NaN,NaN
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,late,q_uu,0,100,0.0239678830984267,NaN,NaN

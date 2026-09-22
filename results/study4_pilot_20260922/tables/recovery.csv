@@ -1,0 +1,13 @@
+scenario,model,scenarioId,modelId,coefficientCount,completed,applicable,status,recovered,recoveryTime,recoveryDelay,dwellEnd,rightCensored,censorTime,terminationBeforeCensor,terminationTime,threshold,dwellSamples,dwellSeconds,recordCompleted,recordStatus
+No change,Affine,no_change,A,3,1,0,notApplicable,0,NaN,NaN,NaN,0,NaN,0,NaN,0.04,20,2,1,complete
+No change,Augmented affine,no_change,Aplus,4,1,0,notApplicable,0,NaN,NaN,NaN,0,NaN,0,NaN,0.04,20,2,1,complete
+No change,Complete quadratic,no_change,P2,6,1,0,notApplicable,0,NaN,NaN,NaN,0,NaN,0,NaN,0.04,20,2,1,complete
+No change,Known-model reference,no_change,K,0,1,0,notApplicable,0,NaN,NaN,NaN,0,NaN,0,NaN,0.04,20,2,1,complete
+Represented nonlinear change,Affine,represented,A,3,1,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2,1,complete
+Represented nonlinear change,Augmented affine,represented,Aplus,4,1,1,recovered,1,56.8,6.8,58.8,0,NaN,0,NaN,0.04,20,2,1,complete
+Represented nonlinear change,Complete quadratic,represented,P2,6,1,1,recovered,1,55.8,5.8,57.8,0,NaN,0,NaN,0.04,20,2,1,complete
+Represented nonlinear change,Known-model reference,represented,K,0,1,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2,1,complete
+Unrepresented nonlinear change,Affine,unrepresented,A,3,1,1,rightCensored,0,NaN,NaN,NaN,1,60,0,NaN,0.04,20,2,1,complete
+Unrepresented nonlinear change,Augmented affine,unrepresented,Aplus,4,1,1,recovered,1,57.4,7.4,59.4,0,NaN,0,NaN,0.04,20,2,1,complete
+Unrepresented nonlinear change,Complete quadratic,unrepresented,P2,6,1,1,recovered,1,56.3,6.3,58.3,0,NaN,0,NaN,0.04,20,2,1,complete
+Unrepresented nonlinear change,Known-model reference,unrepresented,K,0,1,1,recovered,1,50.2,0.2,52.2,0,NaN,0,NaN,0.04,20,2,1,complete
