@@ -1,0 +1,14 @@
+                                   cases: 1558
+                         scoreWindowRows: 3116
+                      initializationRows: 1558
+                          diagnosticRows: 1558
+    itemVersusSavedScoreExactComparisons: 12464
+                         sourceVariables: {'item'  'scores'  'failure'}
+                    resultVariableLoaded: 0
+                         modelsEvaluated: 0
+                  scoringFunctionsCalled: 0
+                        csvNumericFormat: '%.17g'
+                            nonfiniteCSV: 'NaN, Inf and -Inf retained explicitly'
+                           jsonNonfinite: 'MATLAB JSON uses null for nonfinite numeric metadata; consult MAT and CSV'
+                          gramDefinition: 'Legacy Study 1 cond(G); not thresholded numerical-rank diagnostic'
+

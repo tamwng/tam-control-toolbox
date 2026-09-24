@@ -1,0 +1,15 @@
+{
+  "capturedAt": "2026-09-24T23:49:39.7208989+09:00",
+  "os": {
+    "Caption": "Microsoft Windows 11 Home",
+    "Version": "10.0.26200",
+    "BuildNumber": "26200",
+    "OSArchitecture": "64-bit"
+  },
+  "cpu": {
+    "Name": "12th Gen Intel(R) Core(TM) i7-12700K",
+    "NumberOfCores": 12,
+    "NumberOfLogicalProcessors": 20
+  },
+  "purpose": "Current P06 execution environment only; historical environment remains UNKNOWN"
+}

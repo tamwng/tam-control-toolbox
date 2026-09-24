@@ -1,0 +1,39 @@
+configuration,modelId,model,planned,attempted,deterministic,noisy,completed,terminated,exceptions,predictionComplete
+baseline,A,Affine,41,41,1,40,41,0,0,41
+baseline,S,Shared,41,41,1,40,41,0,0,41
+baseline,W,Incorrectly shared,41,41,1,40,41,0,0,41
+baseline,R,Relaxed,41,41,1,40,41,0,0,41
+baseline,P2,Complete quadratic,41,41,1,40,41,0,0,41
+baseline,K,Known-model reference,41,41,1,40,41,0,0,41
+R_half,A,Affine,41,41,1,40,41,0,0,41
+R_half,S,Shared,41,41,1,40,41,0,0,41
+R_half,W,Incorrectly shared,41,41,1,40,41,0,0,41
+R_half,R,Relaxed,41,41,1,40,41,0,0,41
+R_half,P2,Complete quadratic,41,41,1,40,41,0,0,41
+R_half,K,Known-model reference,41,41,1,40,41,0,0,41
+R_double,A,Affine,41,41,1,40,41,0,0,41
+R_double,S,Shared,41,41,1,40,41,0,0,41
+R_double,W,Incorrectly shared,41,41,1,40,41,0,0,41
+R_double,R,Relaxed,41,41,1,40,41,0,0,41
+R_double,P2,Complete quadratic,41,41,1,40,41,0,0,41
+R_double,K,Known-model reference,41,41,1,40,41,0,0,41
+prior_tenth,A,Affine,41,41,1,40,41,0,0,41
+prior_tenth,S,Shared,41,41,1,40,41,0,0,41
+prior_tenth,W,Incorrectly shared,41,41,1,40,41,0,0,41
+prior_tenth,R,Relaxed,41,41,1,40,41,0,0,41
+prior_tenth,P2,Complete quadratic,41,41,1,40,41,0,0,41
+prior_tenfold,A,Affine,41,41,1,40,41,0,0,41
+prior_tenfold,S,Shared,41,41,1,40,41,0,0,41
+prior_tenfold,W,Incorrectly shared,41,41,1,40,41,0,0,41
+prior_tenfold,R,Relaxed,41,41,1,40,41,0,0,41
+prior_tenfold,P2,Complete quadratic,41,41,1,40,41,0,0,41
+fit_50,A,Affine,41,41,1,40,41,0,0,41
+fit_50,S,Shared,41,41,1,40,41,0,0,41
+fit_50,W,Incorrectly shared,41,41,1,40,41,0,0,41
+fit_50,R,Relaxed,41,41,1,40,41,0,0,41
+fit_50,P2,Complete quadratic,41,41,1,40,41,0,0,41
+fit_100,A,Affine,41,41,1,40,41,0,0,41
+fit_100,S,Shared,41,41,1,40,41,0,0,41
+fit_100,W,Incorrectly shared,41,41,1,40,41,0,0,41
+fit_100,R,Relaxed,41,41,1,40,41,0,0,41
+fit_100,P2,Complete quadratic,41,41,1,40,41,0,0,41
