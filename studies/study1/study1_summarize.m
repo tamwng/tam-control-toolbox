@@ -3,6 +3,12 @@ function summary = study1_summarize(output,cfg)
 %   Complete-run summaries exclude incomplete runs and retain their counts.
 %   Finite-prefix scores are explicitly labelled. Quantiles interpolate
 %   linearly at order-statistic position 1+(n-1)*p; no Statistics Toolbox.
+% Single-argument P06 access exposes the unchanged per-run scoring helpers.
+if nargin == 1 && isequal(output,'p06_helpers')
+    summary = struct('scoreRun',@score_run,'scoreFit',@score_fit, ...
+        'diagnoseRun',@diagnose_run,'percentile',@percentile);
+    return
+end
 tableDir = fullfile(output,'tables');
 if ~isfolder(tableDir), mkdir(tableDir); end
 metrics = struct([]); diagnostics = struct([]); initialization = struct([]);

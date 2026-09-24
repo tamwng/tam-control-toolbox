@@ -1,8 +1,11 @@
-function [estimator,fit] = study1_fit(id,record,cfg)
+function [estimator,fit] = study1_fit(id,record,cfg,priorScale)
 %STUDY1_FIT Fit one model only to the supplied completed measured transitions.
 % Store posterior histories before/after each update; checkpoint j is at
 % history column j+1. Rejections retain the core's last valid RLS state.
 % Calibration sets scaling only. It supplies no additional observations.
+% Optional priorScale multiplies only the normalized prior, before fitting.
+if nargin < 4, priorScale = 1; end
+validateattributes(priorScale,{'double'},{'scalar','real','finite','positive'});
 
 [model,theta0,labels] = study1_model(id);
 count = numel(record.u);
@@ -39,6 +42,7 @@ if strcmp(id,'K')
     fit.covariance = zeros(0,0,count+1);
     fit.message(:) = {'Known-model reference: no identification update.'};
 else
+    if priorScale ~= 1, fit.P0 = priorScale*fit.P0; end
     estimator = RlsEstimator(theta0,fit.P0,1,D,struct('mode','none'));
     fit.theta(:,1) = estimator.RawParameters;
     fit.beta(:,1) = estimator.Beta;
