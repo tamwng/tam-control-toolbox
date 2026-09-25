@@ -1,0 +1,116 @@
+{
+  "sourceSHA": "3b1b29e331022e7d48a7f5bf996f65d1d47b9e1b",
+  "sourceChanges": "",
+  "clean": true,
+  "mode": "full",
+  "status": "FAILED_OR_BLOCKED",
+  "computationMode": "fresh",
+  "startedUTC": "2026/09/25 03:34:33",
+  "output": "C:\\Users\\Tam\\OneDrive - Kyoto University\\research\\projects\\tam-control-toolbox\\results\\p07_local_20260925\\full",
+  "references": {
+    "study1": "C:\\Users\\Tam\\OneDrive - Kyoto University\\research\\projects\\tam-control-toolbox\\results\\study1_candidate_20260917",
+    "study2": "C:\\Users\\Tam\\OneDrive - Kyoto University\\research\\projects\\tam-control-toolbox\\results\\study2_pilot_20260918",
+    "study3": "C:\\Users\\Tam\\OneDrive - Kyoto University\\research\\projects\\tam-control-toolbox\\results\\study3_pilot_20260918",
+    "study4": "C:\\Users\\Tam\\OneDrive - Kyoto University\\research\\projects\\tam-control-toolbox\\results\\study4_pilot_20260922",
+    "study5": "C:\\Users\\Tam\\OneDrive - Kyoto University\\research\\projects\\tam-control-toolbox\\results\\study5_pilot_20260922",
+    "study6": "C:\\Users\\Tam\\OneDrive - Kyoto University\\research\\projects\\tam-control-toolbox\\results\\study6_pilot_20260922",
+    "p06": "C:\\Users\\Tam\\OneDrive - Kyoto University\\research\\projects\\tam-control-toolbox\\results\\p06_sensitivity_20260924_225708"
+  },
+  "environment": {
+    "MATLAB": "26.1.0.3346908 (R2026a) Update 5",
+    "computer": "PCWIN64",
+    "toolboxes": [
+      {
+        "Name": "Aerospace Toolbox",
+        "Version": "26.1",
+        "Release": "(R2026a)",
+        "Date": "20-Nov-2025"
+      },
+      {
+        "Name": "Control System Toolbox",
+        "Version": "26.1",
+        "Release": "(R2026a)",
+        "Date": "20-Nov-2025"
+      },
+      {
+        "Name": "Instrument Control Toolbox",
+        "Version": "26.1",
+        "Release": "(R2026a)",
+        "Date": "20-Nov-2025"
+      },
+      {
+        "Name": "MATLAB",
+        "Version": "26.1",
+        "Release": "(R2026a)",
+        "Date": "19-Nov-2025"
+      },
+      {
+        "Name": "Model Predictive Control Toolbox",
+        "Version": "26.1",
+        "Release": "(R2026a)",
+        "Date": "20-Nov-2025"
+      },
+      {
+        "Name": "Optimization Toolbox",
+        "Version": "26.1",
+        "Release": "(R2026a)",
+        "Date": "20-Nov-2025"
+      },
+      {
+        "Name": "System Identification Toolbox",
+        "Version": "26.1",
+        "Release": "(R2026a)",
+        "Date": "20-Nov-2025"
+      },
+      {
+        "Name": "UAV Toolbox",
+        "Version": "26.1",
+        "Release": "(R2026a)",
+        "Date": "20-Nov-2025"
+      }
+    ],
+    "OS": "Windows 10",
+    "OSVersion": "10.0",
+    "CPU": "Intel64 Family 6 Model 151 Stepping 2, GenuineIntel",
+    "architecture": "win64"
+  },
+  "solverOptions": {
+    "ConstraintTolerance": 1E-8,
+    "Display": "off",
+    "FunctionTolerance": "default dependent on problem",
+    "HessianMultiplyFcn": [],
+    "LinearSolver": "auto",
+    "MaxIterations": 200,
+    "ObjectiveLimit": -1.0E+20,
+    "OptimalityTolerance": 1E-8,
+    "ScaleProblem": false,
+    "StepTolerance": 1E-12,
+    "SubproblemAlgorithm": "cg",
+    "TypicalX": "ones(numberOfVariables,1)",
+    "UseCodegenSolver": false,
+    "Algorithm": "interior-point-convex"
+  },
+  "normalizedKKTRejectionThreshold": 1E-7,
+  "comparisonRule": "Exact scientific values and discrete definitions; wall-clock and explicit provenance excluded. Existing numerical identity/KKT thresholds unchanged.",
+  "coverage": {
+    "study1": 258,
+    "study2": 22,
+    "study3": 218,
+    "study4": 12,
+    "study5": 5,
+    "study6DiagnosticBatches": 329,
+    "study6ControlRuns": 0,
+    "p06": 1558
+  },
+  "integrityBefore": {
+    "fileCount": 3022,
+    "totalBytes": 1.357579926E+9,
+    "allPassed": true,
+    "manifestSHA256": "ba298a8a4c6132c28074c462e4bc19ed0911fa71bc366cfc3245dc46b5af94d6"
+  },
+  "identifier": "ejc:ReproductionMismatch",
+  "message": "Study comparison failed. Review recorded differences.",
+  "exception": "Error using assert\nStudy comparison failed. Review recorded differences.\n\nError in run_ejc (line 99)\n                assert(comparison.passed,'ejc:ReproductionMismatch','Study comparison failed. Review recorded differences.');\n                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+  "elapsedSeconds": 747.3713206,
+  "completedUTC": "2026/09/25 03:47:00"
+}

@@ -1,0 +1,6 @@
+Running test_p07_comparison
+.......... .......
+Done test_p07_comparison
+__________
+
+P07 targeted legacy checks: 17 passed. Prior partial Study1: 535 compared files, maximum 0. Protected hashes unchanged. This is a compatibility recheck, not a new fresh run.

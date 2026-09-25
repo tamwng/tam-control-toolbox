@@ -35,3 +35,4 @@
 # Preserve the exact baseline evidence bytes across platforms.
 evidence/p07_gate_b/** -text -whitespace
 evidence/p07_candidate_checks/** -text -whitespace
+evidence/p07_legacy_schema/** -text -whitespace

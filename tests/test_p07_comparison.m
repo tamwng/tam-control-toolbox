@@ -98,6 +98,161 @@ verifyEqual(t,height(report.files),1);
 verifyEqual(t,report.files.study,"study3");
 end
 
+function testAllTwelveLegacyPilotFilesValidateFreshFlags(t)
+[fresh,legacy] = legacy_values;
+names = strings(0,1);
+for model = ["A","K","P2","R","S","W"]
+    for trial = ["000","001"]
+        names(end+1,1) = "data/pilot_"+model+"_"+trial+".mat"; %#ok<AGROW>
+    end
+end
+[sources,references,output] = legacy_fixture(t,"study1",names,fresh,legacy);
+report = ejc_compare_results(sources,references,output);
+verifyTrue(t,report.passed); verifyEqual(t,height(report.files),12);
+verifyEqual(t,height(report.exclusions),24);
+verifyTrue(t,all(report.files.maximumAbsoluteDifference == 0));
+verifyEqual(t,sort(unique(report.exclusions.relativePath)),sort(names));
+end
+
+function testLegacyPilotRequiresBothFreshFlags(t)
+[fresh,legacy] = legacy_values;
+for flag = ["identityChecksEvaluated","firstStepCheckEvaluated"]
+    changed = fresh;
+    changed.result.forecasts = rmfield(changed.result.forecasts,flag);
+    [sources,references,output] = legacy_fixture(t,"study1","data/pilot_A_000.mat",changed,legacy);
+    report = ejc_compare_results(sources,references,output);
+    verifyFalse(t,report.passed,flag+" must be present even when absent historically.");
+    verifyTrue(t,any(contains(report.failures.quantity,flag)));
+end
+end
+
+function testLegacyPilotRejectsWrongValueClassAndShapeFlags(t)
+[fresh,legacy] = legacy_values;
+invalid = {false,1,[true true],false(0,0)};
+for flag = ["identityChecksEvaluated","firstStepCheckEvaluated"]
+    for k = 1:numel(invalid)
+        changed = fresh; changed.result.forecasts.(flag) = invalid{k};
+        [sources,references,output] = legacy_fixture(t,"study1","data/pilot_A_000.mat",changed,legacy);
+        report = ejc_compare_results(sources,references,output);
+        verifyFalse(t,report.passed,flag+" must match its logical scalar definition.");
+        verifyTrue(t,any(contains(report.failures.quantity,flag)));
+    end
+end
+end
+
+function testLegacyPilotFlagsFollowFiniteMaximumDefinitions(t)
+[fresh,legacy] = legacy_values;
+flags = ["identityChecksEvaluated","firstStepCheckEvaluated"];
+maxima = ["maxIdentityResidual","maxFirstStepFreezingError"];
+for k = 1:numel(flags)
+    for maximum = [NaN Inf]
+        changed = fresh; retained = legacy;
+        changed.result.forecasts.(maxima(k)) = maximum;
+        retained.result.forecasts.(maxima(k)) = maximum;
+        changed.result.forecasts.(flags(k)) = false;
+        [sources,references,output] = legacy_fixture(t,"study1","data/pilot_A_000.mat",changed,retained);
+        report = ejc_compare_results(sources,references,output);
+        verifyTrue(t,report.passed,'A correctly unevaluated flag is not a manufactured pass.');
+        changed.result.forecasts.(flags(k)) = true;
+        [sources,references,output] = legacy_fixture(t,"study1","data/pilot_A_000.mat",changed,retained);
+        report = ejc_compare_results(sources,references,output);
+        verifyFalse(t,report.passed);
+    end
+end
+end
+
+function testLegacyPilotRetainsExactScientificValuesAndOtherFields(t)
+[fresh,legacy] = legacy_values;
+changed = fresh; changed.result.forecasts.identityResidual(2) = .25;
+[sources,references,output] = legacy_fixture(t,"study1","data/pilot_A_000.mat",changed,legacy);
+report = ejc_compare_results(sources,references,output);
+verifyFalse(t,report.passed); verifyEqual(t,report.files.maximumAbsoluteDifference,.25);
+verifyTrue(t,any(contains(report.failures.quantity,'identityResidual')));
+changed = fresh; changed.result.forecasts.otherScientificField = true;
+[sources,references,output] = legacy_fixture(t,"study1","data/pilot_A_000.mat",changed,legacy);
+report = ejc_compare_results(sources,references,output);
+verifyFalse(t,report.passed);
+verifyTrue(t,any(contains(report.failures.quantity,'otherScientificField')));
+end
+
+function testLegacyPilotDoesNotExemptOtherPathsOrTrials(t)
+[fresh,legacy] = legacy_values;
+for name = ["data/pilot_A_002.mat","data/pilot_Z_000.mat", ...
+        "data/Pilot_A_000.mat","other/pilot_A_000.mat", ...
+        "data/confirmation_A_000.mat","data/pilot_A_000_extra.mat"]
+    [sources,references,output] = legacy_fixture(t,"study1",name,fresh,legacy);
+    report = ejc_compare_results(sources,references,output);
+    verifyFalse(t,report.passed,name+" is outside the approved twelve files.");
+    verifyEqual(t,height(report.exclusions),0);
+end
+end
+
+function testLegacyPilotDoesNotExemptOtherStudies(t)
+[fresh,legacy] = legacy_values;
+for group = ["study2","study3","study4","study5","study6","p06"]
+    [sources,references,output] = legacy_fixture(t,group,"data/pilot_A_000.mat",fresh,legacy);
+    report = ejc_compare_results(sources,references,output);
+    verifyFalse(t,report.passed,group+" has no legacy pilot exception.");
+    verifyEqual(t,height(report.exclusions),0);
+end
+end
+
+function testLegacyPilotDoesNotExemptSameNamesAtOtherNesting(t)
+[fresh,legacy] = legacy_values;
+for flag = ["identityChecksEvaluated","firstStepCheckEvaluated"]
+    changed = fresh; retained = legacy;
+    changed.result.forecasts.nested = struct(flag,true);
+    retained.result.forecasts.nested = struct;
+    [sources,references,output] = legacy_fixture(t,"study1","data/pilot_A_000.mat",changed,retained);
+    report = ejc_compare_results(sources,references,output);
+    verifyFalse(t,report.passed);
+    verifyTrue(t,any(contains(report.failures.quantity,'.nested.')));
+end
+end
+
+function testLegacyPilotComparesFlagsAlreadyInReferenceExactly(t)
+[fresh,legacy] = legacy_values;
+for flag = ["identityChecksEvaluated","firstStepCheckEvaluated"]
+    retained = legacy; retained.result.forecasts.(flag) = false;
+    [sources,references,output] = legacy_fixture(t,"study1","data/pilot_A_000.mat",fresh,retained);
+    report = ejc_compare_results(sources,references,output);
+    verifyFalse(t,report.passed);
+    verifyTrue(t,any(contains(report.failures.quantity,flag)));
+    verifyFalse(t,any(contains(report.exclusions.quantity,flag)));
+end
+end
+
+function testLegacyArchiveSelfCheckDoesNotClaimFreshFlagValidation(t)
+[~,legacy] = legacy_values;
+[~,references,output] = legacy_fixture(t,"study1","data/pilot_A_000.mat",legacy,legacy);
+report = ejc_compare_results(references,references,output);
+verifyTrue(t,report.passed); verifyEqual(t,height(report.exclusions),0);
+verifyEqual(t,report.files.mode,"archive self-check; no fresh computation");
+end
+
+function [fresh,legacy] = legacy_values
+forecasts = struct('maxIdentityResidual',0,'maxFirstStepFreezingError',0, ...
+    'identityResidual',[0 0],'identityChecksEvaluated',true,'firstStepCheckEvaluated',true);
+fresh = struct('result',struct('completed',true,'forecasts',forecasts));
+legacy = fresh;
+legacy.result.forecasts = rmfield(forecasts,{'identityChecksEvaluated','firstStepCheckEvaluated'});
+end
+
+function [sources,references,output] = legacy_fixture(t,group,names,fresh,legacy)
+temporary = t.applyFixture(matlab.unittest.fixtures.TemporaryFolderFixture);
+root = temporary.Folder;
+sources = struct(group,fullfile(root,'current',group));
+references = struct(group,fullfile(root,'reference',group));
+for name = reshape(names,1,[])
+    currentFile = fullfile(sources.(group),name);
+    referenceFile = fullfile(references.(group),name);
+    if ~isfolder(fileparts(currentFile)), mkdir(fileparts(currentFile)); end
+    if ~isfolder(fileparts(referenceFile)), mkdir(fileparts(referenceFile)); end
+    save(currentFile,'-struct','fresh'); save(referenceFile,'-struct','legacy');
+end
+output = fullfile(root,'comparison');
+end
+
 function [sources,references,output] = fixture(t)
 temporary = t.applyFixture(matlab.unittest.fixtures.TemporaryFolderFixture);
 root = temporary.Folder; sources = struct; references = struct;

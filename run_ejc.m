@@ -60,6 +60,9 @@ manifest.solverOptions = struct;
 for name = string(properties(solver)).', manifest.solverOptions.(name) = solver.(name); end
 manifest.normalizedKKTRejectionThreshold = 1e-7;
 manifest.comparisonRule = 'Exact scientific values and discrete definitions; wall-clock and explicit provenance excluded. Existing numerical identity/KKT thresholds unchanged.';
+manifest.legacySchemaRule = ['Only study1 data/pilot_{A,K,P2,R,S,W}_{000,001}.mat may lack historical ' ...
+    'identityChecksEvaluated and firstStepCheckEvaluated fields. Both fresh flags are required and validated ' ...
+    'against isfinite of their corresponding residual maxima; every other comparison remains exact.'];
 manifest.coverage = struct('study1',258,'study2',22,'study3',218,'study4',12, ...
     'study5',5,'study6DiagnosticBatches',329,'study6ControlRuns',0,'p06',1558);
 write_json(fullfile(output,'run_manifest.json'),manifest);

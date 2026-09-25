@@ -10,6 +10,9 @@ function report = ejc_compare_results(sources,references,output)
 % stored precision, with underlying MAT arrays compared independently.
 % Wall-clock measurements and explicit source/environment metadata are
 % recorded as exclusions. No covariance/Hessian conditioning is excluded.
+% The 12 retained Study 1 pilot files alone may lack two legacy forecast
+% evaluation flags. Fresh flags are required and checked against their
+% unchanged definitions; every other scientific comparison remains exact.
 ejc_assert_writable(output);
 assert(~isfile(output),'ejc:OutputFile','The evidence destination is a file.');
 if ~isfolder(output), mkdir(output); end
@@ -64,6 +67,9 @@ for group = groups
                         "Reported separately under the original P06 quantity-specific gate",a.maxAbsoluteDifference,b.maxAbsoluteDifference)];
                     a.maxAbsoluteDifference = []; b.maxAbsoluteDifference = [];
                 end
+                if mode == "fresh-versus-retained"
+                    [a,state] = legacy_pilot_flags(a,b,context,state);
+                end
                 state = compare_value(a,b,"value",state);
                 if isstruct(a) && isfield(a,'result') && isstruct(a.result) && isscalar(a.result) && isfield(a.result,'completed')
                     state.attemptedRuns = 1; state.completedRuns = double(a.result.completed);
@@ -111,13 +117,66 @@ report.exclusions = as_table(exclusions,struct('quantity',"",'reason',"", ...
 report.inventory = as_table(inventory,struct('study',"",'relativePath',"", ...
     'referencePresent',false,'currentPresent',false,'passed',false));
 report.passed = ~isempty(files) && all(report.files.passed) && all(report.inventory.passed);
-report.rule = 'Exact scientific MAT values and discrete definitions; exact values at stored CSV precision. No ranking assertions.';
+report.rule = ['Exact scientific MAT values and discrete definitions; exact values at stored CSV precision. ' ...
+    'Only the 12 named Study 1 pilot files permit absent legacy forecast evaluation flags after fresh definition checks. No ranking assertions.'];
 report.sourceDirectories = sources; report.referenceDirectories = references;
 writetable(report.files,fullfile(output,'comparison_files.csv'));
 writetable(report.failures,fullfile(output,'comparison_failures.csv'));
 writetable(report.exclusions,fullfile(output,'comparison_exclusions.csv'));
 writetable(report.inventory,fullfile(output,'comparison_inventory.csv'));
 save(fullfile(output,'comparison.mat'),'report','-v7');
+end
+
+function [a,state] = legacy_pilot_flags(a,b,context,state)
+% Author-approved legacy schema only. Do not manufacture historical flags:
+% validate fresh values, then omit only an absent legacy counterpart from
+% the in-memory comparison. No saved record or other field is changed.
+allowed = ["data/pilot_A_000.mat","data/pilot_A_001.mat", ...
+    "data/pilot_K_000.mat","data/pilot_K_001.mat", ...
+    "data/pilot_P2_000.mat","data/pilot_P2_001.mat", ...
+    "data/pilot_R_000.mat","data/pilot_R_001.mat", ...
+    "data/pilot_S_000.mat","data/pilot_S_001.mat", ...
+    "data/pilot_W_000.mat","data/pilot_W_001.mat"];
+if context.study ~= "study1" || ~any(context.file == allowed), return; end
+quantity = "value(1).result(1).forecasts(1)";
+if ~has_forecasts(a) || ~has_forecasts(b)
+    state = failed(state,quantity,"Legacy pilot requires scalar result.forecasts structures",NaN,NaN);
+    return
+end
+flags = ["identityChecksEvaluated","firstStepCheckEvaluated"];
+maxima = ["maxIdentityResidual","maxFirstStepFreezingError"];
+for k = 1:numel(flags)
+    flag = flags(k); maximum = maxima(k); field = quantity+"."+flag;
+    if ~isfield(a.result.forecasts,flag)
+        state = failed(state,field,"Required fresh forecast evaluation flag is missing",NaN,NaN);
+        continue
+    end
+    if ~isfield(a.result.forecasts,maximum) || ...
+            ~isnumeric(a.result.forecasts.(maximum)) || ...
+            ~isreal(a.result.forecasts.(maximum)) || ~isscalar(a.result.forecasts.(maximum))
+        state = failed(state,field,"Fresh flag requires its scalar numerical residual maximum",NaN,NaN);
+        continue
+    end
+    fresh = a.result.forecasts.(flag);
+    if ~islogical(fresh) || ~isscalar(fresh)
+        state = failed(state,field,"Fresh forecast evaluation flag must be a logical scalar",NaN,NaN);
+        continue
+    end
+    expected = isfinite(a.result.forecasts.(maximum));
+    state = compare_value(fresh,expected,field+".definition",state);
+    if ~isfield(b.result.forecasts,flag) && isequal(fresh,expected)
+        reason = "Approved Study 1 pilot legacy omission only; fresh flag checked against isfinite("+maximum+"). Historical evaluation status is not established.";
+        state.excluded = [state.excluded;excluded(field,reason, ...
+            struct('validatedFreshValue',fresh),"absent legacy field")];
+        a.result.forecasts = rmfield(a.result.forecasts,flag);
+    end
+end
+end
+
+function yes = has_forecasts(value)
+yes = isstruct(value) && isscalar(value) && isfield(value,'result') && ...
+    isstruct(value.result) && isscalar(value.result) && isfield(value.result,'forecasts') && ...
+    isstruct(value.result.forecasts) && isscalar(value.result.forecasts);
 end
 
 function [names,ignored] = scientific_files(root)

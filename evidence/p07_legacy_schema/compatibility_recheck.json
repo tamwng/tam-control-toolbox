@@ -1,0 +1,15 @@
+{
+  "checked_utc": "2026-09-25T03:56:33.4314080Z",
+  "computation_mode": "Compatibility recheck of preserved partial output; no new simulation",
+  "prior_output_candidate_sha": "3b1b29e331022e7d48a7f5bf996f65d1d47b9e1b",
+  "comparator_state": "Approved uncommitted correction, before replacement candidate checkpoint",
+  "comparator_sha256": "392e35a985095540faaa7dd49488ebd90eb915d456850a45ca5bf0990cbe126e",
+  "regression_test_sha256": "b64c400f8ea6e32fc863a223be2c9a892d0f44da51be82fddbb5e1bfa667924c",
+  "targeted_tests_passed": 17,
+  "files_compared": 535,
+  "files_passed": 535,
+  "approved_absent_legacy_flags": 24,
+  "maximum_absolute_difference": 0.0,
+  "protected_files_rehashed": 3022,
+  "protected_hashes_unchanged": true
+}
