@@ -1,0 +1,12 @@
+{
+  "baselineSHA": "0ac937f94fbcc10c64742e9b4a47367e4d929cc1",
+  "status": "FAILED_OR_BLOCKED",
+  "startedUTC": "2026/09/25 02:52:39",
+  "completedCases": 14,
+  "comparisonRule": "BASELINE_PLAN.md; exact additional representatives; original P06 gate",
+  "identifier": "p07:Settings",
+  "message": "Study 3 settings differ.",
+  "report": "Error using assert\nStudy 3 settings differ.\n\nError in run_gate_b_cases (line 57)\n    assert(isequaln(cfg,s.cfg),'p07:Settings','Study 3 settings differ.');\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",
+  "elapsedSeconds": 42.2839022,
+  "completedUTC": "2026/09/25 02:53:22"
+}

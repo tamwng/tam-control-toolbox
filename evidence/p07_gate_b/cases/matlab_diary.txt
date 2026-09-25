@@ -1,0 +1,16 @@
+Baseline baseline_A_000: 17 comparisons, maximum difference 0.
+Baseline baseline_A_001: 17 comparisons, maximum difference 0.
+Baseline baseline_S_000: 17 comparisons, maximum difference 0.
+Baseline baseline_S_001: 17 comparisons, maximum difference 0.
+Baseline baseline_W_000: 17 comparisons, maximum difference 0.
+Baseline baseline_W_001: 17 comparisons, maximum difference 0.
+Baseline baseline_R_000: 17 comparisons, maximum difference 0.
+Baseline baseline_R_001: 17 comparisons, maximum difference 0.
+Baseline baseline_P2_000: 17 comparisons, maximum difference 0.
+Baseline baseline_P2_001: 17 comparisons, maximum difference 0.
+Baseline baseline_K_000: 17 comparisons, maximum difference 0.
+Baseline baseline_K_001: 17 comparisons, maximum difference 0.
+Baseline study2_fit_E: 218 exact quantities matched.
+Baseline study2_amplitude_03_E: 50 exact quantities matched.
+Baseline study2_fit_K: 218 exact quantities matched.
+Baseline study2_constraint_K: 50 exact quantities matched.

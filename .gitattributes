@@ -31,3 +31,6 @@
 *.pdf binary
 *.png binary
 *.xlsx binary
+
+# Preserve the exact baseline evidence bytes across platforms.
+evidence/p07_gate_b/** -text -whitespace

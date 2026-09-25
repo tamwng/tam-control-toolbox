@@ -1,0 +1,15 @@
+{
+  "os": {
+    "Caption": "Microsoft Windows 11 Pro",
+    "Version": "10.0.26200",
+    "BuildNumber": "26200",
+    "OSArchitecture": "64-bit"
+  },
+  "cpu": {
+    "Name": "12th Gen Intel(R) Core(TM) i9-12900",
+    "NumberOfCores": 16,
+    "NumberOfLogicalProcessors": 24
+  },
+  "sourceSHA": "0ac937f94fbcc10c64742e9b4a47367e4d929cc1",
+  "dateUTC": "2026-09-25T02:50:16.4909716Z"
+}

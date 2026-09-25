@@ -1,0 +1,15 @@
+Baseline study3_fit_S_000: 217 exact quantities matched.
+Baseline study3_abrupt_S_vrf_000: 66 exact quantities matched.
+Baseline study3_drift_S_vrf_000: 66 exact quantities matched.
+Baseline study3_fit_S_001: 217 exact quantities matched.
+Baseline study3_abrupt_S_vrf_001: 66 exact quantities matched.
+Baseline study4_fit_Aplus: 220 exact quantities matched.
+Baseline study4_no_change_Aplus: 67 exact quantities matched.
+Baseline study4_grid_no_change_Aplus: 137 exact quantities matched.
+Baseline study4_represented_Aplus: 67 exact quantities matched.
+Baseline study4_grid_represented_Aplus: 137 exact quantities matched.
+Baseline study4_unrepresented_Aplus: 67 exact quantities matched.
+Baseline study4_grid_unrepresented_Aplus: 137 exact quantities matched.
+Baseline study5_fit_I: 223 exact quantities matched.
+Baseline study5_I: 67 exact quantities matched.
+Gate B remaining cases: PASSED, 7 completed cases; earlier 14 cases not repeated.
