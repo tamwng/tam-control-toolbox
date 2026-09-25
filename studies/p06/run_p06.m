@@ -11,6 +11,7 @@ if strcmp(mode,'execute')
 end
 assert(~isfolder(output) && ~isfile(output),'p06:ExistingOutput','Never overwrite an output.');
 root = fileparts(fileparts(fileparts(mfilename('fullpath'))));
+ejc_assert_writable(output);
 previous = path; cleanup = onCleanup(@() path(previous));
 addpath(fullfile(root,'src'),fullfile(root,'studies','study1'));
 [plan,manifest] = p06_plan;

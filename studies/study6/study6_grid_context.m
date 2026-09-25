@@ -1,6 +1,6 @@
 function grid = study6_grid_context(root,cfg)
 %STUDY6_GRID_CONTEXT Reuse Study 4 grid scores without a new snapshot campaign.
-folder = fullfile(root,'results',cfg.sources{4});
+folder = study6_source(root,cfg,4);
 grid = readtable(fullfile(folder,'tables','grid.csv'),'TextType','string');
 for scenario = ["no_change","represented","unrepresented"]
     for id = ["A","Aplus","P2","K"]

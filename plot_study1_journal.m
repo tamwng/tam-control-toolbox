@@ -5,15 +5,20 @@ function figureDir = plot_study1_journal(resultsDir,figureDir)
 % use the 40 paired noisy confirmation trials. Panel (b) uses the original
 % whole-run score, as in study1_results_draft.tex, including all transients.
 % Exports an 180-by-90 mm vector PDF, 300 dpi PNG, and LaTeX caption.
-% Optional arguments select the existing results and figure directories.
+% Optional arguments select source records and a fresh figure directory.
 
 root = fileparts(mfilename('fullpath'));
 if nargin < 1
     resultsDir = fullfile(root,'results','study1_candidate_20260917');
 end
-if nargin < 2
-    figureDir = fullfile(root,'results','study1_journal');
-end
+if nargin < 2, figureDir = []; end
+figureDir = ejc_output_path('study1_figures',figureDir);
+ejc_assert_writable(figureDir);
+source = char(java.io.File(resultsDir).getCanonicalPath());
+destination = char(java.io.File(figureDir).getCanonicalPath());
+assert(~strcmpi(source,destination) && ...
+    ~startsWith(lower(destination),[lower(source),filesep]), ...
+    'study1:ArchiveWrite','Derived exports must stay outside the source archive.');
 tableDir = fullfile(resultsDir,'tables');
 learning = readtable(fullfile(tableDir,'initialization_noisy_summaries.csv'), ...
     'TextType','string');

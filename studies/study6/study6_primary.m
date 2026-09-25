@@ -1,7 +1,7 @@
 function rows = study6_primary(output,root,cfg)
 %STUDY6_PRIMARY Common-data stationary snapshots, before online adaptation.
 rows = table;
-folder = fullfile(root,'results',cfg.sources{1});
+folder = study6_source(root,cfg,1);
 for campaign = ["pilot","confirmation"]
     saved = load(fullfile(folder,'data',"records_"+campaign+".mat"),'records'); record = saved.records.evaluation;
     q = study6_queries(record,cfg.anchors,'clean');
@@ -18,7 +18,7 @@ for campaign = ["pilot","confirmation"]
         rows = [rows;study6_store(output,'primary',"A_"+campaign+"_"+id,out,q)]; %#ok<AGROW>
     end
 end
-folder = fullfile(root,'results',cfg.sources{2});
+folder = study6_source(root,cfg,2);
 saved = load(fullfile(folder,'records.mat'),'evaluation'); records = saved.evaluation;
 assert(isequal([records.L],[.25 .70 1.10]));
 for range = 1:3
@@ -35,7 +35,7 @@ for range = 1:3
         rows = [rows;study6_store(output,'primary',sprintf('B_range%d_%s',range,id),out,q)]; %#ok<AGROW>
     end
 end
-folder = fullfile(root,'results',cfg.sources{5});
+folder = study6_source(root,cfg,5);
 saved = load(fullfile(folder,'settings.mat'),'cfg'); physicalSettings = saved.cfg;
 saved = load(fullfile(folder,'records.mat'),'records'); record = saved.records.evaluation;
 saved = load(fullfile(folder,'evaluation','common_queries.mat'),'queries'); oldQueries = saved.queries;

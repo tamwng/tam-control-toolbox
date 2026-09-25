@@ -1,0 +1,70 @@
+Running test_p07_comparison
+.......
+Done test_p07_comparison
+__________
+
+Running test_p06
+....Study 1 tables: 2 attempted runs, 2 completed, 0 recorded events.
+...... ......P06 dry-run: 1558 proposed runs. Manifest only; production not launched.
+.
+Done test_p06
+__________
+
+EJC quick: C:\Users\Tam\OneDrive - Kyoto University\research\projects\tam-control-toolbox\results\p07_candidate_checks_20260925_03\quick
+Source: 677258e4c676631806c9c8dd31f779004d511218
+Running test_controller
+.........
+Done test_controller
+__________
+
+Running test_estimation
+..........
+Done test_estimation
+__________
+
+Running test_models
+........
+Done test_models
+__________
+
+Running test_physical
+.......
+Done test_physical
+__________
+
+Running test_qp
+........
+Done test_qp
+__________
+
+Running test_study1
+.......
+Done test_study1
+__________
+
+
+Phase 1 checks: 49 passed, 0 failed, 0 incomplete (49 total).
+Fixed Study 1 Shared trial 0: exact scientific agreement; wall-clock timing excluded.
+EJC quick complete in 9.256 s: C:\Users\Tam\OneDrive - Kyoto University\research\projects\tam-control-toolbox\results\p07_candidate_checks_20260925_03\quick
+EJC archive: C:\Users\Tam\OneDrive - Kyoto University\research\projects\tam-control-toolbox\results\p07_candidate_checks_20260925_03\archive
+Source: 677258e4c676631806c9c8dd31f779004d511218
+Study 1 tables: 258 attempted runs, 258 completed, 0 recorded events.
+Study 2 tables: 22/22 control runs completed; 0 recorded events.
+Study 3 reporting: 218/218 runs completed, 0 recorded events.
+Study 6: 329 MAT batches, 27296/27296 finite paths, 0 explicit failures; identities verified.
+{Error using () (line 131)
+Index in position 1 is invalid. Array indices must be positive integers or logical values.
+
+Error in p06_summarize (line 6)
+noisy = runs(runs.noisy,:);
+        ^^^^^^^^^^^^^^^^^^
+Error in run_ejc>archive_reports (line 166)
+[summaries,contrasts,analysis] = p06_summarize(runs,plan); %#ok<ASGLU>
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^
+Error in run_ejc (line 73)
+            archive_reports(output,reference);
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Error in check_candidate (line 15)
+    run_ejc('archive',OutputDirectory=fullfile(output,'archive'));
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+} 

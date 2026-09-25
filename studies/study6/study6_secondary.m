@@ -1,7 +1,7 @@
 function [measurement,change] = study6_secondary(output,root,cfg)
 %STUDY6_SECONDARY User-bounded initialization and unforeseen-change audits.
 measurement = table; change = table;
-folder = fullfile(root,'results',cfg.sources{1});
+folder = study6_source(root,cfg,1);
 files = dir(fullfile(folder,'audits','*.mat'));
 saved = load(fullfile(folder,'settings.mat'),'cfg'); source = saved.cfg;
 expected = numel(source.modelIds)*(2+source.pilot.noiseTrials+source.confirmation.noiseTrials);
@@ -35,7 +35,7 @@ for file = files.'
     assert(out.archiveComparisonMax <= cfg.tolerance);
     measurement = [measurement;study6_store(output,'measurement',erase(file.name,'.mat'),out,q)]; %#ok<AGROW>
 end
-folder = fullfile(root,'results',cfg.sources{3});
+folder = study6_source(root,cfg,3);
 saved = load(fullfile(folder,'settings.mat'),'cfg'); source = saved.cfg;
 for id = string(source.caseIds)
     filename = "runs/abrupt_"+id+"_000.mat";

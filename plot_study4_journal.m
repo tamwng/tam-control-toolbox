@@ -6,7 +6,9 @@ function figureDir = plot_study4_journal(resultsDir,figureDir)
 % fitting, or prediction evaluations are run. Source data remain read only.
 root = fileparts(mfilename('fullpath'));
 if nargin < 1, resultsDir = fullfile(root,'results','study4_pilot_20260922'); end
-if nargin < 2, figureDir = fullfile(root,'results','study4_journal'); end
+if nargin < 2, figureDir = []; end
+figureDir = ejc_output_path('study4_figures',figureDir);
+ejc_assert_writable(figureDir);
 oldPath = path;
 restorePath = onCleanup(@() path(oldPath));
 addpath(fullfile(root,'studies','study4'));

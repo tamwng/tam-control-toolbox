@@ -36,7 +36,8 @@ plan.modelNames = ["Affine","Shared","Incorrectly shared","Relaxed","Complete qu
 plan.cachePolicy = 'No fit-state cache: fit fresh from the paired prefix for every adaptive run';
 plan.scaling = 'Fixed 41-by-41 grid [-1.2,1.2] x [-1,1]; rowScale=1; beta=D.*theta';
 % Hash the actual reusable algorithms and both approved interface files.
-sourceFiles = [dir(fullfile(root,'src','*.m'));dir(fullfile(root,'studies','study1','*.m'))];
+sourceFiles = [dir(fullfile(root,'src','*.m'));dir(fullfile(root,'studies','study1','*.m')); ...
+    dir(fullfile(root,'ejc_*.m'))];
 plan.sources = struct('file',{},'sha256',{});
 for j = 1:numel(sourceFiles)
     p = fullfile(sourceFiles(j).folder,sourceFiles(j).name);

@@ -53,6 +53,9 @@ for index=order.'
     target=fullfile(output,'runs',char(row.runId+".mat"));
     assert(~isfile(target),'p06:ExistingRun','Never overwrite a run.');
     save(target,'result','scores','item','failure','-v7');
+    if mod(numel(runRows)+1,50)==0 || row.baselineGate
+        fprintf('P06 %d/%d: %s, %s.\n',numel(runRows)+1,height(manifest),row.runId,item.executionStatus);
+    end
     runRows=[runRows;item]; %#ok<AGROW>
     if row.baselineGate
         assert(~isempty(result),'p06:BaselineFailed','Baseline case failed; remaining campaign stopped.');

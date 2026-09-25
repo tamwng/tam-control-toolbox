@@ -1,24 +1,23 @@
-function outputDir = run_study2(outputName)
+function outputDir = run_study2(outputName,options)
 %RUN_STUDY2 Complete deterministic Section 6.2.2 pilot, not confirmation.
 % Requires MATLAB and Optimization Toolbox; tested R2026a Update 5.
 % From a clean session at the repository root, run RUN_STUDY2. This runs the
 % complete test suite and creates a new local results package without tuning.
 % The 18 amplitude runs and Eq.67's four-case constraint audit stay separate.
 % Independent held-out input ranges never select a controller or its settings.
-root = fileparts(mfilename('fullpath'));
-if nargin < 1
-    outputName = ['study2_pilot_' char(datetime('now','Format','yyyyMMdd_HHmmss'))];
+arguments
+    outputName = ''
+    options.Figures (1,1) logical = true
+    options.ReferenceDirectory = ''
 end
-assert(ischar(outputName) && ~isempty(regexp(outputName,'^[A-Za-z0-9_-]+$','once')), ...
-    'study2:OutputName','Provide a simple new results-directory name.');
+root = fileparts(mfilename('fullpath'));
+outputDir = ejc_output_path('study2',outputName);
 previousPath = path;
 cleanup = onCleanup(@() path(previousPath));
 restoredefaultpath;
 addpath(root,fullfile(root,'src'),fullfile(root,'studies','study2'));
 run_verification;
 cfg = study2_settings;
-outputDir = fullfile(root,'results',outputName);
-assert(~isfolder(outputDir),'study2:ExistingOutput','Use a new results directory.');
 mkdir(outputDir);
 for name = {'fits','evaluation','runs'}
     mkdir(fullfile(outputDir,name{1}));
@@ -32,6 +31,7 @@ for j = 1:numel(cfg.evaluationRanges)
     evaluation(j) = study2_record(600,cfg.evaluationRanges(j),cfg.evaluationSeeds(j),cfg); %#ok<AGROW>
 end
 save(fullfile(outputDir,'records.mat'),'initialization','evaluation');
+ejc_check_records(outputDir,options.ReferenceDirectory,2);
 for m = 1:numel(cfg.modelIds)
     id = cfg.modelIds{m};
     [~,fit] = study2_fit(id,initialization,cfg);
@@ -58,7 +58,7 @@ for m = 1:numel(cfg.modelIds)
 end
 study2_verify_results(outputDir,cfg);
 summary = study2_summarize(outputDir,cfg);
-study2_figures(outputDir,cfg,summary);
+if options.Figures, study2_figures(outputDir,cfg,summary); end
 fprintf('Study 2 pilot package complete: %s\n',outputDir);
 end
 

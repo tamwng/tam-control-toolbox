@@ -1,10 +1,13 @@
-function summary = study3_summarize(output,cfg)
+function summary = study3_summarize(output,cfg,destination)
 %STUDY3_SUMMARIZE Gain-change pilot scores, failures, and paired comparisons.
 % Windows follow Appendix A; input scores exclude the terminal unapplied u.
 % Censored recovery stays separate from ordinary continuous-score summaries.
 % Every pair among the five prescribed noisy cases is declared before data
 % inspection. Bootstrap resamples retain complete trial pairs (2,000 draws).
-folder = fullfile(output,'tables');
+% The optional destination separates regenerated reports from source records.
+if nargin < 3, destination = output; end
+ejc_assert_writable(destination);
+folder = fullfile(destination,'tables');
 if ~isfolder(folder), mkdir(folder); end
 metrics = struct([]); diagnostics = struct([]); parameters = struct([]);
 recoveries = struct([]); events = struct([]);

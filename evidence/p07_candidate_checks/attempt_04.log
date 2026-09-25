@@ -1,0 +1,32 @@
+EJC archive: C:\Users\Tam\OneDrive - Kyoto University\research\projects\tam-control-toolbox\results\p07_candidate_checks_20260925_04\archive
+Source: 677258e4c676631806c9c8dd31f779004d511218
+Study 1 tables: 258 attempted runs, 258 completed, 0 recorded events.
+Study 2 tables: 22/22 control runs completed; 0 recorded events.
+Study 3 reporting: 218/218 runs completed, 0 recorded events.
+Study 6: 329 MAT batches, 27296/27296 finite paths, 0 explicit failures; identities verified.
+[Warning: Scrollable is set to 'on' on all figures because the Windows accessibility text size setting is greater than 100%.
+To prevent this behavior, revert the text size setting back to 100% and instead use the Windows system display scale setting to increase the size of on-screen elements.] 
+Study 1 journal figure exported: vector PDF, 300 dpi PNG, and caption.
+Two panels; original confirmation summaries; no numerical results changed.
+Study 2 Gram crosscheck: 15 adaptive model/amplitude pairs match.
+maxStoredCondition was checked against archived gramCondition, not the corrected rank-based condition.
+Study 2 journal package: two panels, 33 source-table points, corrected rank report.
+Principal scores verified against 600 archived samples on 20 <= t < 80 s.
+Study 3 journal figure: six panels at 137.07 mm width, 9.5 pt axes.
+752 recorded times, 13 traces, 9,776 unchanged plotted values; trial 000 only.
+Vector PDF, 300 dpi PNG, exact CSV, and supplied caption exported.
+Study 4 journal figure: four panels at 137.07 mm width, 9.5 pt axes.
+4,200 exact plotted values; 720 saved grid scores cross-checked against grid.csv.
+Coefficient endpoint 119.9 s; snapshot endpoint 119 s; no 49-to-50 s grid connection.
+Study 5 journal figure: two panels at 137.07 mm width, 9.5 pt axes.
+26 exact source-table points checked against saved arrays; 29 common forecast queries.
+Known-model errors checked and omitted; no model evaluations or simulations run.
+Study 6 journal figure: two panels at 137.07 mm width, 9.5 pt axes.
+40 exact table values checked against saved paths; 38 plotted, two H=1 freezing points omitted.
+29/29 finite common queries per row; no simulations or forecasts run.
+EJC archive complete in 83.730 s: C:\Users\Tam\OneDrive - Kyoto University\research\projects\tam-control-toolbox\results\p07_candidate_checks_20260925_04\archive
+
+ans =
+
+    'C:\Users\Tam\OneDrive - Kyoto University\research\projects\tam-control-toolbox\results\p07_candidate_checks_20260925_04\archive'
+

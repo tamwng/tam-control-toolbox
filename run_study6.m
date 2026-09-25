@@ -1,21 +1,34 @@
-function outputDir = run_study6(outputName)
+function outputDir = run_study6(outputName,options)
 %RUN_STUDY6 Prediction/control diagnostics from the saved Studies 1--5.
 % From the repository root: run_study6
 % No fitting, new noise, QP solves or closed-loop study runs are performed by
 % this evaluator. The complete verification suite includes its own fixtures.
+arguments
+    outputName = ''
+    options.Figures (1,1) logical = true
+    options.Sources (1,1) struct = struct
+end
 root = fileparts(mfilename('fullpath'));
-if nargin < 1, outputName = ['study6_pilot_',char(datetime('now','Format','yyyyMMdd_HHmmss'))]; end
-assert(ischar(outputName) && ~isempty(regexp(outputName,'^[A-Za-z0-9_-]+$','once')));
+outputDir = ejc_output_path('study6',outputName);
 oldPath = path; cleanup = onCleanup(@() path(oldPath));
 restoredefaultpath; addpath(root,fullfile(root,'src'));
 for s = 1:6, addpath(fullfile(root,'studies',sprintf('study%d',s))); end
-outputDir = fullfile(root,'results',outputName);
-assert(~isfolder(outputDir) && ~isfile(outputDir),'study6:ExistingOutput','Use a new results directory.');
 before = run_verification;
 cfg = study6_settings;
+cfg.sourceMode = 'historical';
+if ~isempty(fieldnames(options.Sources))
+    ejc_validate_sources(options.Sources);
+    cfg.sourceMode = 'fresh';
+    for s = 1:5
+        key = sprintf('study%d',s);
+        assert(isfield(options.Sources,key),'ejc:Study6Sources','Study 6 requires all five source directories.');
+        cfg.sourceDirectories{s} = char(options.Sources.(key));
+        [~,cfg.sources{s}] = fileparts(cfg.sourceDirectories{s});
+    end
+end
 sources = cell(1,5);
 for s = 1:5
-    sources{s} = load(fullfile(root,'results',cfg.sources{s},'settings.mat'));
+    sources{s} = load(fullfile(study6_source(root,cfg,s),'settings.mat'));
 end
 mkdir(outputDir);
 for folder = {'primary','online','measurement','change','tables','figures'}, mkdir(fullfile(outputDir,folder{1})); end
@@ -34,7 +47,7 @@ summary.main = summary.primary(summary.primary.fittingTransitions == 200,:);
 save(fullfile(outputDir,'summary.mat'),'summary');
 names = fieldnames(summary);
 for j = 1:numel(names), writetable(summary.(names{j}),fullfile(outputDir,'tables',[names{j},'.csv'])); end
-study6_figures(outputDir,summary);
+if options.Figures, study6_figures(outputDir,summary); end
 verification = study6_verify_results(outputDir);
 after = run_verification;
 verification.beforeNames = {before.Name}; verification.beforePassed = [before.Passed];

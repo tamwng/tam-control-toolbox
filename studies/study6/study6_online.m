@@ -1,6 +1,6 @@
 function rows = study6_online(output,root,cfg)
 %STUDY6_ONLINE Common queries after different closed-loop identification paths.
-folder = fullfile(root,'results',cfg.sources{3});
+folder = study6_source(root,cfg,3);
 saved = load(fullfile(folder,'settings.mat'),'cfg'); source = saved.cfg;
 saved = load(fullfile(folder,'records.mat'),'records'); record = saved.records.evaluation;
 rows = table;

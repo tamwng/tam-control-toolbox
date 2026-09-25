@@ -8,7 +8,9 @@ function figureDir = plot_study3_journal(resultsDir,figureDir)
 % column names. Frozen/known forgetting factors are deliberately absent.
 root = fileparts(mfilename('fullpath'));
 if nargin < 1, resultsDir = fullfile(root,'results','study3_pilot_20260918'); end
-if nargin < 2, figureDir = fullfile(root,'results','study3_journal'); end
+if nargin < 2, figureDir = []; end
+figureDir = ejc_output_path('study3_figures',figureDir);
+ejc_assert_writable(figureDir);
 oldPath = path;
 restorePath = onCleanup(@() path(oldPath));
 addpath(fullfile(root,'studies','study3'));

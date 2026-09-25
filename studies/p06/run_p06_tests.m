@@ -3,6 +3,7 @@ function results = run_p06_tests(output)
 assert(nargin==1 && ~isfolder(output) && ~isfile(output), ...
     'p06:ExistingOutput','Specify a fresh test-output directory.');
 folder=fileparts(mfilename('fullpath')); root=fileparts(fileparts(folder));
+ejc_assert_writable(output);
 previous=path; restore=onCleanup(@() path(previous));
 addpath(fullfile(root,'src'),fullfile(root,'studies','study1'),fullfile(folder,'tests'));
 mkdir(output);

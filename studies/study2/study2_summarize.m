@@ -1,4 +1,4 @@
-function summary = study2_summarize(output,cfg)
+function summary = study2_summarize(output,cfg,destination)
 %STUDY2_SUMMARIZE Deterministic pilot scores under Section 6.2.2/Appendix A.
 % Reference amplitude belongs to control runs; evaluationRange belongs to
 % independent common-data queries. No pairing of these variables is implied.
@@ -6,7 +6,10 @@ function summary = study2_summarize(output,cfg)
 % has explicitly labelled finite-prefix scores, never complete-run averages.
 % Activity counts use 1e-6 proximity to a bound; strict exceedances and their
 % magnitudes are retained separately, including floating-point exceedances.
-folder = fullfile(output,'tables');
+% The optional destination separates regenerated reports from source records.
+if nargin < 3, destination = output; end
+ejc_assert_writable(destination);
+folder = fullfile(destination,'tables');
 if ~isfolder(folder), mkdir(folder); end
 metrics = struct([]); diagnostics = struct([]); initialization = struct([]);
 parameters = struct([]); forecasts = struct([]); events = struct([]);

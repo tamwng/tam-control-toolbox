@@ -1,15 +1,18 @@
-function summary = study1_summarize(output,cfg)
+function summary = study1_summarize(output,cfg,destination)
 %STUDY1_SUMMARIZE Study 1 scores and diagnostics under Appendix A.
 %   Complete-run summaries exclude incomplete runs and retain their counts.
 %   Finite-prefix scores are explicitly labelled. Quantiles interpolate
 %   linearly at order-statistic position 1+(n-1)*p; no Statistics Toolbox.
 % Single-argument P06 access exposes the unchanged per-run scoring helpers.
+% An optional destination keeps regenerated tables outside the source archive.
 if nargin == 1 && isequal(output,'p06_helpers')
     summary = struct('scoreRun',@score_run,'scoreFit',@score_fit, ...
         'diagnoseRun',@diagnose_run,'percentile',@percentile);
     return
 end
-tableDir = fullfile(output,'tables');
+if nargin < 3, destination = output; end
+ejc_assert_writable(destination);
+tableDir = fullfile(destination,'tables');
 if ~isfolder(tableDir), mkdir(tableDir); end
 metrics = struct([]); diagnostics = struct([]); initialization = struct([]);
 parameters = struct([]); forecasts = struct([]); events = struct([]);
@@ -95,7 +98,7 @@ summary.paired = paired_contrasts(summary.metrics,cfg);
     {'modelRMS','freezingRMS','totalRMS','meanCrossTerm'},cfg);
 % These recorded-trajectory audits use each controller's own states and
 % inputs. Their paired summaries describe sensitivity, not common queries.
-summary.measured = readtable(fullfile(tableDir,'measured_initialization_audit.csv'), ...
+summary.measured = readtable(fullfile(output,'tables','measured_initialization_audit.csv'), ...
     'TextType','string');
 summary.measured.noise = summary.measured.trial > 0;
 [summary.measuredNoisy,summary.measuredPaired] = ...

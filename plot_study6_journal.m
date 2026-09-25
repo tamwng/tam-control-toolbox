@@ -5,7 +5,9 @@ function figureDir = plot_study6_journal(resultsDir,figureDir)
 % exact selected-value CSV and supplied caption. No forecasts are rerun.
 root = fileparts(mfilename('fullpath'));
 if nargin < 1, resultsDir = fullfile(root,'results','study6_pilot_20260922'); end
-if nargin < 2, figureDir = fullfile(root,'results','study6_journal'); end
+if nargin < 2, figureDir = []; end
+figureDir = ejc_output_path('study6_figures',figureDir);
+ejc_assert_writable(figureDir);
 oldPath = path; restorePath = onCleanup(@() path(oldPath));
 addpath(fullfile(root,'studies','study6'));
 source = char(java.io.File(resultsDir).getCanonicalPath());

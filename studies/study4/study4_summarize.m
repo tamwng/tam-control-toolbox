@@ -1,5 +1,12 @@
-function summary = study4_summarize(output,cfg)
+function summary = study4_summarize(output,cfg,destination)
 %STUDY4_SUMMARIZE Appendix A windows; incomplete prefixes remain labelled.
+% The optional destination separates regenerated reports from source records.
+if nargin < 3, destination = output; end
+ejc_assert_writable(destination);
+for folder = {'tables','evaluation'}
+    target = fullfile(destination,folder{1});
+    if ~isfolder(target), mkdir(target); end
+end
 metrics = struct([]); diagnostics = struct([]); recoveries = struct([]);
 grid = struct([]); events = struct([]); parameters = struct([]);
 for scenario = string(cfg.scenarios)
@@ -131,14 +138,14 @@ else
     summary.events = struct2table(events);
 end
 [summary.initialization,initialization] = initial_scores(output,cfg);
-save(fullfile(output,'evaluation','initialization.mat'),'initialization');
+save(fullfile(destination,'evaluation','initialization.mat'),'initialization');
 summary.counts = table(12,sum(summary.diagnostics.completed), ...
     sum(~summary.diagnostics.completed),sum(summary.diagnostics.identificationRejected), ...
     sum(summary.diagnostics.fallbackActions),'VariableNames', ...
     {'attemptedRuns','completedRuns','incompleteRuns','rejectedUpdates','fallbackActions'});
 names = {'metrics','diagnostics','recovery','grid','parameters','events','initialization','counts'};
 for j = 1:numel(names)
-    writetable(summary.(names{j}),fullfile(output,'tables',[names{j},'.csv']));
+    writetable(summary.(names{j}),fullfile(destination,'tables',[names{j},'.csv']));
 end
 end
 function row = event_row(base,index,stage,message)

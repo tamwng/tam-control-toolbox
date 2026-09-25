@@ -1,6 +1,6 @@
 function [history,summary] = study6_constraints(output,root,cfg)
 %STUDY6_CONSTRAINTS Reuse all four approved deterministic Plant B audit runs.
-folder = fullfile(root,'results',cfg.sources{2});
+folder = study6_source(root,cfg,2);
 saved = load(fullfile(folder,'settings.mat'),'cfg'); expected = saved.cfg.control; expected.hy = [.85;.85];
 history = table; summary = table; runs = cell(1,4); ids = ["A","O3","E","K"];
 for m = 1:4

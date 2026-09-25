@@ -1,5 +1,10 @@
-function verification = study6_verify_results(output)
-%STUDY6_VERIFY_RESULTS Read-only complete-array audit of the derived package.
+function verification = study6_verify_results(output,reportDestination)
+%STUDY6_VERIFY_RESULTS Audit saved arrays and write a compact verification CSV.
+% Supply a separate report destination when auditing a protected archive.
+if nargin < 2, reportDestination = output; end
+ejc_assert_writable(reportDestination);
+tableDir = fullfile(reportDestination,'tables');
+if ~isfolder(tableDir), mkdir(tableDir); end
 verification = struct('filesChecked',0,'attemptedPaths',0,'finitePaths',0,'failureRecords',0, ...
     'identityMax',0,'squaredIdentityMax',0,'combinedIdentityMax',0, ...
     'firstStepFreezingMax',0,'contactMax',0,'archiveComparisonMax',0,'newControlRuns',0);
@@ -61,7 +66,7 @@ assert(height(s.constraintHistory) == 400 && height(s.constraintSummary) == 4);
 assert(all(s.constraintHistory.nextSampleTime-s.constraintHistory.originTime > .1-1e-12));
 assert(all(abs(s.constraintSummary.initialViolation-.55) < 1e-11));
 assert(all(abs(s.constraintSummary.firstActualFutureViolation-.09) < 1e-11));
-counts = struct2table(verification); writetable(counts,fullfile(output,'tables','verification.csv'));
+counts = struct2table(verification); writetable(counts,fullfile(tableDir,'verification.csv'));
 fprintf('Study 6: %d MAT batches, %d/%d finite paths, %d explicit failures; identities verified.\n', ...
     verification.filesChecked,verification.finitePaths,verification.attemptedPaths,verification.failureRecords);
 end

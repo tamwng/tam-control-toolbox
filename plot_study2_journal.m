@@ -7,8 +7,10 @@ function figureDir = plot_study2_journal(resultsDir,figureDir,rankCheckFile)
 % cross-check CSV is retained separately in results/study2_journal.
 root = fileparts(mfilename('fullpath'));
 if nargin < 1, resultsDir = fullfile(root,'results','study2_pilot_20260918'); end
-if nargin < 2, figureDir = fullfile(root,'results','study2_journal'); end
-if nargin < 3, rankCheckFile = fullfile(figureDir,'gram_numerical_rank_check.csv'); end
+if nargin < 2, figureDir = []; end
+figureDir = ejc_output_path('study2_figures',figureDir);
+ejc_assert_writable(figureDir);
+if nargin < 3, rankCheckFile = fullfile(root,'results','study2_journal','gram_numerical_rank_check.csv'); end
 oldPath = path;
 restorePath = onCleanup(@() path(oldPath));
 addpath(fullfile(root,'studies','study2'));

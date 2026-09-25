@@ -1,0 +1,107 @@
+{
+  "sourceSHA": "677258e4c676631806c9c8dd31f779004d511218",
+  "sourceChanges": " M .gitignore\n M CITATION.cff\n M README.md\n M plot_study1_journal.m\n M plot_study2_journal.m\n M plot_study3_journal.m\n M plot_study4_journal.m\n M plot_study5_journal.m\n M plot_study6_journal.m\n M run_study1.m\n M run_study2.m\n M run_study3.m\n M run_study4.m\n M run_study5.m\n M run_study6.m\n M run_tests.m\n M run_verification.m\n M studies/p06/README.md\n M studies/p06/p06_execute.m\n M studies/p06/p06_plan.m\n M studies/p06/p06_provenance.m\n M studies/p06/run_p06.m\n M studies/p06/run_p06_tests.m\n M studies/study1/study1_summarize.m\n M studies/study2/study2_summarize.m\n M studies/study3/study3_summarize.m\n M studies/study4/study4_summarize.m\n M studies/study5/study5_summarize.m\n M studies/study6/study6_constraints.m\n M studies/study6/study6_grid_context.m\n M studies/study6/study6_online.m\n M studies/study6/study6_primary.m\n M studies/study6/study6_secondary.m\n M studies/study6/study6_verify_results.m\n?? P07_MAP.md\n?? ejc_archive_integrity.m\n?? ejc_assert_writable.m\n?? ejc_check_records.m\n?? ejc_output_path.m\n?? ejc_reference_sources.m\n?? ejc_source_revision.m\n?? ejc_validate_sources.m\n?? inspect_ejc.m\n?? run_ejc.m\n?? studies/p07/\n?? studies/study6/study6_source.m\n?? tests/test_p07_comparison.m\n?? tests/test_p07_entrypoints.m\n?? tests/test_p07_reporting.m\n",
+  "clean": false,
+  "mode": "quick",
+  "status": "PASSED",
+  "computationMode": "bounded verification and one fresh representative",
+  "startedUTC": "2026/09/25 03:25:43",
+  "output": "C:\\Users\\Tam\\OneDrive - Kyoto University\\research\\projects\\tam-control-toolbox\\results\\p07_quick_20260925_122543_764",
+  "references": {
+    "study1": "C:\\Users\\Tam\\OneDrive - Kyoto University\\research\\projects\\tam-control-toolbox\\results\\study1_candidate_20260917",
+    "study2": "C:\\Users\\Tam\\OneDrive - Kyoto University\\research\\projects\\tam-control-toolbox\\results\\study2_pilot_20260918",
+    "study3": "C:\\Users\\Tam\\OneDrive - Kyoto University\\research\\projects\\tam-control-toolbox\\results\\study3_pilot_20260918",
+    "study4": "C:\\Users\\Tam\\OneDrive - Kyoto University\\research\\projects\\tam-control-toolbox\\results\\study4_pilot_20260922",
+    "study5": "C:\\Users\\Tam\\OneDrive - Kyoto University\\research\\projects\\tam-control-toolbox\\results\\study5_pilot_20260922",
+    "study6": "C:\\Users\\Tam\\OneDrive - Kyoto University\\research\\projects\\tam-control-toolbox\\results\\study6_pilot_20260922",
+    "p06": "C:\\Users\\Tam\\OneDrive - Kyoto University\\research\\projects\\tam-control-toolbox\\results\\p06_sensitivity_20260924_225708"
+  },
+  "environment": {
+    "MATLAB": "26.1.0.3346908 (R2026a) Update 5",
+    "computer": "PCWIN64",
+    "toolboxes": [
+      {
+        "Name": "Aerospace Toolbox",
+        "Version": "26.1",
+        "Release": "(R2026a)",
+        "Date": "20-Nov-2025"
+      },
+      {
+        "Name": "Control System Toolbox",
+        "Version": "26.1",
+        "Release": "(R2026a)",
+        "Date": "20-Nov-2025"
+      },
+      {
+        "Name": "Instrument Control Toolbox",
+        "Version": "26.1",
+        "Release": "(R2026a)",
+        "Date": "20-Nov-2025"
+      },
+      {
+        "Name": "MATLAB",
+        "Version": "26.1",
+        "Release": "(R2026a)",
+        "Date": "19-Nov-2025"
+      },
+      {
+        "Name": "Model Predictive Control Toolbox",
+        "Version": "26.1",
+        "Release": "(R2026a)",
+        "Date": "20-Nov-2025"
+      },
+      {
+        "Name": "Optimization Toolbox",
+        "Version": "26.1",
+        "Release": "(R2026a)",
+        "Date": "20-Nov-2025"
+      },
+      {
+        "Name": "System Identification Toolbox",
+        "Version": "26.1",
+        "Release": "(R2026a)",
+        "Date": "20-Nov-2025"
+      },
+      {
+        "Name": "UAV Toolbox",
+        "Version": "26.1",
+        "Release": "(R2026a)",
+        "Date": "20-Nov-2025"
+      }
+    ],
+    "OS": "Windows 10",
+    "OSVersion": "10.0",
+    "CPU": "Intel64 Family 6 Model 151 Stepping 2, GenuineIntel",
+    "architecture": "win64"
+  },
+  "solverOptions": {
+    "ConstraintTolerance": 1E-8,
+    "Display": "off",
+    "FunctionTolerance": "default dependent on problem",
+    "HessianMultiplyFcn": [],
+    "LinearSolver": "auto",
+    "MaxIterations": 200,
+    "ObjectiveLimit": -1.0E+20,
+    "OptimalityTolerance": 1E-8,
+    "ScaleProblem": false,
+    "StepTolerance": 1E-12,
+    "SubproblemAlgorithm": "cg",
+    "TypicalX": "ones(numberOfVariables,1)",
+    "UseCodegenSolver": false,
+    "Algorithm": "interior-point-convex"
+  },
+  "normalizedKKTRejectionThreshold": 1E-7,
+  "comparisonRule": "Exact scientific values and discrete definitions; wall-clock and explicit provenance excluded. Existing numerical identity/KKT thresholds unchanged.",
+  "coverage": {
+    "study1": 258,
+    "study2": 22,
+    "study3": 218,
+    "study4": 12,
+    "study5": 5,
+    "study6DiagnosticBatches": 329,
+    "study6ControlRuns": 0,
+    "p06": 1558
+  },
+  "elapsedSeconds": 7.5332614,
+  "completedUTC": "2026/09/25 03:25:51"
+}

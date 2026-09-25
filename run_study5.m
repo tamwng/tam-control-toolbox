@@ -1,17 +1,18 @@
-function outputDir = run_study5(outputName)
+function outputDir = run_study5(outputName,options)
 %RUN_STUDY5 Physical identification/reconstruction deterministic pilot only.
 % From the repository root: run_study5
 % Requires MATLAB and Optimization Toolbox. Writes a new results package;
 % no confirmation, tuning, publication graphics, or Study 6 decomposition.
+arguments
+    outputName = ''
+    options.Figures (1,1) logical = true
+    options.ReferenceDirectory = ''
+end
 root = fileparts(mfilename('fullpath'));
-if nargin < 1, outputName = ['study5_pilot_',char(datetime('now','Format','yyyyMMdd_HHmmss'))]; end
-assert(ischar(outputName) && ~isempty(regexp(outputName,'^[A-Za-z0-9_-]+$','once')), ...
-    'study5:OutputName','Provide a simple new results-directory name.');
+outputDir = ejc_output_path('study5',outputName);
 oldPath = path; cleanup = onCleanup(@() path(oldPath));
 restoredefaultpath; addpath(root,fullfile(root,'src'));
 for s = [1 2 3 5], addpath(fullfile(root,'studies',sprintf('study%d',s))); end
-outputDir = fullfile(root,'results',outputName);
-assert(~isfolder(outputDir) && ~isfile(outputDir),'study5:ExistingOutput','Use a new results directory.');
 before = run_verification;
 cfg = study5_settings;
 mkdir(outputDir);
@@ -27,6 +28,7 @@ assert(audit.stateChecksPassed,'study5:NumericalAccuracy', ...
 records.initialization = study5_record(200,cfg.inputSeed,cfg);
 records.evaluation = study5_record(600,cfg.evaluationSeed,cfg);
 save(fullfile(outputDir,'records.mat'),'records');
+ejc_check_records(outputDir,options.ReferenceDirectory,5);
 queries = study5_queries(records.evaluation,cfg);
 save(fullfile(outputDir,'evaluation','common_queries.mat'),'queries');
 for id = string(cfg.modelIds)
@@ -43,7 +45,7 @@ end
 summary = study5_summarize(outputDir,cfg);
 save(fullfile(outputDir,'summary.mat'),'summary');
 study5_verify_results(outputDir,cfg);
-study5_figures(outputDir,cfg,summary);
+if options.Figures, study5_figures(outputDir,cfg,summary); end
 after = run_verification;
 verification = struct('beforeNames',{{before.Name}},'beforePassed',[before.Passed], ...
     'afterNames',{{after.Name}},'afterPassed',[after.Passed],'savedDataChecksPassed',true);

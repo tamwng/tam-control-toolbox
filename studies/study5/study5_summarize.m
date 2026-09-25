@@ -1,6 +1,11 @@
-function summary = study5_summarize(output,cfg)
+function summary = study5_summarize(output,cfg,destination)
 %STUDY5_SUMMARIZE All pilot outcomes in physical forward-output units.
 % Inverse and direct regression residuals are not pooled or compared.
+% The optional destination separates regenerated reports from source records.
+if nargin < 3, destination = output; end
+ejc_assert_writable(destination);
+tableDir = fullfile(destination,'tables');
+if ~isfolder(tableDir), mkdir(tableDir); end
 summary.metrics = table; initialization = struct([]); forecasts = struct([]);
 diagnostics = struct([]); events = struct([]); parameters = table;
 numericalRuns = struct([]);
@@ -128,7 +133,7 @@ summary.counts = table(numel(cfg.modelIds),sum(summary.diagnostics.completed), .
     sum(summary.diagnostics.fitUpdatesRejected),sum(summary.diagnostics.fallbackActions), ...
     'VariableNames',{'attemptedRuns','completedRuns','incompleteRuns','rejectedOnlineUpdates','rejectedFitUpdates','fallbackActions'});
 names = fieldnames(summary);
-for j = 1:numel(names), writetable(summary.(names{j}),fullfile(output,'tables',[names{j},'.csv'])); end
+for j = 1:numel(names), writetable(summary.(names{j}),fullfile(tableDir,[names{j},'.csv'])); end
 end
 function values = parameter_rows(raw,mapped,index,phase,cfg)
 rows = struct([]); units = [string(cfg.units.J),string(cfg.units.d_C)];

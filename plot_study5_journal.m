@@ -5,7 +5,9 @@ function figureDir = plot_study5_journal(resultsDir,figureDir)
 % exact plotted-value CSV and supplied caption. No models are evaluated.
 root = fileparts(mfilename('fullpath'));
 if nargin < 1, resultsDir = fullfile(root,'results','study5_pilot_20260922'); end
-if nargin < 2, figureDir = fullfile(root,'results','study5_journal'); end
+if nargin < 2, figureDir = []; end
+figureDir = ejc_output_path('study5_figures',figureDir);
+ejc_assert_writable(figureDir);
 oldPath = path; restorePath = onCleanup(@() path(oldPath));
 addpath(fullfile(root,'studies','study5'));
 source = char(java.io.File(resultsDir).getCanonicalPath());
