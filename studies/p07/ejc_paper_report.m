@@ -1,4 +1,4 @@
-function report = ejc_paper_report(sources,references,output)
+function report = ejc_paper_report(sources,references,output,portable)
 %EJC_PAPER_REPORT Compact paper-result views from explicitly identified runs.
 % This is reporting, not a simulation. Sources/references use study1,...,
 % study6,p06 absolute directory fields. Output must not be a historical
@@ -6,6 +6,8 @@ function report = ejc_paper_report(sources,references,output)
 % Table A.14 uses the 503 primary runs, excluding the 12 earlier Study 1
 % diagnostic dependencies. Table 12 is the controller-specific retrospective
 % measurement diagnostic, not the common-query forecast comparison.
+if nargin<4,portable=[];end
+assert(isempty(portable) || isa(portable,'function_handle'),'ejc:PaperAdapter','Expected the P07 table comparator.');
 ejc_assert_writable(output);
 assert(~isfile(output),'ejc:OutputFile','The evidence destination is a file.');
 if ~isfolder(output), mkdir(output); end
@@ -20,6 +22,14 @@ current12 = measurement_rows(sources.study6); reference12 = measurement_rows(ref
 left12 = current12; right12 = reference12;
 left12.sourceFile = []; right12.sourceFile = [];
 table12Passed = isequaln(left12,right12);
+if ~isempty(portable)
+    portableEvidence.originalStrictConditioningPassed=conditioningPassed;
+    portableEvidence.originalStrictTable12Passed=table12Passed;
+    portableEvidence.conditioning=portable("conditioning",left,right);
+    portableEvidence.table12=portable("table12",left12,right12);
+    conditioningPassed=portableEvidence.conditioning.passed;
+    table12Passed=portableEvidence.table12.passed;
+end
 
 % These exports retain all reported-group support rows and their identifiers.
 % Their exact paper row selections are documented in the paper/result map.
@@ -54,6 +64,7 @@ report.table12Rows = height(current12);
 report.sourceBindings = binding;
 report.resultSources = struct2table(resultRows,'AsArray',true);
 report.passed = conditioningPassed && table12Passed;
+if ~isempty(portable),report.portable=portableEvidence;end
 report.mode = 'Derived reporting only; execution manifests identify fresh versus historical sources.';
 report.conditioningDefinition = ['Recorded covarianceCondition for adaptive runs and qpCondition for all runs, ' ...
     'at steps 1:nSteps. These are separate from recent-regressor numerical rank/condition. ' ...

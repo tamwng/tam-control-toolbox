@@ -1,6 +1,10 @@
-function study4_verify_results(output,cfg)
+function study4_verify_results(output,cfg,gramComparison)
 %STUDY4_VERIFY_RESULTS Independent formulas and saved-data causal audits.
 % No performance ordering is required. Verification does not rerun control.
+% Optional P07 hook replaces ONLY the finite recent-Gram condition assertion.
+% The original rank-deficiency Inf assertion is still executed in both modes.
+if nargin < 3, gramComparison = []; end
+assert(isempty(gramComparison) || isa(gramComparison,'function_handle'));
 saved = load(fullfile(output,'records.mat'),'records'); records = saved.records;
 for name = ["initialization","evaluation"]
     r = records.(name);
@@ -91,7 +95,11 @@ for id = string(cfg.modelIds)
                 s = svd(G); rank = nnz(s > 1e-10*s(1));
                 assert(r.gramValid(j) && r.gramRank(j) == rank);
                 if rank < r.nEstimated, assert(isinf(r.gramCondition(j)));
-                else, close(r.gramCondition(j),s(1)/s(end),1e-6); end
+                elseif isempty(gramComparison), close(r.gramCondition(j),s(1)/s(end),1e-6); end
+                if ~isempty(gramComparison)
+                    condition = Inf; if rank == r.nEstimated, condition = s(1)/s(end); end
+                    gramComparison(r,G,recent,j,rank,condition,fullfile(output,'runs',file));
+                end
             end
         end
         for j = indices
@@ -123,7 +131,11 @@ for id = string(cfg.modelIds)
     end
 end
 assert(count == 12 && numel(dir(fullfile(output,'runs','*.mat'))) == 12);
-fprintf('Study 4 saved-data verification: 12 runs, 3 fits; batch, timing, grid, ranks, and QP checks passed.\n');
+if isempty(gramComparison)
+    fprintf('Study 4 saved-data verification: 12 runs, 3 fits; batch, timing, grid, ranks, and QP checks passed.\n');
+else
+    fprintf('Study 4: 12 runs, 3 fits; all non-hook requirements passed. Gram comparison verdict is external.\n');
+end
 end
 function rows = features(id,x,u)
 x = x(:); u = u(:); rows = [ones(size(x)),x,u];

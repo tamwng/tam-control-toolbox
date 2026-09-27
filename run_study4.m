@@ -7,6 +7,7 @@ arguments
     outputName = ''
     options.Figures (1,1) logical = true
     options.ReferenceDirectory = ''
+    options.VerificationAdapter = []
 end
 root = fileparts(mfilename('fullpath'));
 outputDir = ejc_output_path('study4',outputName);
@@ -54,7 +55,12 @@ for scenario = string(cfg.scenarios)
         save(fullfile(outputDir,'evaluation',sprintf('%s_%s.mat',scenario,id)),'evaluation');
     end
 end
-study4_verify_results(outputDir,cfg);
+if isempty(options.VerificationAdapter)
+    study4_verify_results(outputDir,cfg);
+else
+    assert(isa(options.VerificationAdapter,'function_handle'),'ejc:VerificationAdapter','Expected a verification function.');
+    options.VerificationAdapter(outputDir,cfg);
+end
 summary = study4_summarize(outputDir,cfg);
 save(fullfile(outputDir,'summary.mat'),'summary');
 if options.Figures, study4_figures(outputDir,cfg); end

@@ -1,0 +1,8 @@
+{
+  "fixture": "tests/fixtures/p07_gram_screens.mat",
+  "sha256": "27c4b3c519fe9bb97864cccab73413989138e0a22a20c8368d9e9ea6472072de",
+  "source765": "results/p07_portable_implementation_20260926_215638/saved_matrix_gate.mat: failure.screen.matrix/normalizedRegressors/storedCondition",
+  "source1067": "results/p07_mac_saved_investigation_20260925_173339/gram_1067_extracted.mat: Gc,Gr,Rc,Rr",
+  "condition1067": "Current cond values calculated only for the isolated unit fixture; not substituted for historical raw values",
+  "scientificRuns": 0
+}

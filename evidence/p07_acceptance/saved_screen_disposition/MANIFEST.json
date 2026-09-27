@@ -1,0 +1,76 @@
+{
+  "source_zip_sha256": "4acaa720ce4ea3d0af0bb8728270612c72e692d6045d25880094f45a2fb5069e",
+  "entries": [
+    {
+      "path": "00_MAC_PROMPT.md",
+      "bytes": 3388,
+      "sha256": "6ccbbff583b8f704e74a4d82caef743a29a08f9c45a5d7cfab980ee2bccd2b92"
+    },
+    {
+      "path": "01_AUDIT_AND_BINDING_DISPOSITION.md",
+      "bytes": 16141,
+      "sha256": "35e874c5e9da709d2d6cae3122e6140363d464ed8c86ce57a5e8498bc3e00bba"
+    },
+    {
+      "path": "02_REQUIRED_TESTS.md",
+      "bytes": 3048,
+      "sha256": "fd84a50a6c5cb39895fa24a28706f9158b5228d483d3432a87ba8c4c65ed9a4c"
+    },
+    {
+      "path": "03_INDEPENDENT_MATRIX_CHECKS.json",
+      "bytes": 43245,
+      "sha256": "bc6dfd07953f18402d18dea954f6afb6e696955b76a68c0e79823af68b88d98a"
+    },
+    {
+      "path": "04_BLOCKERS.csv",
+      "bytes": 2466,
+      "sha256": "bf35398f33026ed5b9c2127d49434dcf3527220831c3f51f76dffc3c5a4e3afe"
+    },
+    {
+      "path": "05_P7_SCOPE_UNCHANGED.csv",
+      "bytes": 1953,
+      "sha256": "d8cceaa07496ecc87ab852f3095ffc9f7dc73dfab34791a26500e6d0524c077d"
+    },
+    {
+      "path": "06_INDEPENDENT_SUMMARY.md",
+      "bytes": 965,
+      "sha256": "1523b42ae9cd9a47ab28d147513d709e9f3c4f2e163c62a77e291cf014eed9b1"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1618,
+      "sha256": "4afc688aa599deafd63bc321d29bfd1dfb6610a5cdc7ca061a89f5e7dd373e7d"
+    },
+    {
+      "path": "source_evidence/00_READ_FIRST.md",
+      "bytes": 3897,
+      "sha256": "6ae73989af7ada3d5c19eed78559af7c54e79e830f7003b3e916bd77b893c427"
+    },
+    {
+      "path": "source_evidence/MANIFEST.json",
+      "bytes": 4069,
+      "sha256": "15da83f8138942be5a055aacc021ef4801788016df4ce5eed445d30d1a851be4"
+    },
+    {
+      "path": "source_evidence/VERIFICATION_STATUS.json",
+      "bytes": 3513,
+      "sha256": "0ed2fa3855aff420b301b0ed99b65a0c6f0807691a5554c99a93383e404c2a8c"
+    },
+    {
+      "path": "source_evidence/integrity_final.json",
+      "bytes": 715,
+      "sha256": "ea877106465a0c5a3555a4edb996834a044adb97f3dbcb1cb0907c76c9a9f338"
+    },
+    {
+      "path": "source_evidence/selected_rank_evidence.mat",
+      "bytes": 30457,
+      "sha256": "268a67f1a1f6e2c9da987095e0043983ce4ee1d2b86452692c2cc5d7b3e423b8"
+    },
+    {
+      "path": "source_evidence/verification_tests_03.log",
+      "bytes": 4118,
+      "sha256": "29cf5a23d8c112a24107ec65b9e1b09181a1995cb32214ed36eae675db7562f2"
+    }
+  ],
+  "note": "Manifest excludes itself. No source repository was edited."
+}

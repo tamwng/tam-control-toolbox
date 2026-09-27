@@ -1,8 +1,12 @@
-function study3_verify_results(output,cfg)
+function study3_verify_results(output,cfg,gramComparison)
 %STUDY3_VERIFY_RESULTS Independent saved-data checks for the complete pilot.
 % Explicit plant/dictionary formulas and weighted batch QR verify causality
 % and numerical obligations without imposing a scientific ranking. Relative
 % batch tolerance is 1e-8; data/timing tolerance is 1e-12; QP residuals 1e-7.
+% Optional P07 hook replaces ONLY the recent-Gram condition assertion.
+% All other assertions and the no-option strict path remain unchanged.
+if nargin < 3, gramComparison = []; end
+assert(isempty(gramComparison) || isa(gramComparison,'function_handle'));
 saved = load(fullfile(output,'records.mat'),'records'); records = saved.records;
 check_record(records.initialization,200,.5,cfg.inputSeed);
 check_record(records.evaluation,600,.5,cfg.evaluationSeed);
@@ -40,7 +44,8 @@ for trial = 0:cfg.noiseTrials
             assert(strcmp(r.id,id) && strcmp(r.scenario,scenario) && r.trial == trial);
             assert(strcmp(r.modelId,spec.modelId) && strcmp(r.mode,spec.mode));
             assert(isequal(r.forgetting,spec.forgetting) && isequal(r.controlSettings,cfg.control));
-            check_run(r,fits.(modelId),measurementNoise,processNoise,cfg);
+            check_run(r,fits.(modelId),measurementNoise,processNoise,cfg,gramComparison, ...
+                fullfile(output,'runs',sprintf('%s_%s_%03d.mat',scenario,id,trial)));
             count = count+1;
         end
     end
@@ -63,8 +68,12 @@ for id = cfg.caseIds
         close(a.result.u(1:last+1),d.result.u(1:last+1));
     end
 end
+if isempty(gramComparison)
 fprintf(['Study 3 saved-data verification: %d/%d runs, %d fits; timing, pairing, ' ...
     'weighted batch, VRF, frozen controls, ranks, and QP checks passed.\n'],count,expected,fitsChecked);
+else
+    fprintf('Study 3: %d/%d runs, %d fits; all non-hook requirements passed. Gram comparison verdict is external.\n',count,expected,fitsChecked);
+end
 end
 
 function check_streams(records,cfg)
@@ -127,7 +136,7 @@ close(fit.checkpointTheta,fit.theta(:,cfg.fitSteps+1));
 close(fit.checkpointCovariance,fit.covariance(:,:,cfg.fitSteps+1));
 end
 
-function check_run(r,fit,v,w,cfg)
+function check_run(r,fit,v,w,cfg,gramComparison,sourceFile)
 n = r.nSteps;
 assert(n >= 0 && n <= cfg.K && r.x(1) == 0 && r.u(1) == 0 && r.Ts == .1);
 assert(~r.completed || (n == cfg.K && all(isfinite(r.x)) && all(abs(r.x) <= 5)));
@@ -196,7 +205,11 @@ for j = 1:n
         singular = svd(G); rank = nnz(singular > 1e-10*singular(1));
         condition = Inf; if rank == size(G,1), condition = singular(1)/singular(end); end
         assert(r.gramValid(j) && r.gramRank(j) == rank);
-        close(r.gramCondition(j),condition);
+        if isempty(gramComparison)
+            close(r.gramCondition(j),condition);
+        else
+            gramComparison(r,G,window,j,rank,condition,sourceFile);
+        end
     end
     value = features(r.modelId,r.y(j),r.u(j))*r.theta(:,j);
     close(r.prediction(j),value); close(r.A(j)*r.y(j)+r.B(j)*r.u(j)+r.c(j),value);

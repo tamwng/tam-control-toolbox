@@ -8,6 +8,7 @@ arguments
     outputName = ''
     options.Figures (1,1) logical = true
     options.ReferenceDirectory = ''
+    options.VerificationAdapter = []
 end
 root = fileparts(mfilename('fullpath'));
 outputDir = ejc_output_path('study3',outputName);
@@ -21,7 +22,12 @@ cfg = study3_settings;
 study3_prepare(outputDir,cfg);
 ejc_check_records(outputDir,options.ReferenceDirectory,3);
 study3_run_batch(outputDir,0:cfg.noiseTrials);
-study3_verify_results(outputDir,cfg);
+if isempty(options.VerificationAdapter)
+    study3_verify_results(outputDir,cfg);
+else
+    assert(isa(options.VerificationAdapter,'function_handle'),'ejc:VerificationAdapter','Expected a verification function.');
+    options.VerificationAdapter(outputDir,cfg);
+end
 summary = study3_summarize(outputDir,cfg);
 if options.Figures, study3_figures(outputDir,cfg,summary); end
 run_verification;

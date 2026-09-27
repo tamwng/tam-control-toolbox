@@ -9,6 +9,7 @@ root = fileparts(fileparts(mfilename('fullpath')));
 t.TestData.root = root;
 for study = 1:6, addpath(fullfile(root,'studies',sprintf('study%d',study))); end
 addpath(fullfile(root,'studies','p06','tests'));
+addpath(fullfile(root,'studies','p07'));
 t.TestData.sources = ejc_reference_sources;
 end
 
@@ -24,7 +25,13 @@ before = read_bytes(fullfile(source,'tables','measured_initialization_audit.csv'
 destination = fullfile(fixture.Folder,'report');
 actual = study1_summarize(source,cfg,destination);
 saved = load(fullfile(t.TestData.root,'studies','p06','tests','fixtures','pre_interface.mat'),'oracle');
-verifyEqual(t,actual,saved.oracle.summary);
+runs=cell(2,1);campaigns={'pilot','confirmation'};
+for j=1:2
+    parent=load(fullfile(source,'data',[campaigns{j},'_S_000.mat']),'result');
+    runs{j}=parent.result;
+end
+portable=ejc_covariance_report_compare(actual,saved.oracle.summary,runs,runs,cfg);
+verifyTrue(t,portable.passed,portable.reason);
 verifyTrue(t,isfile(fullfile(destination,'tables','run_metrics.csv')));
 verifyFalse(t,isfile(fullfile(source,'tables','run_metrics.csv')));
 verifyEqual(t,read_bytes(fullfile(source,'tables','measured_initialization_audit.csv')),before);

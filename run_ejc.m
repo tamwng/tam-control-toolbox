@@ -23,20 +23,24 @@ addpath(root,fullfile(root,'src'),fullfile(root,'studies','p06'),fullfile(root,'
 for s = 1:6, addpath(fullfile(root,'studies',sprintf('study%d',s))); end
 reference = ejc_reference_sources; revision = ejc_source_revision;
 isFresh = ~ismember(mode,{'quick','archive'});
-if isFresh
-    assert(revision.clean,'ejc:DirtySource','Commit the candidate and obtain a clean source tree before fresh reproduction.');
-end
-if strcmp(mode,'study6'), ejc_validate_sources(options.Sources); end
+portable=~strcmp(mode,'archive');
+if portable,revision=ejc_portable_candidate;end
+if strcmp(mode,'study6'), ejc_validate_sources(options.Sources,revision.policySHA256); end
 assert(exist('quadprog','file')==2 && license('test','Optimization_Toolbox'), ...
     'ejc:MissingSolver','Licensed Optimization Toolbox is required.');
+if portable
+    toolbox=ver('optim');
+    assert(contains(version,'(R2026a) Update 5') && isscalar(toolbox) && strcmp(toolbox.Version,'26.1'), ...
+        'ejc:Environment','Required MATLAB R2026a Update 5 / Optimization Toolbox 26.1 differs.');
+end
 output = ejc_output_path(mode,options.OutputDirectory);
 % Historic whole tree is 1.36 GB. Allow three such trees for new data/logs;
 % this is a conservative storage allowance, not a predicted output size.
-if strcmp(mode,'full')
+if portable
     diskPath = fileparts(output);
     while ~isfolder(diskPath), diskPath = fileparts(diskPath); end
     disk = java.io.File(diskPath);
-    assert(disk.getUsableSpace() > 3*1357579926,'ejc:Storage','Full reproduction needs at least 4.08 GB free working space.');
+    assert(disk.getUsableSpace() >= 4.1e9,'ejc:Storage','Verification requires at least 4.1 GB free working space.');
 end
 fprintf('EJC %s: %s\nSource: %s\n',mode,output,revision.sourceSHA);
 if strcmp(mode,'full')
@@ -54,12 +58,23 @@ manifest.environment = struct('MATLAB',version,'computer',computer,'toolboxes',v
     'OS',char(java.lang.System.getProperty('os.name')), ...
     'OSVersion',char(java.lang.System.getProperty('os.version')), ...
     'CPU',getenv('PROCESSOR_IDENTIFIER'),'architecture',computer('arch'));
+manifest.environment.BLAS=version('-blas');manifest.environment.LAPACK=version('-lapack');
+manifest.environment.maxNumCompThreads=maxNumCompThreads;
+manifest.environment.threadEnvironment=struct('OMP_NUM_THREADS',getenv('OMP_NUM_THREADS'), ...
+    'MKL_NUM_THREADS',getenv('MKL_NUM_THREADS'),'OPENBLAS_NUM_THREADS',getenv('OPENBLAS_NUM_THREADS'));
+if ismac
+    [~,cpu]=system('sysctl -n machdep.cpu.brand_string');manifest.environment.CPU=strtrim(cpu);
+    [~,os]=system('sw_vers');manifest.environment.macOS=strtrim(os);
+end
 solver = optimoptions('quadprog','Algorithm','interior-point-convex','Display','off', ...
     'ConstraintTolerance',1e-8,'OptimalityTolerance',1e-8);
 manifest.solverOptions = struct;
 for name = string(properties(solver)).', manifest.solverOptions.(name) = solver.(name); end
 manifest.normalizedKKTRejectionThreshold = 1e-7;
 manifest.comparisonRule = 'Exact scientific values and discrete definitions; wall-clock and explicit provenance excluded. Existing numerical identity/KKT thresholds unchanged.';
+if portable
+    manifest.comparisonRule='Frozen approved P07 field rules; exact records/discrete/source checks; only explicitly reported passive-Gram qualifications.';
+end
 manifest.legacySchemaRule = ['Only study1 data/pilot_{A,K,P2,R,S,W}_{000,001}.mat may lack historical ' ...
     'identityChecksEvaluated and firstStepCheckEvaluated fields. Both fresh flags are required and validated ' ...
     'against isfinite of their corresponding residual maxima; every other comparison remains exact.'];
@@ -67,14 +82,17 @@ manifest.coverage = struct('study1',258,'study2',22,'study3',218,'study4',12, ..
     'study5',5,'study6DiagnosticBatches',329,'study6ControlRuns',0,'p06',1558);
 write_json(fullfile(output,'run_manifest.json'),manifest);
 sources = struct;
+totals=struct('scientificFiles',0,'controlCases',0,'completedControlCases',0,'legacyOmissions',0,'gramQualifications',0);
 try
     if isFresh, write_expected_inventory(output,mode,reference); end
-    if ~strcmp(mode,'quick')
-        manifest.integrityBefore = ejc_archive_integrity(fullfile(output,'integrity_before'));
-    end
+    manifest.integrityBefore = ejc_archive_integrity(fullfile(output,'integrity_before'));
+    assert(manifest.integrityBefore.fileCount==3022 && manifest.integrityBefore.totalBytes==1357579926, ...
+        'ejc:ArchiveCoverage','Protected archive coverage differs.');
     switch mode
         case 'quick'
-            quick_example(output,reference);
+            quick=quick_example(output,reference);
+            manifest.quick=struct('checksPassed',49,'representativePassed',quick.passed, ...
+                'representativeStatus',quick.status,'gramQualifications',quick.qualifiedCount);
         case 'archive'
             archive_reports(output,reference);
         otherwise
@@ -84,45 +102,73 @@ try
                 study = stages{k}; stageTimer = tic;
                 target = fullfile(output,study);
                 if strcmp(study,'p06')
-                    run_p06_tests(fullfile(output,'p06_tests'));
+                    ejc_p06_portable_tests(fullfile(output,'p06_tests'));
                     run_p06(target,'execute','P06_PRODUCTION_AUTHORIZED');
                 elseif strcmp(study,'study6')
                     bound = sources;
                     if ~strcmp(mode,'full'), bound = options.Sources; end
-                    identities = ejc_validate_sources(bound);
+                    identities = ejc_validate_sources(bound,revision.policySHA256);
                     run_study6(target,Figures=false,Sources=bound);
                     write_json(fullfile(target,'source_relationships.json'),identities);
+                    manifest.study6Sources=ejc_study6_source_checks(target,bound,fullfile(output,'study6_source_checks'));
                 else
                     runner = str2func(['run_' study]);
-                    runner(target,Figures=false,ReferenceDirectory=reference.(study));
+                    if any(strcmp(study,{'study3','study4'}))
+                        adapter=@(source,cfg)ejc_study34_verify(string(study),source,cfg,fullfile(output,['validity_' study]));
+                        runner(target,Figures=false,ReferenceDirectory=reference.(study),VerificationAdapter=adapter);
+                    else
+                        runner(target,Figures=false,ReferenceDirectory=reference.(study));
+                    end
                 end
                 sources.(study) = target;
                 one = struct; one.(study) = target;
-                comparison = ejc_compare_results(one,reference,fullfile(output,['comparison_' study]));
+                comparison = ejc_compare_portable_results(one,reference,fullfile(output,['comparison_' study]),sources);
                 assert(comparison.passed,'ejc:ReproductionMismatch','Study comparison failed. Review recorded differences.');
-                current = ejc_source_revision;
-                assert(current.clean && strcmp(current.sourceSHA,revision.sourceSHA),'ejc:SourceChanged','Candidate changed during execution.');
+                totals.scientificFiles=totals.scientificFiles+height(comparison.files);
+                totals.controlCases=totals.controlCases+sum(comparison.files.attemptedRuns);
+                totals.completedControlCases=totals.completedControlCases+sum(comparison.files.completedRuns);
+                totals.legacyOmissions=totals.legacyOmissions+nnz(startsWith(comparison.exclusions.reason,"Approved Study 1 pilot legacy omission only"));
+                totals.gramQualifications=totals.gramQualifications+comparison.qualifiedInstances;
+                manifest.comparisonTotals=totals;
+                ejc_portable_candidate(revision);
                 identity = struct('sourceSHA',revision.sourceSHA,'study',study, ...
                     'computationMode','fresh','status','PASSED','output',target, ...
                     'elapsedSeconds',toc(stageTimer),'completedUTC',char(datetime('now','TimeZone','UTC')));
+                identity.policySHA256=revision.policySHA256;
+                identity.gramQualifications=comparison.qualifiedInstances;
                 write_json(fullfile(target,'execution_manifest.json'),identity);
                 manifest.completedSources = sources;
                 write_json(fullfile(output,'run_manifest.json'),manifest);
             end
             if strcmp(mode,'full')
-                report = ejc_paper_report(sources,reference,fullfile(output,'paper_report'));
+                assert(totals.scientificFiles==2877 && totals.controlCases==2073 && ...
+                    totals.completedControlCases==2073 && totals.legacyOmissions==24 && ...
+                    manifest.study6Sources.diagnosticBatches==329, ...
+                    'ejc:FullCoverage','Mandatory full-suite coverage differs.');
+                report = ejc_paper_portable(sources,reference,fullfile(output,'paper_report'));
                 assert(report.passed,'ejc:PaperReportMismatch','Paper diagnostics differ. Stop for review.');
                 journal_figures(output,sources);
             end
     end
-    if ~strcmp(mode,'quick')
-        manifest.integrityAfter = ejc_archive_integrity(fullfile(output,'integrity_after'));
-    end
+    manifest.integrityAfter = ejc_archive_integrity(fullfile(output,'integrity_after'));
+    if portable,manifest.finalCandidate=ejc_portable_candidate(revision);end
     manifest.status = 'PASSED';
+    if portable
+        qualifications=totals.gramQualifications;
+        if strcmp(mode,'quick'),qualifications=manifest.quick.gramQualifications;end
+        manifest.acceptance=ejc_acceptance_verdict(0,0,qualifications);
+    end
 catch exception
     manifest.status = 'FAILED_OR_BLOCKED'; manifest.identifier = exception.identifier;
     manifest.message = exception.message;
     manifest.exception = getReport(exception,'extended','hyperlinks','off');
+    % Integrity evidence is mandatory even when a scientific check fails.
+    try
+        manifest.integrityAfterFailure=ejc_archive_integrity(fullfile(output,'integrity_after_failure'));
+    catch integrityFailure
+        manifest.integrityAfterFailure=struct('allPassed',false,'message',integrityFailure.message);
+    end
+    manifest.finalSource=ejc_source_revision;
     manifest.elapsedSeconds = toc(started);
     manifest.completedUTC = char(datetime('now','TimeZone','UTC'));
     write_json(fullfile(output,'run_manifest.json'),manifest);
@@ -133,8 +179,10 @@ write_json(fullfile(output,'run_manifest.json'),manifest);
 fprintf('EJC %s complete in %.3f s: %s\n',mode,manifest.elapsedSeconds,output);
 end
 
-function quick_example(output,reference)
+function report=quick_example(output,reference)
 results = run_tests('quick'); save(fullfile(output,'unit_checks.mat'),'results');
+assert(numel(results)==49 && all([results.Passed]) && ~any([results.Incomplete]), ...
+    'ejc:QuickCoverage','All 49 original quick checks are mandatory.');
 cfg = study1_settings;
 saved = load(fullfile(reference.study1,'data','records_confirmation.mat'),'records');
 initialization = study1_record(200,.5,cfg.confirmation.inputSeed,cfg);
@@ -148,8 +196,10 @@ result.forecasts = study1_forecasts(fit,evaluation,cfg);
 original = load(fullfile(reference.study1,'data','confirmation_S_000.mat'),'result');
 exact = isequaln(rmfield(result,'controlTime'),rmfield(original.result,'controlTime'));
 save(fullfile(output,'representative_study1_S_000.mat'),'result','cfg','exact');
-assert(exact,'ejc:ExampleMismatch','Representative scientific arrays differ.');
-fprintf('Fixed Study 1 Shared trial 0: exact scientific agreement; wall-clock timing excluded.\n');
+report=ejc_compare_representative(result,original.result,cfg);
+save(fullfile(output,'representative_comparison.mat'),'report','-v7');
+assert(report.passed,'ejc:ExampleMismatch','Representative portable requirements failed: %s',report.reason);
+fprintf('Fixed Study 1 Shared trial 0: %s; %d explicitly recorded Gram qualifications.\n',report.status,report.qualifiedCount);
 end
 
 function archive_reports(output,reference)
