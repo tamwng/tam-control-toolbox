@@ -73,7 +73,7 @@ for name = string(properties(solver)).', manifest.solverOptions.(name) = solver.
 manifest.normalizedKKTRejectionThreshold = 1e-7;
 manifest.comparisonRule = 'Exact scientific values and discrete definitions; wall-clock and explicit provenance excluded. Existing numerical identity/KKT thresholds unchanged.';
 if portable
-    manifest.comparisonRule='Frozen approved P07 field rules; exact records/discrete/source checks; only explicitly reported passive-Gram qualifications.';
+    manifest.comparisonRule='Frozen approved P07 field rules; exact records/discrete/source checks; explicitly reported passive-Gram qualifications and approved source-bound descriptive/null claim classifications.';
 end
 manifest.legacySchemaRule = ['Only study1 data/pilot_{A,K,P2,R,S,W}_{000,001}.mat may lack historical ' ...
     'identityChecksEvaluated and firstStepCheckEvaluated fields. Both fresh flags are required and validated ' ...
@@ -82,7 +82,7 @@ manifest.coverage = struct('study1',258,'study2',22,'study3',218,'study4',12, ..
     'study5',5,'study6DiagnosticBatches',329,'study6ControlRuns',0,'p06',1558);
 write_json(fullfile(output,'run_manifest.json'),manifest);
 sources = struct;
-totals=struct('scientificFiles',0,'controlCases',0,'completedControlCases',0,'legacyOmissions',0,'gramQualifications',0);
+totals=struct('scientificFiles',0,'controlCases',0,'completedControlCases',0,'legacyOmissions',0,'gramQualifications',0,'claimApplicabilityInstances',0,'rawClaimDifferences',0);
 try
     if isFresh, write_expected_inventory(output,mode,reference); end
     manifest.integrityBefore = ejc_archive_integrity(fullfile(output,'integrity_before'));
@@ -129,6 +129,8 @@ try
                 totals.completedControlCases=totals.completedControlCases+sum(comparison.files.completedRuns);
                 totals.legacyOmissions=totals.legacyOmissions+nnz(startsWith(comparison.exclusions.reason,"Approved Study 1 pilot legacy omission only"));
                 totals.gramQualifications=totals.gramQualifications+comparison.qualifiedInstances;
+                totals.claimApplicabilityInstances=totals.claimApplicabilityInstances+comparison.claimApplicabilityInstances;
+                totals.rawClaimDifferences=totals.rawClaimDifferences+comparison.rawClaimDifferences;
                 manifest.comparisonTotals=totals;
                 ejc_portable_candidate(revision);
                 identity = struct('sourceSHA',revision.sourceSHA,'study',study, ...
@@ -147,6 +149,12 @@ try
                     'ejc:FullCoverage','Mandatory full-suite coverage differs.');
                 report = ejc_paper_portable(sources,reference,fullfile(output,'paper_report'));
                 assert(report.passed,'ejc:PaperReportMismatch','Paper diagnostics differ. Stop for review.');
+                manifest.paperExportClaimApplicability=struct('instances',report.exportChecks.claimApplicabilityInstances, ...
+                    'rawClaimDifferences',report.exportChecks.rawClaimDifferences, ...
+                    'statisticalSignificanceAgreementClaimed',false);
+                manifest.paperTable12ClaimApplicability=struct('instances',report.portable.table12.claimApplicabilityInstances, ...
+                    'rawClaimDifferences',report.portable.table12.rawClaimDifferences, ...
+                    'statisticalSignificanceAgreementClaimed',false);
                 journal_figures(output,sources);
             end
     end

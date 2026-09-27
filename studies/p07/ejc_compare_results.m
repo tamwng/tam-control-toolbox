@@ -109,6 +109,8 @@ for group = groups
                 fileRow.referenceSHA256=state.portable.referenceSHA256;
             end
             fileRow.qualifiedInstances=state.qualifiedCount;
+            fileRow.claimApplicabilityInstances=state.claimCount;
+            fileRow.rawClaimDifferences=state.claimDifferences;
             ledger=state.portableRows; %#ok<NASGU>
             folder=fullfile(output,'field_ledgers',group);if ~isfolder(folder),mkdir(folder);end
             save(fullfile(folder,replace(name,'/','__')+".mat"),'ledger','-v7');
@@ -151,6 +153,8 @@ report.rule = ['Exact scientific MAT values and discrete definitions; exact valu
 if ~isempty(portable)
     report.rule='Closed P07 portable field rules; exact records/discrete values and explicit masks; separate parent, source, original-validity and publication gates remain mandatory.';
     report.qualifiedInstances=sum(report.files.qualifiedInstances);
+    report.claimApplicabilityInstances=sum(report.files.claimApplicabilityInstances);
+    report.rawClaimDifferences=sum(report.files.rawClaimDifferences);
 end
 report.sourceDirectories = sources; report.referenceDirectories = references;
 writetable(report.files,fullfile(output,'comparison_files.csv'));
@@ -239,7 +243,7 @@ function state = empty_state
 state = struct('leafChecks',0,'numericValues',0,'maskMismatches',0, ...
     'maximum',0,'maximumField',"",'maximumIndex',NaN,'attemptedRuns',0,'completedRuns',0, ...
     'failures',struct([]),'excluded',struct([]),'portable',[], ...
-    'portableRows',{{}},'qualifiedCount',0);
+    'portableRows',{{}},'qualifiedCount',0,'claimCount',0,'claimDifferences',0);
 end
 
 function state = compare_value(a,b,quantity,state,parentA,parentB)
@@ -332,6 +336,10 @@ else
         v=ejc_portable_leaf(a,b,quantity,parentA,parentB,state.portable);
         v.quantity=quantity;v.rawMaximumAbsoluteDifference=maximum;v.rawMaximumLinearIndex=index;
         state.portableRows{end+1,1}=v;state.qualifiedCount=state.qualifiedCount+v.qualifiedCount;
+        if isfield(v.claim,'directionalClaimApplicability')
+            state.claimCount=state.claimCount+1;
+            state.claimDifferences=state.claimDifferences+~v.claim.originalStrictVerdict.passed;
+        end
         if ~v.passed,state=failed(state,quantity,v.reason,maximum,index);end
     end
 end

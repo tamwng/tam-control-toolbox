@@ -84,8 +84,8 @@ verifyEqual(t,r.files.referenceSHA256,r.files.sourceSHA256);
 verifyTrue(t,isnan(r.files.absoluteTolerance) && isnan(r.files.relativeTolerance));
 verifyEqual(t,root,fileparts(which('run_ejc')));
 end
-function test_both_reported_cross_term_means_preserve_sign(t)
-c=context;c.study="study6";c.file="tables/main.csv";c.sources=struct;c.references=struct;
+function test_explicitly_claimed_cross_term_means_preserve_sign(t)
+c=context;c.study="study6";c.file="tables/main.csv";c.sources=struct;c.references=struct;c.explicitDirectionalClaim=true;
 a=table(-1e-20,-1e-20,'VariableNames',{'meanCrossTerm','meanCombinedCrossTerm'});
 b=a;b{:,:}=-b{:,:};
 for field=["meanCrossTerm","meanCombinedCrossTerm"]

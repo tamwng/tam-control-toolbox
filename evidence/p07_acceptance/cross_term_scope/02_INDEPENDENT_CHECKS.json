@@ -1,0 +1,185 @@
+{
+  "auditType": "Independent compact-package inspection; no MATLAB execution",
+  "inputZipSHA256": "626973f23a551e981db82c14a51b233f7869ed748c891512af4c298ede1580f6",
+  "oldCandidate": "894eba817eaa43b882f849c5f830f64a8d6dbe39",
+  "oldPolicySHA256": "05c20f48e37a352f62ad3fb8975b7803be10ecd9e528bfeff61ac5005c97c451",
+  "oldOutcome": "FAILED; must remain preserved",
+  "manifestEntriesVerified": 26,
+  "manifestChecks": [
+    {
+      "path": "DETAIL_SUMMARY.json",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "FINAL_IDENTITY_AND_COVERAGE.json",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "IMPLEMENTATION_GATE.json",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "LOCAL_EVIDENCE_INDEX.csv",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "POLICY.json",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "PRIOR_QUICK_MANIFEST.json",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "README.md",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "comparison_study1/comparison_exclusions.csv",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "comparison_study1/comparison_failures.csv",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "comparison_study1/comparison_files.csv",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "comparison_study1/comparison_inventory.csv",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "expected_scientific_files.csv",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "failed_cross_term_rows.csv",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "frozen_verification_excerpt/ejc_claim_check.m",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "frozen_verification_excerpt/ejc_portable_leaf.m",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "frozen_verification_excerpt/ejc_rule_parameters.m",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "full_launcher.log",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "full_launcher_native_02.log",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "integrity_after_failure/archive_integrity.csv",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "integrity_before/archive_integrity.csv",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "launch_provenance.json",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "matlab_diary.txt",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "preflight.json",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "run_manifest.json",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "saved_detail_review.log",
+      "bytesMatch": true,
+      "sha256Match": true
+    },
+    {
+      "path": "saved_detail_review_02.log",
+      "bytesMatch": true,
+      "sha256Match": true
+    }
+  ],
+  "failedRowsVerified": 858,
+  "failedRowHexKeysDifferencesAndReferenceMatch": true,
+  "allFailedRowsPassExistingP10CoreBound": true,
+  "maxFailedDifference": 5.2758276779739026e-17,
+  "maxFailedAbsCurrent": 4.44028394674168e-17,
+  "maxFailedAbsReference": 3.77163518020052e-17,
+  "failedByModel": {
+    "A": 235,
+    "S": 128,
+    "W": 145,
+    "R": 150,
+    "P2": 48,
+    "K": 152
+  },
+  "failedByHorizon": {
+    "1": 330,
+    "10": 129,
+    "20": 137,
+    "2": 127,
+    "5": 135
+  },
+  "failedByInputMode": {
+    "held": 600,
+    "recordedRateLimited": 258
+  },
+  "referenceTableRows": 2580,
+  "referenceTableSHA256": "03d3f087dfb0d9bb752a13471c078d8f30550a0aad87b47cd54a9391994cc1f7",
+  "producerSourceSHA256": "aaa40dc3279d962ef3c06e6f08d637cb0700cf2acfde3a364c92d3feee8937d8",
+  "producerSourceMatchesFrozenDependencyManifest": true,
+  "beforeAfterIntegrityManifestRowsIdentical": true,
+  "protectedPaths": 3022,
+  "protectedBytes": 1357579926,
+  "protectedBytesIndependentlyRehashedHere": false,
+  "visitedFileVerdicts": 527,
+  "passedFileVerdicts": 526,
+  "failedFileVerdicts": 1,
+  "notIndependentlyExecuted": [
+    "MATLAB prerequisites",
+    "scientific trajectories",
+    "full MAT parent replay",
+    "full 330545-leaf ledger",
+    "later study comparisons",
+    "paper gate"
+  ],
+  "sourceNote": "The defining study1_measured_audits.m was recovered from the earlier supplied P06 results source snapshot and matches the exact SHA in this frozen candidate dependency manifest. The earlier full historical CSV was recovered from the supplied numerical archive and matches the current failure report reference SHA. Other older source snapshots are not used as authority when their hashes differ."
+}

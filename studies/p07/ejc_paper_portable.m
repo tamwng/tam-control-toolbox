@@ -29,6 +29,7 @@ save(fullfile(output,'paper_portable.mat'),'report','-v7');
         c=struct('study',"paper",'file',file,'rootA',a,'rootB',b,'sources',sources,'references',references, ...
             'sourceSHA256',"derived-in-this-invocation",'referenceSHA256',"derived-in-this-invocation", ...
             'parentCache',cache,'isCSV',false,'rowIndex',NaN);
+        c.claimBindingsA=[];c.claimBindingsB=[];
         rows={};
         for name=string(a.Properties.VariableNames)
             for j=1:height(a)
@@ -38,6 +39,8 @@ save(fullfile(output,'paper_portable.mat'),'report','-v7');
         end
         out=struct('passed',all(cellfun(@(v)v.passed,rows)),'fields',numel(rows),'links',links, ...
             'ledger',string(fullfile(output,kind+"_portable_ledger.mat")));
+        out.claimApplicabilityInstances=nnz(cellfun(@(v)isfield(v.claim,'directionalClaimApplicability'),rows));
+        out.rawClaimDifferences=nnz(cellfun(@(v)isfield(v.claim,'directionalClaimApplicability') && ~v.claim.originalStrictVerdict.passed,rows));
         save(out.ledger,'rows','-v7');
     end
 end

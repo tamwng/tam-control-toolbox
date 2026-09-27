@@ -3,6 +3,7 @@ function c=ejc_portable_context(info,a,b,sources,references,bindingsA,bindingsB,
 c=info;c.rootA=a;c.rootB=b;c.sources=sources;c.references=references;
 c.sourceSHA256=string(ejc_file_sha256(info.source));
 c.referenceSHA256=string(ejc_file_sha256(info.reference));
+c.claimBindingsA=bindingsA;c.claimBindingsB=bindingsB;
 c.parentCache=parentCache;c.isCSV=endsWith(info.file,'.csv');c.rowIndex=NaN;
 c.csvSourceValidated=false;c.csvReferenceValidated=false;c.historicalUnroundedAbsent=false;
 if ~c.isCSV

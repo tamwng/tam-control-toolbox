@@ -158,11 +158,16 @@ try
             verdict.claim=ejc_claim_check([parentA.lower95,parentA.upper95], ...
                 [parentB.lower95,parentB.upper95],"intervalZeroContainment");
         end
+        if isfield(verdict.claim,'passed')
+            verdict.claim=ejc_apply_claim_scope(verdict.claim,rule,a,b,parentA,parentB,context);
+            if isfield(verdict.claim,'status'),verdict.status=verdict.claim.status;end
+        end
         if isfield(verdict.claim,'passed') && ~verdict.claim.passed
             verdict.passed=false;verdict.status="FAILED_PUBLICATION_GUARD";verdict.reason=verdict.claim.reason;
         end
     end
 catch e
+    verdict.passed=false;verdict.status="BLOCKED";
     verdict.reason=string(e.identifier)+": "+string(e.message);
 end
 end

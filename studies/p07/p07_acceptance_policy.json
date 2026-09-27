@@ -1,5 +1,5 @@
 {
-  "policy_id": "P07_PORTABLE_20260927_V4",
+  "policy_id": "P07_PORTABLE_20260927_V5",
   "status": "AUTHOR_APPROVED_FROZEN_REQUIREMENTS",
   "active": true,
   "approval_authority": "00_MAC_PROMPT.md and binding 01_AUDIT_DECISION.md in EJC_P07_Consolidated_Approval_Handoff.zip; superseded only as explicitly specified by evidence/p07_acceptance/rank_amendment/01_AUDIT_DECISION.md; V3 limited treatments in evidence/p07_acceptance/saved_screen_disposition/01_AUDIT_AND_BINDING_DISPOSITION.md",
@@ -233,7 +233,7 @@
       "units_and_scaling": "RMS/mean/extrema use original variable U; MSE and signed cross terms use U_state^2; mean increment/total variation use input U. Legacy 100*norm(theta-target)/sqrt(n) is a frozen coordinate score, not a physically homogeneous percentage for Plant C.",
       "requirement": "E(U_metric) independently on each unrounded scalar. Total variation uses the same chosen scalar target E(U_input), not an automatic n-times relaxation. Exact source membership, denominators, percentile method, violation/activity thresholds and indices; A3/A4 precedence.",
       "basis": "New output-accuracy requirements, not a claim that passing parent bounds mathematically guarantees every reduction. Separate component/parent checks required.",
-      "publication_safeguard": "Do not confuse RMSE with squared quantities; preserve signs of reported signed cross terms and any scientifically claimed contrast/order. Same-run selected slack samples/cached summaries checked against own parents before cross-run comparison.",
+      "publication_safeguard": "Retain raw signs and all true directional claims. Only source-verified descriptive algebraic cross terms in the exact amendment map use NUMERICAL_AGREEMENT_SIGN_NOT_ASSERTED after unchanged numerical/source/identity checks.",
       "remaining_decision_or_fact": "Approve scalar requirements and claim safeguards. Confirm legacy scaled-score interpretation without rewriting values or manuscript.",
       "atol_units": 1e-08,
       "rtol": 1e-07,
@@ -247,7 +247,7 @@
       "units_and_scaling": "Underlying named metric unit, including squared state units for meanCrossTerm contrasts; CI endpoints have the same unit as the paired difference.",
       "requirement": "E(U_metric) for each estimate/endpoint; exact paired IDs/eligibility/ordering, seeds/analysis states/bootstrap membership/counts, signConvention and quantile method.",
       "basis": "New repeatability requirement on fixed empirical calculations; not statistical equivalence or new independent evidence.",
-      "publication_safeguard": "Require exact sign of the reported signed contrast and exact zero-containment classification of each reported interval; report magnitudes of every ordering change. An unresolved publication claim blocks its claim even when numeric E passes.",
+      "publication_safeguard": "Original exact sign/interval guards remain except the approved source-verified descriptive cross terms and identity-null freezingRMS rows/exact paper aliases in the amendment map. All parent, numeric, pairing, bootstrap, serialization and interval-ordering checks remain mandatory; raw signs/endpoints and original strict verdicts retained.",
       "remaining_decision_or_fact": "Approve these statistic/claim guards as one family; author must confirm the explicit manuscript-claim selection map before release.",
       "atol_units": 1e-08,
       "rtol": 1e-07,
@@ -343,7 +343,7 @@
   },
   "metadata_exception": "Only the literal untracked path results/.DS_Store; preserve it and disclose literal status.",
   "publication_claim_map": "Missing explicit claim map is a disclosed final-closure limitation, not a waiver for failed numerical checks.",
-  "predecessor_policy_sha256": "eccd22c35977224d2965b4eb45684af4dafdf5c666d5f34149406ba5f9914fee",
+  "predecessor_policy_sha256": "05c20f48e37a352f62ad3fb8975b7803be10ecd9e528bfeff61ac5005c97c451",
   "rank_amendment_sha256": "5d01ec3918ce621b8764c7c08a901433748e5bf5247ecbf45e725102b694e1d6",
   "rank_amendment": "Only intermediate supplemental rank uncertainty in the same 19 passive Gram scopes: both robustly deficient, matching point ranks, overlapping intervals, all original rank/count/flag/outcome/publication and matrix/source checks mandatory. Full-rank boundary blocks. No numeric limit changes.",
   "saved_screen_disposition": {
@@ -365,5 +365,31 @@
     "finite_rule": "Existing P6: abs(reconstructed-stored)<=1e-8+1e-7*abs(stored), own envelopes and all parents mandatory.",
     "unresolved_rule": "Existing amended P7 only; qualified raw diagnostic, not equality.",
     "numeric_limits_changed": false
+  },
+  "claim_applicability_amendment": {
+    "post_failure": true,
+    "failed_candidate": "894eba817eaa43b882f849c5f830f64a8d6dbe39",
+    "failed_policy_sha256": "05c20f48e37a352f62ad3fb8975b7803be10ecd9e528bfeff61ac5005c97c451",
+    "cross_term_authority": "evidence/p07_acceptance/cross_term_scope/01_AUDIT_AND_BINDING_DECISION.md",
+    "identity_authority": "evidence/p07_acceptance/freezing_identity/01_AUDIT_AND_BINDING_DECISION.md",
+    "export_authority": "evidence/p07_acceptance/freezing_identity/EXPORT_INHERITANCE_APPROVAL.md",
+    "map": "evidence/p07_acceptance/freezing_identity/CLAIM_APPLICABILITY.csv",
+    "source_manifest": "evidence/p07_acceptance/freezing_identity/C0_SCIENTIFIC_DEPENDENCIES.json",
+    "identity_fields": [
+      "F0301",
+      "F0302",
+      "F0303"
+    ],
+    "exact_export_aliases": [
+      "F4022",
+      "F4023",
+      "F4024"
+    ],
+    "identity_criterion": 1e-11,
+    "numeric_limits_changed": false,
+    "gram_rules_changed": false,
+    "raw_sign_interval_and_strict_verdict_retained": true,
+    "statistical_significance_agreement_claimed": false,
+    "final_campaign": "Fresh quick then entire fresh full on the same clean frozen candidate; no resumed Study 1."
   }
 }
