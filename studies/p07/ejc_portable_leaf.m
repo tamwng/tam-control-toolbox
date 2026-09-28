@@ -148,6 +148,9 @@ try
         end
     end
     verdict.passed=verdict.numeric.passed;verdict.status="NUMERICAL_AGREEMENT";
+    if verdict.passed && isfield(verdict.parents,'maximumLocator')
+        verdict.status=verdict.parents.maximumLocator.status;
+    end
     if ~any(required,'all'),verdict.status="NOT_APPLICABLE";end
     if ~verdict.passed,verdict.status="FAILED";verdict.reason=verdict.numeric.reason;end
     if verdict.passed && all(required,'all') && istable(parentB)
@@ -375,4 +378,10 @@ for side=1:2
     else,out.sourceReference=source;out.selectedReference=ix;out.argmaxReference=index;end
 end
 out.passed=isequal(out.selectedCurrent,out.selectedReference) && isequaln(out.argmaxCurrent,out.argmaxReference);
+% Bounded post-failure amendment. Every eligible row is evaluated, including
+% equal locators. All other scopes retain the original exact-index rule.
+if c.study=="study2" && c.file=="tables/run_diagnostics.csv" && field=="qpConditionMax"
+    out.maximumLocator=ejc_qp_max_locator(ra,rb,rowA,rowB,c,pair,out);
+    out.passed=out.maximumLocator.passed;
+end
 end

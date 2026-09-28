@@ -1,4 +1,4 @@
-function figureDir = plot_study2_journal(resultsDir,figureDir,rankCheckFile)
+function [figureDir,verification] = plot_study2_journal(resultsDir,figureDir,rankCheckFile,gramComparison)
 %PLOT_STUDY2_JOURNAL Two-panel figure and corrected saved-data rank report.
 % Run at the repository root; requires MATLAB only (tested R2026a).
 % Exports an 180-by-90 mm vector PDF, 300 dpi PNG, the exact 33 plotted values,
@@ -11,6 +11,7 @@ if nargin < 2, figureDir = []; end
 figureDir = ejc_output_path('study2_figures',figureDir);
 ejc_assert_writable(figureDir);
 if nargin < 3, rankCheckFile = fullfile(root,'results','study2_journal','gram_numerical_rank_check.csv'); end
+if nargin < 4, gramComparison = []; end
 oldPath = path;
 restorePath = onCleanup(@() path(oldPath));
 addpath(fullfile(root,'studies','study2'));
@@ -23,7 +24,7 @@ assert(~strcmpi(sourcePath,outputPath) && ...
 assert(isfile(rankCheckFile),'study2:MissingRankReference', ...
     'The supplied gram_numerical_rank_check.csv is required for cross-checking.');
 values = study2_figure_data(resultsDir);
-rankReport = study2_gram_report(resultsDir,rankCheckFile);
+[rankReport,verification] = study2_gram_report(resultsDir,rankCheckFile,gramComparison);
 
 ids = ["A","E","O3","O5","P3","K"];
 names = {'Affine','Exact sine','Odd cubic','Odd quintic','Complete cubic','Known model'};

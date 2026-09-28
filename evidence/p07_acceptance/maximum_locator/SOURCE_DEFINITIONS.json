@@ -1,0 +1,14 @@
+[
+  {
+    "path": "studies/study2/study2_summarize.m",
+    "sha256": "4dcafb8a3dcf6c91d6ce3faec9bce5a8d0aeba28f17fe9819346e885b744e5da"
+  },
+  {
+    "path": "studies/study2/study2_trajectory.m",
+    "sha256": "f53517434a0fa16f9cadd39682314eac6adc42107b9cd533efca1d39cb941f47"
+  },
+  {
+    "path": "studies/p07/ejc_paper_report.m",
+    "sha256": "d8b34a2c40fee69057b19e7823c6e0c226c6b9fb0f826953955b1a7a0a921d85"
+  }
+]

@@ -1,0 +1,30 @@
+{
+  "version": "P07_B2_EXACT_REPORTING_HOOKS_V1",
+  "authority": "evidence/p07_acceptance/blocker_repairs/01_CONSOLIDATED_DECISION.md",
+  "authoritySHA256": "c9960b9eb92d3fe5b7be911363bc5c86af1af747cbea9073dc0178cf2d399d6d",
+  "originalScientificManifest": "evidence/p07_acceptance/freezing_identity/C0_SCIENTIFIC_DEPENDENCIES.json",
+  "originalScientificManifestSHA256": "5ac3c1c6a9465236b1b8c5a35c99b092d5f66e17aa883eba27c6a3fe91822cd1",
+  "originalPreflightManifestSHA256": "e92e603e93520f716546594f39c0d06754f0eda832738f3992f1d9b21cc3e3ba",
+  "scope": "Exact old/new hash pairs only; every other source and every unlisted variant must fail the existing integrity guard. Prior manifests remain immutable.",
+  "scientificCalculationBlockUnchanged": true,
+  "entries": [
+    {
+      "path": "studies/study2/study2_gram_report.m",
+      "oldSHA256": "961d2c57c1d56f0d763f0d7c5b4b04cb52a068db7b99ee12c3230a4bdc9eca72",
+      "newSHA256": "b4a3f290a531dfba06922bd65ae0ad1c387fd6a28a266ea7b0c4d70bb3a8e207",
+      "oldBytes": 7928,
+      "newBytes": 9820,
+      "diffSHA256": "8f06bed2c77dbf2e3183d5646a876db82a3e27e78bd4392562656986dc8bcb33",
+      "authorization": "B2 optional assertion callback/evidence and plotter forwarding only"
+    },
+    {
+      "path": "plot_study2_journal.m",
+      "oldSHA256": "833032582b11a30f43e51724c54a9a43f0f616fa48a8e148d27191900274af9c",
+      "newSHA256": "e543632bce2dcd5f715c6cd1e6cd370c400feb2513671b50e4ba515ae3dfa448",
+      "oldBytes": 5839,
+      "newBytes": 5939,
+      "diffSHA256": "12195f83d6a18e61e51cb80d5679fc3dc96e4d1f41c3a8f12b1f156b043f4590",
+      "authorization": "B2 optional assertion callback/evidence and plotter forwarding only"
+    }
+  ]
+}

@@ -1,8 +1,10 @@
-function report=ejc_compare_portable_results(sources,references,output,parentSources)
+function report=ejc_compare_portable_results(sources,references,output,parentSources,diagnostic)
 %EJC_COMPARE_PORTABLE_RESULTS Saved-value comparison under the frozen policy.
 % Never produces a trajectory. Original validity checks and lifecycle guards
 % execute separately and remain mandatory before any campaign can advance.
 if nargin<4,parentSources=sources;end
+if nargin<5,diagnostic="";end
+assert(any(string(diagnostic)==["","COLLECT_DIAGNOSTIC_FAILURES"]),'ejc:DiagnosticMode','Unknown comparison mode.');
 for key=string(fieldnames(sources)).'
     assert(isfield(parentSources,key) && isequal(string(parentSources.(key)),string(sources.(key))), ...
         'ejc:PortableSource','Comparison source differs from its supplied parent package.');
@@ -31,6 +33,7 @@ cache('P07_INPUT_IDENTITY_SHA256')=ejc_file_sha256(fullfile(output,'input_identi
 mkdir(cache('P07_MATRIX_EVIDENCE_DIRECTORY'));
 adapter=struct('contextForFile',@(info,a,b)ejc_portable_context(info,a,b,parentSources,references, ...
     currentBindings,referenceBindings,cache));
+adapter.diagnosticCollect=string(diagnostic)=="COLLECT_DIAGNOSTIC_FAILURES";
 report=ejc_compare_results(sources,references,fullfile(output,'comparisons'),adapter);
 catch failure
     inputsAfter=ejc_input_snapshot(parentSources,references);
@@ -47,5 +50,6 @@ report.policySHA256=policyHash;
 assert(strcmp(policyHash,ejc_file_sha256(policyFile)),'ejc:PolicyChanged','Policy changed during comparison.');
 report.originalValidityAndLifecycleRequired=true;
 report.mode="SAVED_SCIENTIFIC_COMPARISON_COMPONENT_NOT_A_FRESH_CAMPAIGN";
+if adapter.diagnosticCollect,report.mode="DIAGNOSTIC_FAILURE_COLLECTION_NOT_CERTIFICATION";end
 save(fullfile(output,'portable_comparison.mat'),'report','-v7');
 end

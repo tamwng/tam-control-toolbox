@@ -16,9 +16,11 @@ function report = ejc_compare_results(sources,references,output,portable)
 % Optional portable context is supplied only by the P07 policy adapter.
 % Omitting it preserves the original strict comparator and its evidence.
 if nargin<4,portable=[];end
+collect=false;
 if ~isempty(portable)
     assert(isstruct(portable) && isfield(portable,'contextForFile') && ...
         isa(portable.contextForFile,'function_handle'),'ejc:PortableContext','Missing file-evidence adapter.');
+    collect=isfield(portable,'diagnosticCollect') && isequal(portable.diagnosticCollect,true);
 end
 ejc_assert_writable(output);
 assert(~isfile(output),'ejc:OutputFile','The evidence destination is a file.');
@@ -111,6 +113,8 @@ for group = groups
             fileRow.qualifiedInstances=state.qualifiedCount;
             fileRow.claimApplicabilityInstances=state.claimCount;
             fileRow.rawClaimDifferences=state.claimDifferences;
+            fileRow.maximumLocatorInstances=state.locatorCount;
+            fileRow.maximumLocatorDifferences=state.locatorDifferences;
             ledger=state.portableRows; %#ok<NASGU>
             folder=fullfile(output,'field_ledgers',group);if ~isfolder(folder),mkdir(folder);end
             save(fullfile(folder,replace(name,'/','__')+".mat"),'ledger','-v7');
@@ -124,7 +128,7 @@ for group = groups
             row = state.excluded(k); row.study = group; row.relativePath = name;
             exclusions = [exclusions;row]; %#ok<AGROW>
         end
-        if ~isempty(portable) && ~fileRow.passed,break;end
+        if ~isempty(portable) && ~fileRow.passed && ~collect,break;end
     end
     % Preserve the distinction between execution provenance and scientific
     % equality. These files are retained in each source package, not loaded
@@ -138,7 +142,7 @@ for group = groups
             string(fullfile(actualRoot,name)),string(fullfile(referenceRoot,name)));
         row.study = group; row.relativePath = name; exclusions = [exclusions;row]; %#ok<AGROW>
     end
-    if ~isempty(portable) && ~isempty(failures),break;end
+    if ~isempty(portable) && ~isempty(failures) && ~collect,break;end
 end
 report.files = as_table(files,struct('study',"",'passed',false));
 report.failures = as_table(failures,struct('quantity',"",'reason',"", ...
@@ -155,6 +159,9 @@ if ~isempty(portable)
     report.qualifiedInstances=sum(report.files.qualifiedInstances);
     report.claimApplicabilityInstances=sum(report.files.claimApplicabilityInstances);
     report.rawClaimDifferences=sum(report.files.rawClaimDifferences);
+    report.maximumLocatorInstances=sum(report.files.maximumLocatorInstances);
+    report.maximumLocatorDifferences=sum(report.files.maximumLocatorDifferences);
+    report.diagnosticCollectionOnly=collect;
 end
 report.sourceDirectories = sources; report.referenceDirectories = references;
 writetable(report.files,fullfile(output,'comparison_files.csv'));
@@ -243,11 +250,19 @@ function state = empty_state
 state = struct('leafChecks',0,'numericValues',0,'maskMismatches',0, ...
     'maximum',0,'maximumField',"",'maximumIndex',NaN,'attemptedRuns',0,'completedRuns',0, ...
     'failures',struct([]),'excluded',struct([]),'portable',[], ...
-    'portableRows',{{}},'qualifiedCount',0,'claimCount',0,'claimDifferences',0);
+    'portableRows',{{}},'qualifiedCount',0,'claimCount',0,'claimDifferences',0, ...
+    'locatorCount',0,'locatorDifferences',0);
 end
 
 function state = compare_value(a,b,quantity,state,parentA,parentB)
 if nargin<5,parentA=[];parentB=[];end
+% B1 retains exact represented classes/shapes at every retained descendant.
+% MATLAB isequaln alone permits some cross-numeric-class equal values.
+if ~isempty(state.portable) && isfield(state.portable,'settingsNamespaceActive') && ...
+        state.portable.settingsNamespaceActive && ...
+        (~strcmp(class(a),class(b)) || ~isequal(size(a),size(b)))
+    state=failed(state,quantity,"F2710 descendant class/shape differs",NaN,NaN);return
+end
 if ~isempty(state.portable) && (isstruct(b) || istable(b) || iscell(b))
     try
         rule=ejc_rule_lookup(state.portable.study,state.portable.file,quantity,class(b),b);
@@ -257,10 +272,18 @@ if ~isempty(state.portable) && (isstruct(b) || istable(b) || iscell(b))
             an=string(fieldnames(a));bn=string(fieldnames(b));
             an=an(arrayfun(@(x)strlength(exclusion_reason(x,quantity))==0,an));
             bn=bn(arrayfun(@(x)strlength(exclusion_reason(x,quantity))==0,bn));
-            assert(isequal(an,bn),'ejc:PortableSchema','Scientific structure field order differs.');
+            namespace=ejc_settings_namespace(a,b,rule,state.portable,quantity,an,bn);
+            if ~namespace.applied
+                assert(isequal(an,bn),'ejc:PortableSchema','Scientific structure field order differs.');
+            end
         end
         state.portableRows{end+1,1}=struct('coverageId',rule.coverage_id, ...
             'family',rule.policy_family,'quantity',quantity,'passed',true,'status',"EXACT_CONTAINER_SCHEMA");
+        if isstruct(b) && namespace.applied
+            state.portable.settingsNamespaceActive=true;
+            state.portableRows{end}.status="EXACT_OUTER_SETTINGS_NAMESPACE";
+            state.portableRows{end}.namespace=namespace;
+        end
     catch exception
         state=failed(state,quantity,string(exception.identifier)+": "+string(exception.message),NaN,NaN);return
     end
@@ -335,10 +358,21 @@ else
     else
         v=ejc_portable_leaf(a,b,quantity,parentA,parentB,state.portable);
         v.quantity=quantity;v.rawMaximumAbsoluteDifference=maximum;v.rawMaximumLinearIndex=index;
+        v.rowIndex=state.portable.rowIndex;
+        if ~v.passed
+            v.failedCurrent=a;v.failedReference=b;
+            if istable(parentA),v.failedSourceRowCurrent=parentA;v.failedSourceRowReference=parentB;end
+        end
         state.portableRows{end+1,1}=v;state.qualifiedCount=state.qualifiedCount+v.qualifiedCount;
         if isfield(v.claim,'directionalClaimApplicability')
             state.claimCount=state.claimCount+1;
             state.claimDifferences=state.claimDifferences+~v.claim.originalStrictVerdict.passed;
+        end
+        if isfield(v.parents,'maximumLocator')
+            state.locatorCount=state.locatorCount+1;
+            if isfield(v.parents.maximumLocator,'originalStrictPassed')
+                state.locatorDifferences=state.locatorDifferences+~v.parents.maximumLocator.originalStrictPassed;
+            end
         end
         if ~v.passed,state=failed(state,quantity,v.reason,maximum,index);end
     end

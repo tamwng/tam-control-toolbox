@@ -155,7 +155,7 @@ try
                 manifest.paperTable12ClaimApplicability=struct('instances',report.portable.table12.claimApplicabilityInstances, ...
                     'rawClaimDifferences',report.portable.table12.rawClaimDifferences, ...
                     'statisticalSignificanceAgreementClaimed',false);
-                journal_figures(output,sources);
+                manifest.figureVerification=ejc_journal_figures(output,sources,true);
             end
     end
     manifest.integrityAfter = ejc_archive_integrity(fullfile(output,'integrity_after'));
@@ -250,15 +250,7 @@ for name = ["noisy_summaries.csv","paired_contrasts.csv"]
 end
 report = ejc_paper_report(reference,reference,fullfile(output,'paper_report'));
 assert(report.passed,'ejc:PaperReportMismatch','Historical report consistency failed.');
-journal_figures(output,reference);
-end
-
-function journal_figures(output,sources)
-% Exactly six paper figures, never thousands of per-trial inspection plots.
-for s = 1:6
-    runner = str2func(sprintf('plot_study%d_journal',s));
-    runner(sources.(sprintf('study%d',s)),fullfile(output,'figures',sprintf('study%d',s)));
-end
+ejc_journal_figures(output,reference);
 end
 
 function write_json(file,value)

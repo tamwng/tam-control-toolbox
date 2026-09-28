@@ -1,0 +1,17 @@
+{
+  "coverageId": "F0698",
+  "study": "study2",
+  "file": "tables/run_diagnostics.csv",
+  "field": "qpConditionMax",
+  "maximumLocationClaim": "NOT_ASSERTED",
+  "selection": "all steps 1:nSteps; original max first-index convention",
+  "units": "dimensionless condition number of the unchanged condensed QP Hessian",
+  "claimMapReview": {
+    "path": "/Users/tamw.nguyen/Library/CloudStorage/OneDrive-KyotoUniversity/research/papers/2027/ejc-review-2027/v1/appendices/numerical_protocol.tex",
+    "sha256": "9dda8995c16a9245ab09fa37153c4e83b0974176727a9c3b44f1363c1f6f65f9",
+    "lines": "201-249",
+    "finding": "A.14 reports maximum values and full counts; no maximum time, event, action, ordering, or example selection is asserted for this run diagnostic."
+  },
+  "exactAliases": [],
+  "aliasAudit": "The complete 4195-row field inventory has only F0698 for this Study 2 reduction. There is no retained Study 2 summary.mat. A.14 is an aggregate over 22 runs / 14800 steps, not an exact semantic copy of a single F0698 row. No automatic inheritance by similar names."
+}

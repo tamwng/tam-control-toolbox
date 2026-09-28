@@ -1,5 +1,5 @@
 {
-  "policy_id": "P07_PORTABLE_20260927_V5",
+  "policy_id": "P07_PORTABLE_20260928_V7_FROZEN",
   "status": "AUTHOR_APPROVED_FROZEN_REQUIREMENTS",
   "active": true,
   "approval_authority": "00_MAC_PROMPT.md and binding 01_AUDIT_DECISION.md in EJC_P07_Consolidated_Approval_Handoff.zip; superseded only as explicitly specified by evidence/p07_acceptance/rank_amendment/01_AUDIT_DECISION.md; V3 limited treatments in evidence/p07_acceptance/saved_screen_disposition/01_AUDIT_AND_BINDING_DISPOSITION.md",
@@ -11,7 +11,7 @@
       "units_and_scaling": "Original class/shape/units; exact numeric IDs, counts, preset indices, configured thresholds and fixed constants. Count-derived fractions remain functions of exact counts.",
       "requirement": "Exact schema/file set/class/shape/order, records and meaningful discrete values; protected path/size/SHA exact. Same-run copies exactly equal their selected source. Existing legacy exceptions and narrow timing/provenance rules only. Preserve original P06 gate separately.",
       "basis": "Committed comparator/runner/P06 gate; not a fallback for unspecified computed floats.",
-      "publication_safeguard": "Keep failures, counts, selections, argmax identifiers, applicability and paper source relationships exact. No near-tie/exitflag waiver.",
+      "publication_safeguard": "Keep failures, counts, selections, argmax identifiers, applicability and paper source relationships exact. No near-tie/exitflag waiver. The narrowly scoped maximum_locator_amendment overrides only the cross-run F0698 passive maximum locator; its own-run identities remain exact. The settings_namespace_amendment additionally changes only the outer F2710 MAT-variable name-order comparison; every nested requirement stays unchanged.",
       "remaining_decision_or_fact": "No new approval. Verify all 24 fresh legacy-flag definitions and all original scientific tests.",
       "predicate": "exact_scoped_with_existing_exceptions",
       "reviewed_draft_status": "EXISTING_UNCHANGED"
@@ -173,7 +173,7 @@
       "status": "AUTHOR_APPROVED",
       "role": "Covariance and QP Hessian condition estimates, including A.14 reductions",
       "units_and_scaling": "Dimensionless condition estimates in their ORIGINAL distinct P and H coordinates; no Hessian rescaling/preconditioning.",
-      "requirement": "For resolved spectra only: abs(k_a-k_b)<=1e-8+1e-7*abs(k_b), plus each estimate within its proposed spectral envelope. Require matrix validity/decomposition screens and exact masks/counts/argmax. Unresolved => BLOCKED.",
+      "requirement": "For resolved spectra only: abs(k_a-k_b)<=1e-8+1e-7*abs(k_b), plus each estimate within its proposed spectral envelope. Require matrix validity/decomposition screens and exact masks/counts/argmax. Unresolved => BLOCKED. The approved maximum_locator_amendment below is the sole scoped exception to cross-run argmax equality.",
       "basis": "New condition-estimate agreement requirement; conditioning helps classify resolution, not excuse errors. Reconstruct H from saved inputs only later, never solve a QP for comparison.",
       "publication_safeguard": "No Gram waiver; A.14 requires unchanged 503-run selection, 483500 covariance and 590000 Hessian instances, exact applicability and extrema identities.",
       "remaining_decision_or_fact": "Approve numeric rule/resolution screen; any unresolved required covariance/Hessian value stays blocking.",
@@ -329,7 +329,7 @@
   "windows": "MISSING",
   "original_quick": "FAILED_OR_BLOCKED",
   "full": "PAUSED_NOT_STARTED",
-  "activation_note": "Requirements approved; implementation gate and frozen candidate are still required. This document alone does not enable a runner.",
+  "activation_note": "Author-approved final Mac activation only: evidence/p07_acceptance/final_mac_activation/USER_AUTHORIZATION.md. The implementation gate and a clean frozen candidate remain mandatory; every scientific/numerical/qualification rule is unchanged from the reviewed V7 diagnostic policy.",
   "approval_handoff_sha256": "6a04b3ef4f4e1b35dd99de5b7f27a3708b70a579704bf8b0a6a01954689015ee",
   "reviewed_package_sha256": "fd6ee17e20e096c37cd6337619abbeb931b2ff7a1640a4c622bc91e63c9ebad1",
   "matrix_screen": {
@@ -391,5 +391,59 @@
     "raw_sign_interval_and_strict_verdict_retained": true,
     "statistical_significance_agreement_claimed": false,
     "final_campaign": "Fresh quick then entire fresh full on the same clean frozen candidate; no resumed Study 1."
+  },
+  "maximum_locator_amendment": {
+    "post_failure": true,
+    "failed_candidate": "de77ad73531abe100499abc1dc45099026f75667",
+    "failed_policy_sha256": "8904e6c9b844da08009f3f852353f884ab8602455418873e0e16c846d8efb288",
+    "authority": "evidence/p07_acceptance/maximum_locator/02_MAXIMUM_LOCATOR_RULE.md",
+    "scope_map": "evidence/p07_acceptance/maximum_locator/CLAIM_SCOPE.json",
+    "scope_map_sha256": "ab9e92c529fa449b5dbbb50567b1074f211043ddee7cefd547549eb17f777dee",
+    "source_definitions": "evidence/p07_acceptance/maximum_locator/SOURCE_DEFINITIONS.json",
+    "coverage_ids": [
+      "F0698"
+    ],
+    "exact_aliases": [],
+    "requirement": "Only the approved passive QP maximum locator: full pointwise existing P6, independent P6 maxima, exact own first maxima, exact selections/identities/settings and all resolved QP parents. Both cross-index losses must lie between zero and delta[ic]+delta[ir]. Existing E0/P6 locator equality remains for every other scope. P13/source checks remain mandatory.",
+    "status_for_unequal_indices": "NUMERICAL_AGREEMENT_MAX_LOCATOR_DIFFERENT",
+    "numerical_limits_changed": false,
+    "gram_rules_changed": false,
+    "production_activation": "Author-authorized final Mac certification after candidate freeze and implementation gates; existing F0698 scope and all requirements unchanged."
+  },
+  "settings_namespace_amendment": {
+    "version": "B1_F2710_OUTER_NAMESPACE_V1",
+    "authority": "evidence/p07_acceptance/blocker_repairs/01_CONSOLIDATED_DECISION.md",
+    "authority_sha256": "c9960b9eb92d3fe5b7be911363bc5c86af1af747cbea9073dc0178cf2d399d6d",
+    "coverage_id": "F2710",
+    "scope": {
+      "study": "study6",
+      "file": "settings.mat",
+      "quantity": "value",
+      "mode": "portable"
+    },
+    "retained_names": [
+      "cfg",
+      "sources"
+    ],
+    "requirement": "Exact outer retained variable names independent of loaded order; exact scalar struct, all descendants and nested order/class/shape/value checks, unchanged exclusions and exact own-source links remain mandatory. Raw orders retained. No stored object is reordered.",
+    "strict_default": "Original nonportable comparator unchanged; all other portable container-order requirements unchanged."
+  },
+  "study2_gram_report_binding": {
+    "version": "P07_STUDY2_GRAM_MAX_V1",
+    "authority": "evidence/p07_acceptance/blocker_repairs/01_CONSOLIDATED_DECISION.md",
+    "authority_sha256": "c9960b9eb92d3fe5b7be911363bc5c86af1af747cbea9073dc0178cf2d399d6d",
+    "parent_coverage_id": "F0533",
+    "reporting_site": "study2_gram_report:crosscheck:maxStoredCondition",
+    "selection": "recorded steps 1:nSteps with gramCount==50",
+    "requirement": "Exact source/row/time/window membership; exact current own maximum and unchanged historical CSV-to-own-MAT contract; complete selected paired P5/P6/P7 parents; original ranks/counts/validity and all remaining report/plot assertions. Qualified unresolved maxima are not numerical equality. Preserve same-index parents at both own witnesses.",
+    "not_aliases": [
+      "F0698",
+      "F0713"
+    ],
+    "strict_default": "Original equality or finite 32*eps bound unchanged when the optional callback is absent. No bypass or replacement reference.",
+    "numeric_limits_changed": false,
+    "rank_rules_changed": false,
+    "integrity_annex": "evidence/p07_acceptance/blocker_repairs/REPORTING_HOOK_INTEGRITY_ANNEX.json",
+    "integrity_annex_sha256": "a3557128d5b402efdb80ffd83937dd49f32a7d1b949860109868ec00889bc682"
   }
 }

@@ -1,8 +1,10 @@
-function report=ejc_study34_bind(extracted,cfg,output)
+function report=ejc_study34_bind(extracted,cfg,output,diagnostic)
 %EJC_STUDY34_BIND Complete the approved same-record portable assertion pass.
 % The original verifier must first finish EVERY non-hook requirement. Its
 % evidence is bound to the checker/policy and every original source file.
 % This is only the two named assertion sites, not full/paper acceptance.
+if nargin<4,diagnostic="";end
+assert(any(string(diagnostic)==["","COLLECT_DIAGNOSTIC_FAILURES"]),'ejc:DiagnosticMode','Unknown mode.');
 assert(~isfolder(output) && ~isfile(output),'ejc:ExistingEvidence','Output exists.');
 mkdir(output);started=tic;
 root=fileparts(fileparts(fileparts(mfilename('fullpath'))));
@@ -80,7 +82,7 @@ for path=extracted.contexts.'
     save(fullfile(output,'progress.mat'),'report');
     % Collect all independent saved instances in the affected run, then stop
     % this study on a genuine failed rule. No policy adjustment or retry.
-    if report.failed>0,break;end
+    if report.failed>0 && string(diagnostic)=="",break;end
 end
 if report.failed>0,report.status="FAILED_PORTABLE_ASSERTION";
 elseif report.instances~=extracted.instances || report.strictFailures~=extracted.strictFailures
