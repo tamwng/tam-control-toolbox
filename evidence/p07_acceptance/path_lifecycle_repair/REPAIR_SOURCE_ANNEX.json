@@ -1,0 +1,138 @@
+{
+  "kind": "AUTHORIZED_CALLBACK_PATH_REPAIR_ONLY_NOT_CERTIFICATION",
+  "baseAndProducingCommit": "196ff3cae21ab8ac369224163dc4321ba7bb2c3d",
+  "policySHA256": "ca9101ea01a6eb093664d383a3d6bd1734598ba84aed2ee35b28cfa7412aec58",
+  "policyAndNormativeRulesByteIdentical": true,
+  "priorGateSHA256": "7a142ba5a9e4b75c9d9dc154bba3adc7bdff2b5729a04f1e9ba3712d208eb613",
+  "authorityHandoffSHA256": "8e1b5d12ecd0db1d23fdddb82a675780af28d89251bb757aae3967a1007c13f5",
+  "authorizedCodeChanges": [
+    {
+      "path": "run_ejc.m",
+      "oldSHA256": "70116250019727a33b6c620fbb533160fadff755493d368982a30ce6f2b6d12e",
+      "newSHA256": "988eb5acf612edd9887987c9858068302f81f28498213e83f98837129b29289e",
+      "bytes": 17931
+    },
+    {
+      "path": "studies/p07/ejc_study34_callback.m",
+      "oldSHA256": null,
+      "newSHA256": "fad5e3a8e9ec2f64807f0bcb6d0230cfda4c877765f707dcd3ce9254c520e737",
+      "bytes": 4092
+    },
+    {
+      "path": "tests/test_p07_path_lifecycle.m",
+      "oldSHA256": null,
+      "newSHA256": "2dbd00fa01e150cd67384bf7a331161958bc0cb88ad025c45531fff5358a6b69",
+      "bytes": 15963
+    }
+  ],
+  "implementationGateRefresh": "Evidence and source identities only; no acceptance-policy bytes or limits changed.",
+  "scientificFilesUnchangedFromProducingCommit": true,
+  "existingB2HookAnnexUnchanged": true,
+  "normalProductionCleanCandidateGuardUnchanged": true,
+  "savedVerificationSnapshot": {
+    "path": "results/p07_path_lifecycle_repair_20260928_01/REPAIR_TESTED_SNAPSHOT.json",
+    "bytes": 65554,
+    "sha256": "a2f018c67c975fdd5e1032b6746e730aab37d9b8154791165bc2d61a71a4baba"
+  },
+  "finalRegressionSnapshot": {
+    "path": "results/p07_path_lifecycle_repair_20260928_01/REPAIR_FINAL_TESTED_SNAPSHOT.json",
+    "bytes": 65555,
+    "sha256": "54285f27d06031c339fb4f455a585b126d23d65dd6bf767f745d7d1d99afb3fa"
+  },
+  "tests": {
+    "passed": 323,
+    "failed": 0,
+    "incomplete": 0,
+    "distinctTests": 323,
+    "total": 323,
+    "elapsedSeconds": 687.8560395833333,
+    "scope": "all"
+  },
+  "savedStudy3": {
+    "status": "PASSED",
+    "phase": "saved_study3_01",
+    "elapsedSeconds": 1793.6882597916667,
+    "result": {
+      "validity": {
+        "study": "study3",
+        "scope": "F0894",
+        "passed": true,
+        "status": "PASSED_WITH_GRAM_QUALIFICATIONS",
+        "instances": 211024,
+        "strictFailures": 0,
+        "numericalAgreement": 198130,
+        "qualified": 12894,
+        "structuralZero": 0,
+        "failed": 0,
+        "cases": 176,
+        "failures": [],
+        "policySHA256": "ca9101ea01a6eb093664d383a3d6bd1734598ba84aed2ee35b28cfa7412aec58",
+        "originalRequirementsCompleted": true,
+        "elapsedSeconds": 289.924126125,
+        "publicationContext": "Same immutable source record; reconstruction never replaces a reported value. Original ranks, counts, flags and scientific outcomes verified. No new cross-run publication claim.",
+        "checkerHashes": {
+          "ejc_study34_bind": "27328e7ac45cfd8d5c14cb348901774b00ad855389246b2ee3c61c1058e87b87",
+          "ejc_study34_gram_facts": "90a168a1002bb5da2e6676db87f721d3f8f633fa70fa6274407818f92729e4cb",
+          "ejc_p7_qualify": "c57702b106e2aeba5027fa107b4e8021c993d18b13ff8eeb3dd0beaa7f354a93",
+          "ejc_matrix_screen": "46b8af674ee39834b9a911d3101e8717786e100ce60034f5b05fe51c70f64ef9",
+          "ejc_gram_parent": "c9c0e3152443e797a47b75de55abffcf40d9d63156882981db00a443f24108f8",
+          "ejc_acceptance_numeric": "c76c3f5679cd6cd35464809b7fda1f4983955a053864317afafb63cdeb59fc6d",
+          "ejc_rule_lookup": "ef0f5cb7151f17a0a5a0ffbfd4bd520b4ad04c00b65fcb7751628ad7fa022efb"
+        }
+      },
+      "scientificFiles": 316,
+      "controlCases": 218,
+      "completedControlCases": 218,
+      "qualifiedInstances": 13054,
+      "claimApplicabilityInstances": 0,
+      "rawClaimDifferences": 0,
+      "newCSVReports": 12,
+      "originalInputsUnchanged": true
+    }
+  },
+  "savedStudy4": {
+    "status": "PASSED",
+    "phase": "saved_study4_01",
+    "elapsedSeconds": 731.6733968333333,
+    "result": {
+      "study": "study4",
+      "scope": "F1344",
+      "passed": true,
+      "status": "PASSED_WITH_GRAM_QUALIFICATIONS",
+      "instances": 10791,
+      "strictFailures": 0,
+      "numericalAgreement": 2934,
+      "qualified": 7857,
+      "structuralZero": 0,
+      "failed": 0,
+      "cases": 9,
+      "failures": [],
+      "policySHA256": "ca9101ea01a6eb093664d383a3d6bd1734598ba84aed2ee35b28cfa7412aec58",
+      "originalRequirementsCompleted": true,
+      "elapsedSeconds": 38.103500708333335,
+      "publicationContext": "Same immutable source record; reconstruction never replaces a reported value. Original ranks, counts, flags and scientific outcomes verified. No new cross-run publication claim.",
+      "checkerHashes": {
+        "ejc_study34_bind": "27328e7ac45cfd8d5c14cb348901774b00ad855389246b2ee3c61c1058e87b87",
+        "ejc_study34_gram_facts": "90a168a1002bb5da2e6676db87f721d3f8f633fa70fa6274407818f92729e4cb",
+        "ejc_p7_qualify": "c57702b106e2aeba5027fa107b4e8021c993d18b13ff8eeb3dd0beaa7f354a93",
+        "ejc_matrix_screen": "46b8af674ee39834b9a911d3101e8717786e100ce60034f5b05fe51c70f64ef9",
+        "ejc_gram_parent": "c9c0e3152443e797a47b75de55abffcf40d9d63156882981db00a443f24108f8",
+        "ejc_acceptance_numeric": "c76c3f5679cd6cd35464809b7fda1f4983955a053864317afafb63cdeb59fc6d",
+        "ejc_rule_lookup": "ef0f5cb7151f17a0a5a0ffbfd4bd520b4ad04c00b65fcb7751628ad7fa022efb"
+      }
+    }
+  },
+  "remainingBoundariesEvidence": {
+    "path": "results/p07_path_lifecycle_repair_20260928_01/remaining_boundaries_01/COMPLETION.json",
+    "bytes": 533968,
+    "sha256": "7d7dc3efb5190343fdb19b475e0a5082e7ab37e78434345adb46624dad1da829"
+  },
+  "protectedAndFailedEvidenceIntegrity": {
+    "path": "results/p07_path_lifecycle_repair_20260928_01/INTEGRITY_PRE_GATE.json",
+    "bytes": 1416,
+    "sha256": "42511609548223a526952b7326162eba3b45276a84c4c143aae39ad056b35c01"
+  },
+  "certificationStatus": "Original QUICK PASSED / FULL FAILED preserved. No new certification performed.",
+  "stopUncommitted": true,
+  "timestampUTC": "2026-09-28T13:35:50.705910+00:00"
+}

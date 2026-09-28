@@ -2,27 +2,29 @@
   "status": "PASSED",
   "policyID": "P07_PORTABLE_20260928_V7_FROZEN",
   "policySHA256": "ca9101ea01a6eb093664d383a3d6bd1734598ba84aed2ee35b28cfa7412aec58",
-  "baseCandidate": "de77ad73531abe100499abc1dc45099026f75667",
+  "baseCandidate": "196ff3cae21ab8ac369224163dc4321ba7bb2c3d",
   "candidateIdentity": "Runtime clean Git HEAD; no self-reference. Frozen-state prerequisites and fresh certification still mandatory.",
   "tests": {
-    "passed": 310,
+    "passed": 323,
     "failed": 0,
     "incomplete": 0,
-    "total": 310,
-    "elapsedSeconds": 458.98244904166665,
-    "policySHA256": "ca9101ea01a6eb093664d383a3d6bd1734598ba84aed2ee35b28cfa7412aec58",
+    "distinctTests": 323,
+    "total": 323,
+    "elapsedSeconds": 687.8560395833333,
+    "scope": "all",
     "frozen": false,
-    "sourceBefore": {
-      "sourceSHA": "de77ad73531abe100499abc1dc45099026f75667",
-      "sourceChanges": " M plot_study2_journal.m\n M run_ejc.m\n M studies/p07/ejc_claim_source_guard.m\n M studies/p07/ejc_compare_portable_results.m\n M studies/p07/ejc_compare_results.m\n M studies/p07/ejc_portable_leaf.m\n M studies/p07/ejc_study34_bind.m\n M studies/p07/p07_acceptance_policy.json\n M studies/study2/study2_gram_report.m\n?? evidence/p07_acceptance/blocker_repairs/\n?? evidence/p07_acceptance/final_mac_activation/\n?? evidence/p07_acceptance/maximum_locator/\n?? studies/p07/ejc_diagnostic_preflight.m\n?? studies/p07/ejc_journal_figures.m\n?? studies/p07/ejc_maximum_locator.m\n?? studies/p07/ejc_preflight_branch.m\n?? studies/p07/ejc_preflight_integrity_exception.m\n?? studies/p07/ejc_preflight_study34.m\n?? studies/p07/ejc_preflight_study6.m\n?? studies/p07/ejc_qp_max_locator.m\n?? studies/p07/ejc_reporting_hook_integrity.m\n?? studies/p07/ejc_settings_namespace.m\n?? studies/p07/ejc_settings_source_binding.m\n?? studies/p07/ejc_study2_gram_binding.m\n?? studies/p07/ejc_study2_gram_reduction.m\n?? studies/p07/ejc_study2_portable_report.m\n?? tests/test_p07_final_activation.m\n?? tests/test_p07_maximum_locator.m\n?? tests/test_p07_reporting_hook_integrity.m\n?? tests/test_p07_settings_namespace.m\n?? tests/test_p07_study2_gram_binding.m\n",
-      "clean": false
+    "verificationMode": "UNCOMMITTED_REPAIR_REGRESSIONS_NOT_CERTIFICATION",
+    "sourceSnapshot": {
+      "path": "results/p07_path_lifecycle_repair_20260928_01/REPAIR_FINAL_TESTED_SNAPSHOT.json",
+      "bytes": 65555,
+      "sha256": "54285f27d06031c339fb4f455a585b126d23d65dd6bf767f745d7d1d99afb3fa"
     }
   },
   "savedData": {
     "failed": 0,
     "blocked": 0,
     "complete": true,
-    "mode": "HQ_ACCEPTED_V7_DIAGNOSTIC_PREFLIGHT_PLUS_ACTIVATION_INTEGRATION_TESTS_NOT_CERTIFICATION",
+    "mode": "HQ_ACCEPTED_V7_DIAGNOSTIC_PREFLIGHT_PLUS_ACTIVATION_INTEGRATION_TESTS_NOT_CERTIFICATION; AUTHORIZED_SAVED_CALLBACK_PATH_REPAIR_NOT_CERTIFICATION",
     "reviewedPolicySHA256": "04925dc10f1b89c1a866c1d36bb58e033a79b070455230f6e4e80777d332e65d",
     "reviewedSnapshotSHA256": "79e84b101920b5c99163f73e7aa5ed8fa7056c6ef75c9a771dd76c5225f54451",
     "scientificFiles": 2877,
@@ -80,39 +82,177 @@
       "passed": true
     },
     "fullMustStartFromBeginning": true,
-    "all12HistoricalPilotFilesIncluded": true
+    "all12HistoricalPilotFilesIncluded": true,
+    "pathLifecycleRepair": {
+      "passed": true,
+      "study3": {
+        "validity": {
+          "study": "study3",
+          "scope": "F0894",
+          "passed": true,
+          "status": "PASSED_WITH_GRAM_QUALIFICATIONS",
+          "instances": 211024,
+          "strictFailures": 0,
+          "numericalAgreement": 198130,
+          "qualified": 12894,
+          "structuralZero": 0,
+          "failed": 0,
+          "cases": 176,
+          "failures": [],
+          "policySHA256": "ca9101ea01a6eb093664d383a3d6bd1734598ba84aed2ee35b28cfa7412aec58",
+          "originalRequirementsCompleted": true,
+          "elapsedSeconds": 289.924126125,
+          "publicationContext": "Same immutable source record; reconstruction never replaces a reported value. Original ranks, counts, flags and scientific outcomes verified. No new cross-run publication claim.",
+          "checkerHashes": {
+            "ejc_study34_bind": "27328e7ac45cfd8d5c14cb348901774b00ad855389246b2ee3c61c1058e87b87",
+            "ejc_study34_gram_facts": "90a168a1002bb5da2e6676db87f721d3f8f633fa70fa6274407818f92729e4cb",
+            "ejc_p7_qualify": "c57702b106e2aeba5027fa107b4e8021c993d18b13ff8eeb3dd0beaa7f354a93",
+            "ejc_matrix_screen": "46b8af674ee39834b9a911d3101e8717786e100ce60034f5b05fe51c70f64ef9",
+            "ejc_gram_parent": "c9c0e3152443e797a47b75de55abffcf40d9d63156882981db00a443f24108f8",
+            "ejc_acceptance_numeric": "c76c3f5679cd6cd35464809b7fda1f4983955a053864317afafb63cdeb59fc6d",
+            "ejc_rule_lookup": "ef0f5cb7151f17a0a5a0ffbfd4bd520b4ad04c00b65fcb7751628ad7fa022efb"
+          }
+        },
+        "scientificFiles": 316,
+        "controlCases": 218,
+        "completedControlCases": 218,
+        "qualifiedInstances": 13054,
+        "claimApplicabilityInstances": 0,
+        "rawClaimDifferences": 0,
+        "newCSVReports": 12,
+        "originalInputsUnchanged": true
+      },
+      "study4": {
+        "study": "study4",
+        "scope": "F1344",
+        "passed": true,
+        "status": "PASSED_WITH_GRAM_QUALIFICATIONS",
+        "instances": 10791,
+        "strictFailures": 0,
+        "numericalAgreement": 2934,
+        "qualified": 7857,
+        "structuralZero": 0,
+        "failed": 0,
+        "cases": 9,
+        "failures": [],
+        "policySHA256": "ca9101ea01a6eb093664d383a3d6bd1734598ba84aed2ee35b28cfa7412aec58",
+        "originalRequirementsCompleted": true,
+        "elapsedSeconds": 38.103500708333335,
+        "publicationContext": "Same immutable source record; reconstruction never replaces a reported value. Original ranks, counts, flags and scientific outcomes verified. No new cross-run publication claim.",
+        "checkerHashes": {
+          "ejc_study34_bind": "27328e7ac45cfd8d5c14cb348901774b00ad855389246b2ee3c61c1058e87b87",
+          "ejc_study34_gram_facts": "90a168a1002bb5da2e6676db87f721d3f8f633fa70fa6274407818f92729e4cb",
+          "ejc_p7_qualify": "c57702b106e2aeba5027fa107b4e8021c993d18b13ff8eeb3dd0beaa7f354a93",
+          "ejc_matrix_screen": "46b8af674ee39834b9a911d3101e8717786e100ce60034f5b05fe51c70f64ef9",
+          "ejc_gram_parent": "c9c0e3152443e797a47b75de55abffcf40d9d63156882981db00a443f24108f8",
+          "ejc_acceptance_numeric": "c76c3f5679cd6cd35464809b7fda1f4983955a053864317afafb63cdeb59fc6d",
+          "ejc_rule_lookup": "ef0f5cb7151f17a0a5a0ffbfd4bd520b4ad04c00b65fcb7751628ad7fa022efb"
+        }
+      },
+      "remainingBoundaries": {
+        "P06": {
+          "strictPassed": 15,
+          "strictFailed": 2,
+          "unchangedMandatoryPassed": 15,
+          "portableReportingPassed": 2,
+          "portableReportingFailed": 0,
+          "portableReportingIncomplete": 0,
+          "activeMandatoryTotal": 17,
+          "originalStrictResultsPreserved": true,
+          "passed": true
+        },
+        "paperFamilies": 13,
+        "paperFields": 21016,
+        "conditioningFields": 132,
+        "table12Fields": 1530,
+        "figures": {
+          "passed": true,
+          "figureCount": 6,
+          "portableStudy2": true,
+          "study2": {
+            "passed": true,
+            "adaptiveRows": 15,
+            "totalRows": 18,
+            "knownModelNARows": 3,
+            "exactPlottedPoints": 33,
+            "originalValidityPassed": true,
+            "sourceValuesExact": true,
+            "inputsUnchanged": true,
+            "gram": {
+              "passed": true,
+              "binding": "P07_STUDY2_GRAM_MAX_V1",
+              "adaptiveRows": 15,
+              "numericalAgreement": 9,
+              "qualifiedMaxima": 6,
+              "originalStrictFailures": 15,
+              "selectedParentChecks": 11250,
+              "qualifiedParentChecks": 3907,
+              "policySHA256": "ca9101ea01a6eb093664d383a3d6bd1734598ba84aed2ee35b28cfa7412aec58",
+              "inputsUnchanged": true
+            }
+          }
+        },
+        "sourceSet": {
+          "study1": "/Users/tamw.nguyen/Library/CloudStorage/OneDrive-KyotoUniversity/research/projects/tam-control-toolbox/results/p07_mac_full_de77ad7_20260927_01/study1",
+          "study2": "/Users/tamw.nguyen/Library/CloudStorage/OneDrive-KyotoUniversity/research/projects/tam-control-toolbox/results/p07_mac_full_de77ad7_20260927_01/study2",
+          "study3": "/Users/tamw.nguyen/Library/CloudStorage/OneDrive-KyotoUniversity/research/projects/tam-control-toolbox/results/p07_locator_preflight_20260927_01/diagnostic_batch_01/study3",
+          "study4": "/Users/tamw.nguyen/Library/CloudStorage/OneDrive-KyotoUniversity/research/projects/tam-control-toolbox/results/p07_locator_preflight_20260927_01/diagnostic_batch_01/study4",
+          "study5": "/Users/tamw.nguyen/Library/CloudStorage/OneDrive-KyotoUniversity/research/projects/tam-control-toolbox/results/p07_locator_preflight_20260927_01/diagnostic_batch_01/study5",
+          "p06": "/Users/tamw.nguyen/Library/CloudStorage/OneDrive-KyotoUniversity/research/projects/tam-control-toolbox/results/p07_locator_preflight_20260927_01/diagnostic_batch_01/p06",
+          "study6": "/Users/tamw.nguyen/Library/CloudStorage/OneDrive-KyotoUniversity/research/projects/tam-control-toolbox/results/p07_locator_preflight_20260927_01/diagnostic_batch_01/study6"
+        },
+        "priorDiagnosticSourceProvenanceRetained": true,
+        "fullEvidence": {
+          "path": "results/p07_path_lifecycle_repair_20260928_01/remaining_boundaries_01/COMPLETION.json",
+          "bytes": 533968,
+          "sha256": "7d7dc3efb5190343fdb19b475e0a5082e7ab37e78434345adb46624dad1da829"
+        }
+      },
+      "sourceAnnex": {
+        "path": "evidence/p07_acceptance/path_lifecycle_repair/REPAIR_SOURCE_ANNEX.json",
+        "bytes": 6167,
+        "sha256": "627c5f3d5e9b448bdc6ce6022f7970452e47ec7a2dc1a22956b5ab828bca93af"
+      },
+      "freshCertification": false
+    }
   },
   "integrity": {
     "allPassed": true,
     "fileCount": 3022,
     "totalBytes": 1357579926,
     "exactProtectedFileSet": true,
-    "manifestSHA256": "3bf6fd5903331a4f800fce9fb7a9a0a33aa46b75615a277af685a933b5128270",
-    "baseHEAD": "de77ad73531abe100499abc1dc45099026f75667",
-    "scientificInventory": 119,
-    "byteIdenticalScientificFiles": 118,
-    "authorizedExactReportingHook": [
-      "studies/study2/study2_gram_report.m"
-    ],
-    "unchangedReviewedDependencies": 6208,
-    "authorizedActivationChanges": [
+    "frozenFailureEvidenceFiles": 3357,
+    "frozenFailureEvidenceBytes": 1597624897,
+    "frozenFailureEvidenceUnchanged": true,
+    "exactIndexedFailureEvidenceFileSet": true,
+    "exactAllFilesystemFileSet": false,
+    "allFilesystemFileCount": 3358,
+    "additionalIgnoredDesktopMetadata": [
       {
-        "path": "run_ejc.m",
-        "oldSHA256": "4326e6faf40e2cfeb528525d5c73f59537e99202976d5e59e45586084d3b72a5",
-        "newSHA256": "70116250019727a33b6c620fbb533160fadff755493d368982a30ce6f2b6d12e"
-      },
-      {
-        "path": "studies/p07/p07_acceptance_policy.json",
-        "oldSHA256": "04925dc10f1b89c1a866c1d36bb58e033a79b070455230f6e4e80777d332e65d",
-        "newSHA256": "ca9101ea01a6eb093664d383a3d6bd1734598ba84aed2ee35b28cfa7412aec58"
-      },
-      {
-        "path": "tests/test_p07_study2_gram_binding.m",
-        "oldSHA256": "591869a4a3ab7b82d1a1b27d9c7337aa3595a4e0541987ad2498d9cf336f860e",
-        "newSHA256": "92fa4286ab8711defd951336f55f9567e50af6d8efd3350156e6960dcbf38680"
+        "path": "results/p07_final_mac_certification_20260928_01/.DS_Store",
+        "bytes": 10244,
+        "sha256": "296cbd4265a3dcb0b0cfce3d0f9dd7243662c3eaec3a39fb7040f378cbee504e"
       }
     ],
-    "scientificAndNumericalRulesUnchanged": true
+    "policySHA256": "ca9101ea01a6eb093664d383a3d6bd1734598ba84aed2ee35b28cfa7412aec58",
+    "allOtherFrozenSourceAndNormativeFilesUnchanged": true,
+    "allowedExistingChanges": [
+      {
+        "path": "run_ejc.m",
+        "oldSHA256": "70116250019727a33b6c620fbb533160fadff755493d368982a30ce6f2b6d12e",
+        "newSHA256": "988eb5acf612edd9887987c9858068302f81f28498213e83f98837129b29289e"
+      }
+    ],
+    "scientificInventory": 119,
+    "byteIdenticalScientificFiles": 118,
+    "existingAuthorizedReportingHookOnly": [
+      "studies/study2/study2_gram_report.m"
+    ],
+    "noNewScientificChanges": true,
+    "baseHEAD": "196ff3cae21ab8ac369224163dc4321ba7bb2c3d",
+    "gitStatus": " M run_ejc.m\n?? studies/p07/ejc_study34_callback.m\n?? tests/test_p07_path_lifecycle.m\n",
+    "stopUncommitted": true,
+    "timestampUTC": "2026-09-28T13:35:29.931277+00:00"
   },
   "sourceFiles": [
     {
@@ -409,6 +549,11 @@
       "path": "evidence/p07_acceptance/maximum_locator/qp_argmax_fixture.mat",
       "bytes": 51952,
       "sha256": "51eeebba34385c9671d9403e9b14ac973f5bbc06a9d2ea149aac743744333aee"
+    },
+    {
+      "path": "evidence/p07_acceptance/path_lifecycle_repair/REPAIR_SOURCE_ANNEX.json",
+      "bytes": 6167,
+      "sha256": "627c5f3d5e9b448bdc6ce6022f7970452e47ec7a2dc1a22956b5ab828bca93af"
     },
     {
       "path": "evidence/p07_acceptance/rank_amendment/00_MAC_PROMPT.md",
@@ -772,8 +917,8 @@
     },
     {
       "path": "run_ejc.m",
-      "bytes": 17948,
-      "sha256": "70116250019727a33b6c620fbb533160fadff755493d368982a30ce6f2b6d12e"
+      "bytes": 17931,
+      "sha256": "988eb5acf612edd9887987c9858068302f81f28498213e83f98837129b29289e"
     },
     {
       "path": "run_study1.m",
@@ -1254,6 +1399,11 @@
       "path": "studies/p07/ejc_study34_bind.m",
       "bytes": 6776,
       "sha256": "27328e7ac45cfd8d5c14cb348901774b00ad855389246b2ee3c61c1058e87b87"
+    },
+    {
+      "path": "studies/p07/ejc_study34_callback.m",
+      "bytes": 4092,
+      "sha256": "fad5e3a8e9ec2f64807f0bcb6d0230cfda4c877765f707dcd3ce9254c520e737"
     },
     {
       "path": "studies/p07/ejc_study34_extract.m",
@@ -1861,6 +2011,11 @@
       "sha256": "93ada8eab3932ba54c84a7539b1c0482ebb896396345bb91df9c5dc1d710913b"
     },
     {
+      "path": "tests/test_p07_path_lifecycle.m",
+      "bytes": 15963,
+      "sha256": "2dbd00fa01e150cd67384bf7a331161958bc0cb88ad025c45531fff5358a6b69"
+    },
+    {
       "path": "tests/test_p07_portable_dispatch.m",
       "bytes": 5335,
       "sha256": "5bdee4f93116c9919d2434af1074239aa534a63ec59b02a259db19e596a18f61"
@@ -2066,6 +2221,36 @@
       "path": "results/p07_final_mac_certification_20260928_01/FREEZE_READINESS_AUDIT.json",
       "bytes": 3336,
       "sha256": "5b2b4cd8e9ab7cfbb866fcf3037634d7c810f9708551f23f971507e8d6ccfc14"
+    },
+    {
+      "path": "results/p07_path_lifecycle_repair_20260928_01/saved_study3_01/COMPLETION.json",
+      "bytes": 1810,
+      "sha256": "9304df5246ec28aed05ed30452699cb1d43657d5126aa91fa2680870fbd9d492"
+    },
+    {
+      "path": "results/p07_path_lifecycle_repair_20260928_01/saved_study3_01/integrated_tests.json",
+      "bytes": 152,
+      "sha256": "af8cce5da6113a896835cff397a175292c4d78ca06402539752c10afaff0ad4a"
+    },
+    {
+      "path": "results/p07_path_lifecycle_repair_20260928_01/saved_study4_01/COMPLETION.json",
+      "bytes": 1484,
+      "sha256": "72d4f4b6f5672e0497ef029262154af6a0b3adeb6f958ad0359f4e97f0dac287"
+    },
+    {
+      "path": "results/p07_path_lifecycle_repair_20260928_01/saved_study4_01/integrated_tests.json",
+      "bytes": 152,
+      "sha256": "eb113b3a9f0c231f4fa47a834f9cd238029bc7972219e11525e4663921915c19"
+    },
+    {
+      "path": "results/p07_path_lifecycle_repair_20260928_01/remaining_boundaries_01/COMPLETION.json",
+      "bytes": 533968,
+      "sha256": "7d7dc3efb5190343fdb19b475e0a5082e7ab37e78434345adb46624dad1da829"
+    },
+    {
+      "path": "results/p07_path_lifecycle_repair_20260928_01/INTEGRITY_PRE_GATE.json",
+      "bytes": 1416,
+      "sha256": "42511609548223a526952b7326162eba3b45276a84c4c143aae39ad056b35c01"
     }
   ],
   "reviewedReadinessPackageSHA256": "5c33d9581fe2656d05472f072afe124dee7dfe3e789924db3cc899885f1ed02e",
@@ -2108,5 +2293,22 @@
     "Only after QUICK passes: entire fresh Mac FULL from the beginning"
   ],
   "WindowsExecuted": false,
-  "P07Closed": false
+  "P07Closed": false,
+  "pathLifecycleRepair": {
+    "annex": {
+      "path": "evidence/p07_acceptance/path_lifecycle_repair/REPAIR_SOURCE_ANNEX.json",
+      "bytes": 6167,
+      "sha256": "627c5f3d5e9b448bdc6ce6022f7970452e47ec7a2dc1a22956b5ab828bca93af"
+    },
+    "preRepairGate": {
+      "path": "results/p07_path_lifecycle_repair_20260928_01/before/evidence/p07_acceptance/IMPLEMENTATION_GATE.json",
+      "bytes": 75336,
+      "sha256": "7a142ba5a9e4b75c9d9dc154bba3adc7bdff2b5729a04f1e9ba3712d208eb613"
+    },
+    "failedGeneratingCandidate": "196ff3cae21ab8ac369224163dc4321ba7bb2c3d",
+    "originalFullVerdict": "FAILED",
+    "postRepairCommitCreated": false,
+    "newQuickFullExecuted": false,
+    "policyBytesChanged": false
+  }
 }

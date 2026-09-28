@@ -114,7 +114,7 @@ try
                 else
                     runner = str2func(['run_' study]);
                     if any(strcmp(study,{'study3','study4'}))
-                        adapter=@(source,cfg)ejc_study34_verify(string(study),source,cfg,fullfile(output,['validity_' study]));
+                        adapter=ejc_study34_callback(root,string(study),fullfile(output,['validity_' study]));
                         runner(target,Figures=false,ReferenceDirectory=reference.(study),VerificationAdapter=adapter);
                     else
                         runner(target,Figures=false,ReferenceDirectory=reference.(study));
