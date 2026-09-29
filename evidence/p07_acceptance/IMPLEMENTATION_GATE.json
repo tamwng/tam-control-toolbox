@@ -5,19 +5,41 @@
   "baseCandidate": "196ff3cae21ab8ac369224163dc4321ba7bb2c3d",
   "candidateIdentity": "Runtime clean Git HEAD; no self-reference. Frozen-state prerequisites and fresh certification still mandatory.",
   "tests": {
-    "passed": 323,
+    "passed": 329,
     "failed": 0,
     "incomplete": 0,
-    "distinctTests": 323,
-    "total": 323,
-    "elapsedSeconds": 687.8560395833333,
+    "total": 329,
+    "distinctTests": 329,
+    "elapsedSeconds": 530.3084512083333,
     "scope": "all",
     "frozen": false,
-    "verificationMode": "UNCOMMITTED_REPAIR_REGRESSIONS_NOT_CERTIFICATION",
-    "sourceSnapshot": {
-      "path": "results/p07_path_lifecycle_repair_20260928_01/REPAIR_FINAL_TESTED_SNAPSHOT.json",
-      "bytes": 65555,
-      "sha256": "54285f27d06031c339fb4f455a585b126d23d65dd6bf767f745d7d1d99afb3fa"
+    "verificationMode": "REVIEWED_TEST_PORTABILITY_VALIDATION_NOT_CERTIFICATION",
+    "validationBaseCandidate": "9855c14210643cc06908fb529afd47953413ed6c",
+    "equivalentCommittedTestCandidate": "b506689fff4dde55b4a72b1de22b7469eea08417",
+    "resultsEvidence": {
+      "path": "results/p07_mac_test_portability_20260929_01/mac_prerequisites_01/tests.json",
+      "bytes": 94,
+      "sha256": "11fd48fae2f5a853c24cefdfbcd8d67358384eb3533c59002fd6478c495f3135"
+    },
+    "perTestEvidence": {
+      "path": "results/p07_mac_test_portability_20260929_01/mac_prerequisites_01/tests.csv",
+      "bytes": 28903,
+      "sha256": "49d8cc4723c3687a5315c4a45e2b13495e6f9d7bb9c5f1eb54bed5b433198bc7"
+    },
+    "executionEvidence": {
+      "path": "results/p07_mac_test_portability_20260929_01/mac_prerequisites_01/STATE.json",
+      "bytes": 1018,
+      "sha256": "b548b73a458a1199ae71d751b0deecaad7d13378ccc56ead4df447a4d88d89d3"
+    },
+    "sourceEvidence": {
+      "path": "results/p07_mac_test_portability_20260929_01/SOURCE_IDENTITIES.json",
+      "bytes": 2720,
+      "sha256": "90ea4f216140d4cfe9d2698499e0f677c3cba1a26da7bec4da0eb961dfe9bb52"
+    },
+    "integrityEvidence": {
+      "path": "results/p07_mac_test_portability_20260929_01/INTEGRITY_FINAL_REVIEWED.json",
+      "bytes": 2211,
+      "sha256": "2e8c558a1f1808ab03d3aac13aa6a2eed16863d7f3978fc31904f9959f228944"
     }
   },
   "savedData": {
@@ -1911,6 +1933,11 @@
       "sha256": "d9c0472d582283a35806fcf056af867ee9832329c4048bbb403d9bbbad6264ad"
     },
     {
+      "path": "tests/p07_w2_saved_fixture.m",
+      "bytes": 3173,
+      "sha256": "ed65ccd84da6a40208a2029ede753d665c22947aa3c583c51966d40e7be0ddd0"
+    },
+    {
       "path": "tests/test_controller.m",
       "bytes": 8254,
       "sha256": "5b42b3bdedaa46b2dcd6efcf6c7d079618444a67ab1a406d922ddc308b309ea1"
@@ -2072,8 +2099,8 @@
     },
     {
       "path": "tests/test_p07_study34_binding.m",
-      "bytes": 6773,
-      "sha256": "3e716889d6a6230def160f9034d5badcfd40da6bfbc8da46975e5c733aeab527"
+      "bytes": 21190,
+      "sha256": "bbdef37e962afc17f08439433258531ef3e4b3be2398e73f82944418016a783d"
     },
     {
       "path": "tests/test_physical.m",
@@ -2251,6 +2278,31 @@
       "path": "results/p07_path_lifecycle_repair_20260928_01/INTEGRITY_PRE_GATE.json",
       "bytes": 1416,
       "sha256": "42511609548223a526952b7326162eba3b45276a84c4c143aae39ad056b35c01"
+    },
+    {
+      "path": "results/p07_mac_test_portability_20260929_01/mac_prerequisites_01/tests.json",
+      "bytes": 94,
+      "sha256": "11fd48fae2f5a853c24cefdfbcd8d67358384eb3533c59002fd6478c495f3135"
+    },
+    {
+      "path": "results/p07_mac_test_portability_20260929_01/mac_prerequisites_01/tests.csv",
+      "bytes": 28903,
+      "sha256": "49d8cc4723c3687a5315c4a45e2b13495e6f9d7bb9c5f1eb54bed5b433198bc7"
+    },
+    {
+      "path": "results/p07_mac_test_portability_20260929_01/mac_prerequisites_01/STATE.json",
+      "bytes": 1018,
+      "sha256": "b548b73a458a1199ae71d751b0deecaad7d13378ccc56ead4df447a4d88d89d3"
+    },
+    {
+      "path": "results/p07_mac_test_portability_20260929_01/SOURCE_IDENTITIES.json",
+      "bytes": 2720,
+      "sha256": "90ea4f216140d4cfe9d2698499e0f677c3cba1a26da7bec4da0eb961dfe9bb52"
+    },
+    {
+      "path": "results/p07_mac_test_portability_20260929_01/INTEGRITY_FINAL_REVIEWED.json",
+      "bytes": 2211,
+      "sha256": "2e8c558a1f1808ab03d3aac13aa6a2eed16863d7f3978fc31904f9959f228944"
     }
   ],
   "reviewedReadinessPackageSHA256": "5c33d9581fe2656d05472f072afe124dee7dfe3e789924db3cc899885f1ed02e",
@@ -2309,6 +2361,45 @@
     "originalFullVerdict": "FAILED",
     "postRepairCommitCreated": false,
     "newQuickFullExecuted": false,
+    "policyBytesChanged": false
+  },
+  "testPortabilityGateRefresh": {
+    "reviewedCommittedTests": "b506689fff4dde55b4a72b1de22b7469eea08417",
+    "validationBaseCandidate": "9855c14210643cc06908fb529afd47953413ed6c",
+    "provenance": "Existing Mac 329/329 run used the reviewed two-file patch on the prior base. Both tested hashes exactly equal the subsequently committed files. This metadata refresh is not a new test execution or certification.",
+    "previousGateSHA256": "da467ce9177b06cb0bfb0a3d3236caf4d07fd453f6820f15420414dfa96a4431",
+    "previousTests": {
+      "passed": 323,
+      "failed": 0,
+      "incomplete": 0,
+      "distinctTests": 323,
+      "total": 323,
+      "elapsedSeconds": 687.8560395833333,
+      "scope": "all",
+      "frozen": false,
+      "verificationMode": "UNCOMMITTED_REPAIR_REGRESSIONS_NOT_CERTIFICATION",
+      "sourceSnapshot": {
+        "path": "results/p07_path_lifecycle_repair_20260928_01/REPAIR_FINAL_TESTED_SNAPSHOT.json",
+        "bytes": 65555,
+        "sha256": "54285f27d06031c339fb4f455a585b126d23d65dd6bf767f745d7d1d99afb3fa"
+      }
+    },
+    "changedTestPins": [
+      {
+        "path": "tests/test_p07_study34_binding.m",
+        "previousSHA256": "3e716889d6a6230def160f9034d5badcfd40da6bfbc8da46975e5c733aeab527",
+        "committedSHA256": "bbdef37e962afc17f08439433258531ef3e4b3be2398e73f82944418016a783d",
+        "bytes": 21190
+      },
+      {
+        "path": "tests/p07_w2_saved_fixture.m",
+        "previousSHA256": null,
+        "committedSHA256": "ed65ccd84da6a40208a2029ede753d665c22947aa3c583c51966d40e7be0ddd0",
+        "bytes": 3173
+      }
+    ],
+    "existingResultsReused": true,
+    "frozenStateTestsRerun": false,
     "policyBytesChanged": false
   }
 }
