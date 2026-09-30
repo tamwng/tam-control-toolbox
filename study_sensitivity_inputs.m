@@ -16,9 +16,13 @@ end
 assert(isfile(recordFile) && isfile(settingsFile),'study:ReferenceUnavailable','Sensitivity record/settings missing.');
 z=load(settingsFile,'cfg');assert(isequaln(z.cfg,cfg),'study:SensitivitySettings','Fixed settings differ.');
 z=load(recordFile,'records');sensitivity_check_records(cfg,z.records);
+recordIdentity=sensitivity_record_identity(recordFile, ...
+    fullfile(referenceStudy1,'data','records_confirmation.mat'));
+assert(strcmp(saved.plan.recordSHA256,recordIdentity.currentSHA256), ...
+    'study:SensitivityRecordHash','Saved plan does not identify its actual input file.');
 [plan,manifest]=sensitivity_design(cfg,recordFile,sensitivity_hash(recordFile),archive);
 plan.settingsFile=settingsFile;
 assert(height(manifest)==1558,'study:SensitivityInventory','Complete sensitivity design required.');
 inputs=struct('sensitivityPlan',plan,'sensitivityManifest',manifest, ...
-    'sensitivityReference',char(referenceStudy1));
+    'sensitivityReference',char(referenceStudy1),'recordIdentity',recordIdentity);
 end

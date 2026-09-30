@@ -21,6 +21,11 @@ try
     end
     if rule.policy_family=="E0"
         verdict.passed=isequaln(a,b);verdict.status="EXACT";
+        [bound,identity]=verification_sensitivity_record_hash(a,b,key,context);
+        if bound
+            verdict.passed=identity.passed;verdict.status="EXACT_BOUND_INPUT_RECORDS";
+            verdict.parents=identity;
+        end
         if context.isCSV
             [sa,sb]=csv_sources(context,leaf);
             column=find(context.csvHeaders==leaf);

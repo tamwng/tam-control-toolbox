@@ -18,7 +18,7 @@ if mode=='case'
     index=find(manifest.runId==options.Case);
     assert(isscalar(index),'study:SensitivityCase','Supply one exact fixed runId.');
 elseif mode=='all'
-    index=[find(manifest.baselineGate);find(~manifest.baselineGate)];
+    index=(1:height(manifest)).';
 else
     index=[];
 end
@@ -43,10 +43,12 @@ settingsFile=fullfile(inputs,'settings.mat');save(settingsFile,'cfg','environmen
 [plan,manifest]=sensitivity_design(cfg,recordFile,sensitivity_hash(recordFile),'');
 plan.settingsFile=settingsFile;plan.settingsSHA256=sensitivity_hash(settingsFile);
 manifest=manifest(index,:);
-save(fullfile(output,'execution_provenance.mat'),'plan','manifest');
+executionOrder=[find(manifest.baselineGate);find(~manifest.baselineGate)];
+save(fullfile(output,'execution_provenance.mat'),'plan','manifest','executionOrder');
 writetable(manifest,fullfile(output,'P06_RUN_MANIFEST.csv'));
 rows=struct([]);
-for j=1:height(manifest)
+% Store the fixed design order; execute baseline cases first as before.
+for j=reshape(executionOrder,1,[])
     item=sensitivity_generate_case(output,manifest(j,:),plan,records);
     rows=[rows;item]; %#ok<AGROW>
     assert(item.completed && item.predictionCompleted,'study:SensitivityFailed', ...

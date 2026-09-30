@@ -95,6 +95,12 @@ for group = groups
                     [a,state] = legacy_pilot_flags(a,b,context,state);
                 end
                 if ~isempty(portable),state.portable=portable.contextForFile(context,a,b);end
+                if ~isempty(portable) && isfield(portable,'prepareValues')
+                    [a,b,state.portable]=portable.prepareValues(a,b,state.portable);
+                    if isfield(state.portable,'manifestOrderProof')
+                        state.portableRows{end+1,1}=state.portable.manifestOrderProof;
+                    end
+                end
                 state = compare_value(a,b,"value",state);
                 if isstruct(a) && isfield(a,'result') && isstruct(a.result) && isscalar(a.result) && isfield(a.result,'completed')
                     state.attemptedRuns = 1; state.completedRuns = double(a.result.completed);

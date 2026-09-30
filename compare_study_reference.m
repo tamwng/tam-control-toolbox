@@ -37,10 +37,11 @@ required=keys;
 if any(keys=='study6'),required=union(required,"study"+(1:5).');validate_generated_sources(select(parents,"study"+(1:5)));end
 if any(keys=='p06'),required=union(required,"study1");end
 referenceIdentity=resolve_reference_inputs(referenceParents,required);
+producers=struct;
 for key=keys.'
     assert(isfolder(sources.(key)) && ~strcmp(canonical(sources.(key)),referenceIdentity.(key).directory), ...
         'study:SelfReference','A generated package cannot be its own canonical reference.');
-    verify_generated_package(key,sources.(key));
+    producers.(key)=verify_generated_package(key,sources.(key));
 end
 assert(~strcmp(proof.sourceReview,'HQ_REVIEW_PENDING') || options.DevelopmentComparison, ...
     'study:SourceReviewPending','The source relationship is not enabled for reference comparison.');
@@ -68,13 +69,16 @@ end
 cache=containers.Map('KeyType','char','ValueType','any');
 cache('P07_MATRIX_EVIDENCE_DIRECTORY')=fullfile(output,'matrix_details');mkdir(cache('P07_MATRIX_EVIDENCE_DIRECTORY'));
 cache('P07_INPUT_IDENTITY_SHA256')=verification_file_sha256(fullfile(output,'input_identity_before.mat'));
-adapter=struct('contextForFile',@bind,'additionalFiles',@extra,'sourceFile',@source_file);
+adapter=struct('contextForFile',@bind,'additionalFiles',@extra,'sourceFile',@source_file, ...
+    'prepareValues',@verification_sensitivity_manifest_order);
 report=verification_compare_results(sources,references,fullfile(output,'comparison'),adapter);
 assert(isequaln(before,verification_input_snapshot(parents,referenceParents)), ...
     'study:InputChanged','Generated or canonical inputs changed.');
 after=verify_source_relationship;
 assert(strcmp(after.relationshipSHA256,proof.relationshipSHA256),'study:SourceChanged','Source authority changed.');
 report.sourceRelationship=proof;report.inputsUnchanged=true;
+for key=keys.',report.producingSources.(key)=producers.(key).sourceIdentity;end
+if any(keys=='p06'),report.sensitivityInputIdentity=currentInputs.recordIdentity;end
 report.numericalChecksPassed=report.passed;
 if strcmp(proof.sourceReview,'HQ_REVIEW_PENDING')
     report.passed=false;report.status='PROVISIONAL_SOURCE_REVIEW_PENDING';
@@ -87,6 +91,10 @@ save(fullfile(output,'reference_comparison.mat'),'report');
         c=verification_portable_context(info,a,b,parents,referenceParents,bindingsA,bindingsB,cache);
         c.sourceGuard=@study_claim_source_guard;
         c.canonicalReferencePath=string(referenceIdentity.(info.study).originalPrefix)+info.file;
+        if info.study=="p06"
+            c.sensitivityRecords=currentInputs.recordIdentity;
+            c.allowLegacySensitivityOrder=~strcmp(producers.p06.sourceIdentity,proof.sourceIdentity);
+        end
     end
     function names=extra(group)
         names=strings(0,1);
