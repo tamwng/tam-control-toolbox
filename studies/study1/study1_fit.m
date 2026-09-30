@@ -1,9 +1,14 @@
 function [estimator,fit] = study1_fit(id,record,cfg,priorScale)
-%STUDY1_FIT Fit one model only to the supplied completed measured transitions.
-% Store posterior histories before/after each update; checkpoint j is at
-% history column j+1. Rejections retain the core's last valid RLS state.
-% Calibration sets scaling only. It supplies no additional observations.
-% Optional priorScale multiplies only the normalized prior, before fitting.
+% STUDY1_FIT Fit one model to supplied completed measured transitions.
+%  RECORD has count inputs and count+1 endpoint measurements, stored as rows.
+%  THETA and BETA histories have coefficient rows and count+1 columns;
+%  covariance is n-by-n-by-(count+1). Column j+1 follows transition j.
+%  Calibration sets fixed scaling only; it supplies no additional observations.
+%  Optional positive priorScale multiplies only the normalized prior before
+%  fitting. Rejections retain the last valid RLS state. For adaptive models,
+%  ESTIMATOR carries the terminal coefficients AND covariance into control;
+%  the controller resets only its residual window. The known model returns
+%  an empty estimator and records no identification updates.
 if nargin < 4, priorScale = 1; end
 validateattributes(priorScale,{'double'},{'scalar','real','finite','positive'});
 

@@ -1,8 +1,8 @@
-# P06 sensitivity reproduction
+# Sensitivity to tuning and initialization
 
-P06 is the frozen paper's seven-setting Study 1 sensitivity study (Table A.18). Its historical execution completed all 1,558 cases at source `d1f1adb0d7891aba2a9555b7b7c73feb2897e7c7`; the records are under `results/p06_sensitivity_20260924_225708/`. P08 is closed, and these results remain exploratory numerical evidence. Reused Study 1 records do not establish independent confirmation.
+This seven-setting Study 1 sensitivity study corresponds to Table A.18. Its historical execution completed all 1,558 cases at source `d1f1adb0d7891aba2a9555b7b7c73feb2897e7c7`; the records are under `results/p06_sensitivity_20260924_225708/`. The results remain exploratory numerical evidence. Reused Study 1 records do not establish independent confirmation.
 
-From the repository root, the P07 public entry point is `run_ejc('p06')`. See the root README for current command-verification status. The original entry points remain available:
+From the repository root, `run_ejc('p06')` runs the complete sensitivity campaign and historical comparison under the frozen source requirements. It needs local references and certification inputs. See the [root README](../../README.md) and [verification guide](../../CROSS_PLATFORM_VERIFICATION.md). The lower-level entry points remain available:
 
 ```matlab
 addpath('studies/p06');
@@ -29,8 +29,8 @@ Paired bootstrap uses mt19937ar/7401 and 2,000 resamples, separate from experime
 
 The existing nominal gate requires exact statuses, counts, update/control acceptance and nonfinite masks. Fitted theta/beta/covariance and initialization prediction use `atol=rtol=1e-10`; trajectory x/y/u/theta/prediction use `atol=rtol=1e-7`; whole-run scores use `atol=1e-8, rtol=1e-7`. These predeclared comparison tolerances are not historical solver settings. They must not be changed after a discrepancy. Timing and machine-dependent condition estimates are separate diagnostics.
 
-The historical execution passed all 204 gate comparisons with zero maximum discrepancy, completed in 3,865.9445834 s on the recorded Windows/R2026a machine, and retained all attempts. This does not establish a new P07 run or second-machine agreement.
+The historical execution passed all 204 gate comparisons with zero maximum discrepancy, completed in 3,865.9445834 s on the recorded Windows/R2026a machine, and retained all attempts. That original record is distinct from the later Mac and Windows #2 full certifications identified in the verification guide.
 
 The pre-interface fixture was captured at `05000a19bad01e52d852e1d63ac21f607d7596ae`. It holds short synthetic fits and old summarizer outputs from two copied Shared cases; it is protected evidence, not a newly generated plant trajectory.
 
-`p06_provenance` reports the current invocation's commit, source hashes, environment and actual solver options. `productionLaunched` belongs only to that invocation. Historical source gaps remain UNKNOWN. Its P06/P07/P08 metadata distinguishes completed historical P06 evidence, pending release verification and closed exploratory P08 status. Historical snapshots/reports retain their original wording unchanged.
+`p06_provenance` reports the current invocation's commit, source hashes, environment and actual solver options. `productionLaunched` belongs only to that invocation. Historical source gaps remain UNKNOWN. Stored metadata and historical reports retain their original labels; use the identified execution record when interpreting status.

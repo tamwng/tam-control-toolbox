@@ -5,6 +5,10 @@ function outputDir = run_study1(outputName,options)
 % trials plus noiseless comparisons, using the fixed manuscript pilot values.
 % No tuning occurs. Each invocation writes a new repository-local package.
 % Complete execution may take several minutes. Nothing is overwritten.
+% The complete test suite requires retained archives/fixtures; this is
+% not a reference-free single-case driver. Figures=false suppresses figures
+% only; it does not reduce the computation or its scientific checks.
+
 arguments
     outputName = ''
     options.Figures (1,1) logical = true

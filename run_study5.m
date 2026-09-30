@@ -3,6 +3,10 @@ function outputDir = run_study5(outputName,options)
 % From the repository root: run_study5
 % Requires MATLAB and Optimization Toolbox. Writes a new results package;
 % no confirmation, tuning, publication graphics, or Study 6 decomposition.
+% The complete test suite requires retained archives/fixtures; this is
+% not a reference-free single-case driver. Figures=false suppresses figures
+% only; it does not reduce the computation or its scientific checks.
+
 arguments
     outputName = ''
     options.Figures (1,1) logical = true

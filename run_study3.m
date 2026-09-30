@@ -4,6 +4,10 @@ function outputDir = run_study3(outputName,options)
 % Run from the repository root in a clean session. Results always go to a new
 % local directory. Settings, windows and seeds are fixed before execution.
 % No confirmation campaign, tuning, structural change, or later study is run.
+% The complete test suite requires retained archives/fixtures; this is
+% not a reference-free single-case driver. Figures=false suppresses figures
+% only; it does not reduce the computation or its scientific checks.
+
 arguments
     outputName = ''
     options.Figures (1,1) logical = true

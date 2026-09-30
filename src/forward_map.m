@@ -1,7 +1,12 @@
 function [next,A,B] = forward_map(model,xi,u,theta)
-%FORWARD_MAP Reconstruct the nonlinear predictor with fixed coefficients.
-%   A and B differentiate exactly this computational map with theta held
-%   fixed. Physical-model sensitivities use the same RK4 stages as the state.
+% FORWARD_MAP Reconstruct a nonlinear predictor with fixed coefficients.
+%  XI, U and THETA are columns of lengths model.n, model.m and model.ntheta.
+%  NEXT is model.n-by-1; A and B are its n-by-n and n-by-m Jacobians with
+%  THETA held fixed. A has state/state units and B has state/input units.
+%  Direct models reconstruct the output and shift the measured-history state.
+%  Physical prediction requires J>0 and d>=0. Its state and sensitivities use
+%  the same RK4 stages; this numerical flow need not be linear in theta.
+%  Nonfinite predictions or derivatives raise an error; no value is clipped.
 validateattributes(xi,{'numeric'},{'real','finite','size',[model.n,1]});
 validateattributes(u,{'numeric'},{'real','finite','size',[model.m,1]});
 validateattributes(theta,{'numeric'},{'real','finite','size',[model.ntheta,1]});
@@ -19,6 +24,7 @@ switch model.kind
             validateattributes(supplied,{'numeric'},{'real','finite','size',[model.p,1]});
             validateattributes(Jknown,{'numeric'},{'real','finite','size',[model.p,model.n+model.m]});
         end
+        % Reconstruct output coefficients before applying the known history shifts.
         coefficients = reshape(model.sharing*theta,model.p,model.featureCount);
         output = supplied+coefficients*phi;
         Joutput = Jknown+coefficients*Jphi;

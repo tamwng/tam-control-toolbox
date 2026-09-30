@@ -1,10 +1,9 @@
 function results = run_verification
-%RUN_VERIFICATION Run existing unit, numerical, archive and interface checks.
-% From the repository root in a clean session, enter RUN_VERIFICATION.
-% Requires MATLAB and Optimization Toolbox; tested with R2026a Update 5.
-% RUN_TESTS contains the independent mathematical checks as well as software
-% tests; this entry point runs that single suite without duplicating checks.
-% The full suite requires retained archives. It does not reproduce full studies.
+% RUN_VERIFICATION Run the complete existing test suite through RUN_TESTS.
+%  Requires MATLAB, Optimization Toolbox, retained archives and test fixtures.
+%  Includes independent mathematical and software checks. It does not
+%  generate complete studies and is not a reference-free startup check.
+%  Use RUN_TESTS('quick') for the bounded core/Study 1 component selection.
 
 fprintf('EJC numerical core verification\nMATLAB %s\n', version);
 results = run_tests;

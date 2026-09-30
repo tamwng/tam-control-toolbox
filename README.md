@@ -1,68 +1,94 @@
 # Structure-Informed Indirect Adaptive Predictive Control
 
-MATLAB implementation of the frozen EJC manuscript, *A Numerical Investigation of Indirect Adaptive Predictive Control with Structure-Informed Nonlinear Regressors*. The results are exploratory numerical evidence. P08 is closed; independent confirmation is not claimed. P07 prepares a reproducibility release without changing the scientific design.
+This MATLAB software studies how supplied nonlinear functions and coefficient relations affect identification, prediction and constrained control. Recursive least squares (RLS) estimates coefficients in a fixed regressor. The fitted model reconstructs a nonlinear predictor; its value and Jacobian define an affine model held fixed over each control horizon.
 
-## Start here
+The accompanying research is *A Numerical Investigation of Indirect Adaptive Predictive Control with Structure-Informed Nonlinear Regressors*. The numerical evidence is exploratory. It does not establish independent confirmation, general closed-loop stability, recursive feasibility or parameter convergence. A known-model controller uses the same frozen-affine control problem and is a diagnostic reference, not a performance bound.
 
-Use MATLAB with Optimization Toolbox from the repository root. The recorded local environment is MATLAB R2026a Update 5 and Optimization Toolbox 26.1 on Windows 11 x64. Other releases and the author's second machine remain unverified.
+## Requirements
 
-```matlab
-run_ejc('quick')
-```
+Use MATLAB with licensed Optimization Toolbox (`quadprog`). The small public workflow was tested on Windows with MATLAB R2026a Update 5 and Optimization Toolbox 26.1. Other releases are unverified. Open MATLAB in the directory containing this README; keep the source layout intact. Public commands select this tree's functions and restore your previous directory and path when they return.
 
-The Windows PowerShell batch command, from the repository root, is:
-
-```text
-& 'C:\Program Files\MATLAB\R2026a\bin\matlab.exe' -wait -batch "run_ejc('quick')"
-```
-
-Quick verification runs the existing small checks and a fixed representative example. It does not launch the full noisy campaigns or P06. Commands fail if required archives, dependencies or checks are missing. Each execution uses a new output directory; `OutputDirectory` can select a new destination explicitly. The result location is reported when execution starts.
-
-**Command status:** quick verification passed 49 existing checks and one exact representative comparison in 9.3 s; archive regeneration passed in 83.7 s on the local machine. These timings exclude MATLAB startup. The pre-refactor baseline passed 120 root tests, 17 P06 tests and 21 fixed cases. Full-paper and second-machine verification remain pending; their exact candidate SHA and outcomes belong in the run evidence.
-
-## Reproduce or inspect
-
-| Purpose | MATLAB command from the repository root |
-|---|---|
-| One fresh study | `run_ejc('study1')` through `run_ejc('study5')` |
-| Fresh P06 sensitivity study | `run_ejc('p06')` |
-| Study 6 diagnostics from explicitly selected runs | `run_ejc('study6',Sources=sources)` |
-| Complete fresh paper computation and derived diagnostics | `run_ejc('full')` |
-| Regenerate summaries/publication figures from preserved records | `run_ejc('archive')` |
-| Display a fixed archived response | `inspect_ejc` |
-
-Fresh commands require a clean committed source. `[output,sources] = run_ejc('study1')` returns the package location and its study-directory mapping. For Study 6, `sources` must contain fields `study1` through `study5`, each pointing to a completed fresh result with a manifest from the same source SHA. Historical, incomplete or mixed-revision inputs fail. `full` connects these dependencies automatically. Study 6 derives forecasts and diagnostics; it creates no new control campaign. Historical regeneration uses `archive` and remains labelled separately.
-
-For an explicit fresh destination:
+## First example
 
 ```matlab
-run_ejc('study2',OutputDirectory='results/my_study2_run')
+[output, summary] = run_example;
 ```
 
-`full` includes the reported noisy comparisons, P06 and derived diagnostics. It is an expensive, explicit action. The historical P06 runner alone took 64 min 25.945 s and produced about 0.99 GB; a full-paper wall-clock runtime has not been measured. Start only after confirming the source SHA, output destination, required archives and storage. No automatic retries or parallel execution are implied.
+This generates the fixed noise-free Shared-model example for Plant A: 200 fitting transitions, a separate 600-transition forecast-evaluation record, and 120 seconds of control at 0.1-second intervals. It uses the existing fixed seeds and settings. It needs no prior results or historical reference dataset. The example is trial 0; the paper's noisy representative trial 1 remains a different selection.
 
-Archive regeneration reads saved trajectories; it is not fresh numerical reproduction. Fresh computation recomputes fits, controller trajectories, diagnostics and summaries using the fixed experimental records. Neither path may replace missing records, overwrite references or silently substitute a saved answer for a new calculation.
+The new `results/example_*` directory contains:
 
-`inspect_ejc` displays the fixed Study 1 Shared-model trial 1 by default. Its study, case and source options select other retained runs; `help inspect_ejc` lists the exact selectors. Inspection plots show reference/output, tracking error, input and available parameter/forgetting histories. They are not new scientific experiments. Display is the default; `SaveTo` explicitly requests a saved figure. Plotting never consumes a simulation random stream.
+- `data/confirmation_S_000.mat`: result, unchanged settings and generated fitting/evaluation records.
+- `metrics.csv`: the existing whole-record and stationary-window scores, including tracking/input RMS and constraint diagnostics.
+- `summary.json`: internal checks, metrics, environment and source/output identities.
+- `function_resolution.csv`: the functions selected from this source tree.
 
-## Where to look
+The returned `summary` and console output report internal validity separately from reference comparison. A failed check raises an error and retains a failure record. Existing destinations are rejected; `run_example('my_example')` selects a new `results/my_example` directory.
 
-- `src/`: ordered models, fixed scaling, RLS, nonlinear reconstruction, frozen affine prediction, constrained QP and committed-input controller.
-- `studies/study1/` through `studies/study6/`: settings, fits, trajectories, diagnostics and summary functions. `studies/p06/` contains the separate sensitivity runner.
-- `tests/` and `studies/p06/tests/`: existing unit, numerical and interface checks.
-- `results/`: immutable historical packages and separately named new runs. The fixed preservation manifest, rather than the changing directory contents, defines the protected records.
-- [P07_MAP.md](P07_MAP.md): compact paper/result map, seeds, comparison rules and provenance boundaries.
+## View and check the saved result
 
-At time k, the completed measured transition was generated by u(k-1); u(k) is already committed; the controller computes u(k+1). Raw RLS estimates remain separate from mapped predictor parameters. Failed control computations retain the existing hold-input fallback. Student-facing wrappers preserve these operations and the saved-file schemas.
+```matlab
+resultFile = fullfile(output,'data','confirmation_S_000.mat');
+[fig, selection] = inspect_results(1,'confirmation_S_000',output, ...
+    'SaveTo',fullfile(output,'response.png'));
+checks = check_result(resultFile);
+```
 
-Settings are in `study*_settings.m`; preserved inputs/noise and saved settings are in each study package. Effective solver options and source identities are recorded with each new run. The existing solver uses `quadprog` with `interior-point-convex`, 1e-8 constraint/optimality tolerances and a 1e-7 normalized KKT rejection threshold. Numerical checks retain their own established thresholds.
+The figure shows true output and reference, tracking error, applied input, coefficient estimates and forgetting factor. The controller is not rerun. The plot omits the unused terminal input; state endpoints and control intervals retain their original alignment. Full source provenance stays in `selection`, `fig.UserData` and the export's JSON sidecar. Omit `SaveTo` to display without writing an image.
 
-## Provenance and status
+Generation already checks the original timing, plant recurrence, fitted-state transfer, independent batch-RLS solutions, constraints, solver acceptance and forecast identities. `check_result` repeats these checks on the saved record. Internal validity does not establish agreement with a historical result.
 
-The protected pre-refactor source is `0ac937f94fbcc10c64742e9b4a47367e4d929cc1`. Compact [Gate B evidence](evidence/p07_gate_b/README.md) is committed; complete local outputs remain under `results/p07_gate_b_20260925/`. The original configuration-check stop and its metadata-only diagnosis are retained. All scientific configuration fields and fixed representative numerical quantities subsequently agreed exactly.
+For the small existing unit/regression selection:
 
-The protected set contains 3,022 files, 1,357,579,926 bytes, including the P06 compatibility fixture. A verified recovery copy is held outside the repository/OneDrive tree at `C:\Users\Tam\Documents\EJC_P07_recovery_20260925`. It is on the same C: volume, not a separate-device backup. Do not edit the recovery copy or historical result packages.
+```matlab
+tests = run_component_tests;
+```
 
-P06's established historical execution source is `d1f1adb0d7891aba2a9555b7b7c73feb2897e7c7`. Other historical producing revisions are not established by archive-introduction commits. A folder named `confirmation` remains a record identifier and does not establish independent confirmation.
+This explicit selection covers the numerical core, short Study 1 fixtures and synthetic comparison negatives. It requires no historical results. It is not the complete archive-dependent test suite.
 
-Local full reproduction and second-machine verification remain pending. A public release/tag requires later author approval. No verified DOI or arXiv identifier for this frozen paper is supplied; none is inferred from the repository's earlier, different preprint. Software citation metadata is in [CITATION.cff](CITATION.cff). License: [BSD 3-Clause](LICENSE.txt).
+## Run an individual study
+
+The study settings and model map below identify the original experiments. Use `help run_study1` through `help run_study6` for driver arguments. A complete Study 1 invocation in the retained reproduction environment is:
+
+```matlab
+studyOutput = run_study1('my_study1',Figures=false);
+```
+
+**Complete study drivers currently require the retained archive-dependent verification environment.** They are not the reference-free first example, and `Figures=false` only suppresses figures. Study 6 derives diagnostics from explicit saved Studies 1–5; it does not run additional control trajectories. [Reproduction and numerical verification](CROSS_PLATFORM_VERIFICATION.md#complete-study-and-paper-reproduction) lists the study-by-study and complete-paper routes, their prerequisites and limits. These longer routes were not executed for this public-interface checkpoint.
+
+Changing a fixed setting defines a different experiment. No command above automatically starts a complete-paper or sensitivity campaign.
+
+## Compare with the canonical reference
+
+Set `referenceFile` to the separately supplied canonical `study1_candidate_20260917/data/confirmation_S_000.mat` record. Then reuse the generated MAT file:
+
+```matlab
+report = compare_reference(resultFile,referenceFile,'my_comparison');
+```
+
+This checks the reference identity and applies the unchanged released field-specific numerical policy to the saved representative. It does not fit or run the controller. `report.passed`, `report.status`, field outcomes and retained Gram qualifications identify what passed and under what conditions. A qualification is not numerical equality. The optional third argument saves compact comparison reports in a new output directory.
+
+Missing references raise `reference:MissingReference`; a different reference raises `reference:Identity`. Neither is PASS. There is no automatic download or substitution. No public acquisition route for the canonical dataset is established. This command covers the fixed representative's full saved scientific record; it is not a compact-table comparison or complete-paper certification. See the [verification guide](CROSS_PLATFORM_VERIFICATION.md) for the exact scope and specification links.
+
+## Directory, study and notation map
+
+| Location | Purpose and paper correspondence | Key notation |
+|---|---|---|
+| `src/model_regression.m`, `src/RlsEstimator.m`, `src/regression_scaling.m` | Completed-transition regression and scaled RLS; Sections 3–4 | `theta`: raw coefficients; `beta=D.*theta`: scaled coefficients; RLS `P`: inverse-information state |
+| `src/forward_map.m`, `src/freeze_predictor.m` | Nonlinear reconstruction and local affine approximation; Sections 3 and 5 | `A`, `B`, `c`: frozen Jacobians/offset; `C`: output selector |
+| `src/assemble_qp.m`, `src/solve_mpc.m`, `src/AdaptiveController.m` | Constraints, solver acceptance and input timing; Section 5 | `N`: horizon; `Q`: output-error weight; `R`: input-increment weight |
+| `studies/study1/` | Supplied structure and coefficient sharing, Plant A; Section 6.2.1 | A/S/W/R/P2/K are model IDs; model R differs from weight `R` |
+| `studies/study2/` | Polynomial degree, restrictions and operating range, Plant B; Section 6.2.2 | Held-out prediction and constraint audit are separate |
+| `studies/study3/` | Gain steps/drift and forgetting; Section 6.3.1 | No, fixed and variable-rate forgetting |
+| `studies/study4/` | Fixed-dictionary structural change; Sections 6.3.2–6.3.3 | Retained-term activation versus out-of-class change |
+| `studies/study5/` | Physical identification/reconstruction, Plant C; Section 6.4 | `theta=[J;d]`; output rad/s, input N m |
+| `studies/study6/` | Diagnostics derived from saved Studies 1–5; Section 6.5 | Common-query nonlinear and affine forecasts |
+| `studies/p06/` | Seven-setting sensitivity; Appendix A, Table A.18 | Input weight, prior and fitting length; [guide](studies/p06/README.md) |
+| `tests/`, `studies/p06/tests/` | Unit/regression tests and fixtures | Some selections require historical data |
+| `results/` | New output packages; created on demand | Generated and canonical records have distinct identities |
+
+At time k, `u(k-1)` generated the completed measured transition, `u(k)` is committed, and the controller computes `u(k+1)`. Fitted coefficients and covariance both enter control. An admissibility map affects predictor parameters without replacing raw RLS estimates. Rejected control holds the committed input.
+
+Plants A/B use dimensionless state/input coordinates; time is in seconds. Plant C uses physical units. Common-data tests share a fitting record and a separate evaluation record. Common-query forecasts share initial states and prescribed inputs while each model keeps its own selected snapshot fixed. Along-trajectory forecasts replay subsequently recorded inputs retrospectively. Prediction, tracking and parameter recovery are different outcomes.
+
+Software attribution: [CITATION.cff](CITATION.cff). License: [BSD 3-Clause](LICENSE.txt).

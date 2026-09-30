@@ -1,15 +1,18 @@
 function [output,sources] = run_ejc(mode,options)
-%RUN_EJC Student entry point for the frozen EJC implementation.
-%   run_ejc('quick')     bounded existing checks and one fixed clean example
-%   run_ejc('study1')    fresh complete study (similarly study2..study5, p06)
-%   run_ejc('full')      all Studies 1--6 and P06, then archive comparisons
-%   run_ejc('archive')   regenerate summaries/figures from historical records
-%   run_ejc('study6',Sources=s) binds to s.study1..s.study5 fresh output paths.
-% OutputDirectory optionally selects a NEW directory. Default locations are
-% collision-safe under results/p07_*. No existing output is overwritten.
-% Full execution is sequential and requires a clean committed candidate. It
-% has no automatic retry/resume. P06 alone previously took 3865.945 seconds;
-% no measured full-paper runtime is available before the P07 verification.
+% RUN_EJC Generate and compare studies using the frozen certification inputs.
+%    run_ejc('quick') runs bounded checks and fixed Study 1 Shared trial 0.
+%    run_ejc('study1') runs a complete study; study2..study5 and p06 also exist.
+%    run_ejc('study6',Sources=s) derives diagnostics from s.study1..s.study5.
+%    run_ejc('full') runs all studies, sensitivity, comparisons and paper checks.
+%    run_ejc('archive') regenerates summaries/figures from historical records.
+%  All modes require local historical records. Except for archive, the exact
+%  source, policy and environment checks also apply, including to quick.
+%  OUTPUT is the new package path. SOURCES maps completed fresh study names
+%  to their directories; quick and archive do not populate that mapping.
+%  OutputDirectory selects a NEW repository-local directory. Defaults are
+%  collision-safe under results/p07_*. Existing output is never overwritten.
+%  Full execution is sequential, expensive, and has no automatic retry/resume.
+%  See CROSS_PLATFORM_VERIFICATION.md for reference and certification scope.
 arguments
     mode (1,:) char = 'quick'
     options.OutputDirectory = ''
@@ -34,8 +37,7 @@ if portable
         'ejc:Environment','Required MATLAB R2026a Update 5 / Optimization Toolbox 26.1 differs.');
 end
 output = ejc_output_path(mode,options.OutputDirectory);
-% Historic whole tree is 1.36 GB. Allow three such trees for new data/logs;
-% this is a conservative storage allowance, not a predicted output size.
+% Check free working space before generating data and comparison reports.
 if portable
     diskPath = fileparts(output);
     while ~isfolder(diskPath), diskPath = fileparts(diskPath); end

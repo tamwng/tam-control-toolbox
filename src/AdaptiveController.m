@@ -1,8 +1,15 @@
 classdef AdaptiveController < handle
-    %ADAPTIVECONTROLLER Measurement-to-next-input sequencing, Eqs. (8), (40).
-    % At step k, CurrentInput is the already committed u(k). The stored
-    % previous input generated the measured transition ending at k. STEP
-    % returns u(k+1); the plant must still use the committed u(k) this interval.
+    % ADAPTIVECONTROLLER Measurement-to-next-input sequencing, Eqs. (8), (40).
+    %  At step k, CurrentInput is the already committed u(k). PreviousInput
+    %  generated the measured transition ending at k. STEP returns u(k+1);
+    %  the plant must still apply the committed u(k) for the current interval.
+    %  The estimator is a handle carrying fitted coefficients and covariance.
+    %  Initialization clears its residual window and invents no transition.
+    %  Measurement has model.p entries; reference is model.p-by-N. The state
+    %  comes from measured outputs/history, never from evaluator-only truth.
+    %  INFO retains identification, frozen prediction and solver diagnostics.
+    %  A rejected control holds the committed input; valid identification may
+    %  still have occurred. Raw estimates remain separate from mapped parameters.
     properties (SetAccess = private)
         Model
         Estimator
@@ -69,6 +76,7 @@ classdef AdaptiveController < handle
                         'message',exception.message);
                 end
             end
+
             info.state = state;
             info.rawParameters = obj.Estimator.RawParameters;
             info.parameters = [];
@@ -90,6 +98,7 @@ classdef AdaptiveController < handle
                 info.control = struct('accepted',false,'uNext',committed, ...
                     'message',exception.message);
             end
+
             info.fallback = ~info.control.accepted;
             info.nextInput = nextInput;
             % Even an invalid measurement occupies its actual sample index;

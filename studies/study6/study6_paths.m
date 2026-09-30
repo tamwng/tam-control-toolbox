@@ -1,6 +1,12 @@
 function p = study6_paths(model,theta,initial,inputs,savedNonlinear)
-%STUDY6_PATHS Pure fixed-model forecast. No true plant/schedule is an argument.
-% Freeze once at the actual initial state and first committed query input.
+% STUDY6_PATHS Fixed-model nonlinear and affine forecasts on common inputs.
+%  INITIAL is a scalar state; INPUTS contains H prescribed input samples.
+%  THETA is one selected model snapshot held fixed throughout this forecast.
+%  The model receives neither true-plant dynamics nor a future gain schedule.
+%  Both output paths are 1-by-(H+1), including INITIAL. Freeze the affine
+%  coefficients once at INITIAL and INPUTS(1), the committed query input.
+%  Optional SAVEDNONLINEAR must have H+1 values and the same initial/contact
+%  values. A failed query retains NaNs, failureStep and message for inspection.
 if nargin < 5, savedNonlinear = []; end
 H = numel(inputs);
 p = struct('nonlinear',nan(1,H+1),'affine',nan(1,H+1), ...

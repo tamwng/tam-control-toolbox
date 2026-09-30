@@ -3,6 +3,10 @@ function outputDir = run_study6(outputName,options)
 % From the repository root: run_study6
 % No fitting, new noise, QP solves or closed-loop study runs are performed by
 % this evaluator. The complete verification suite includes its own fixtures.
+% The complete test suite requires retained archives/fixtures; this is
+% not a reference-free single-case driver. Figures=false suppresses figures
+% only; it does not reduce the computation or its scientific checks.
+
 arguments
     outputName = ''
     options.Figures (1,1) logical = true

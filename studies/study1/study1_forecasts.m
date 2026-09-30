@@ -1,8 +1,14 @@
 function forecasts = study1_forecasts(fit,record,cfg)
-%STUDY1_FORECASTS Independent, clean-state common queries, Eqs. (64)-(66).
-%   Anchors are zero-based transition indices. Parameters and the affine
-%   coefficients remain fixed over each forecast. Invalid queries remain
-%   explicit and are never silently removed from aggregate scores.
+% STUDY1_FORECASTS Fixed-snapshot common-query forecasts, Eqs. (64)-(66).
+%  RECORD is a separate clean evaluation record, not extra fitting data.
+%  Each model uses its own fitted snapshot at CFG.fitSteps. Common-query
+%  means shared initial states and prescribed inputs, not equal parameters.
+%  Anchors are zero-based transition indices. Nonlinear parameters and affine
+%  coefficients stay fixed within a forecast. Arrays use dimensions
+%  [anchor,horizon,inputMode,fitCheckpoint]; oneStepErrors is query-by-fit.
+%  Held and rate-limited inputs are separate conditions. Errors use state
+%  units; crossTerm and squared identities use squared-state units. Invalid
+%  queries remain explicit and are never removed silently from summaries.
 model = study1_model(fit.id);
 nFit = numel(cfg.fitSteps);
 nAnchor = numel(cfg.anchors);

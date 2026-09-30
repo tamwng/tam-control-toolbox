@@ -1,6 +1,12 @@
 function [absolute,relative] = ejc_acceptance_limits(family,subrule,unitScale,parentNorm)
-%EJC_ACCEPTANCE_LIMITS Author-approved constants; no observed-delta input.
-% Dispatch/applicability/units must be established before this primitive.
+% EJC_ACCEPTANCE_LIMITS Frozen additive absolute/relative comparison limits.
+%  This primitive returns constants only. Establish field applicability,
+%  units and parent identities before calling it. The elementwise rule is
+%  abs(current-reference) <= absolute + relative*abs(reference).
+%  unitScale is one declared unit per original coordinate; it is never
+%  estimated from observed differences. Matrix eigenvalue rules additionally
+%  require the reference parent norm. Unknown families/subrules raise errors.
+%  These comparison limits are distinct from solver acceptance thresholds.
 arguments
     family (1,1) string
     subrule (1,1) string = ""

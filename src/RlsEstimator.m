@@ -1,8 +1,15 @@
 classdef RlsEstimator < handle
-    %RLSESTIMATOR Joint RLS in fixed scaled coordinates, Eqs. (24)-(30).
-    % P0 is the covariance of beta = columnScale.*theta. rowScale multiplies
-    % both sides of each measured regression. The admissibility map is used
-    % only by Parameters; it never replaces the unconstrained RLS state.
+    % RLSESTIMATOR Joint RLS in fixed scaled coordinates, Eqs. (24)-(30).
+    %  theta0 has n coefficient entries and P0 is n-by-n covariance in the
+    %  beta=columnScale.*theta coordinates. rowScale multiplies both sides of
+    %  each measured regression; columnScale has n positive entries.
+    %  UPDATE accepts b (response column) and Phi (responses-by-n regressor).
+    %  Covariance is the inverse-information state of this recursion, not a
+    %  physical parameter-uncertainty estimate. Scaling stays fixed during a fit.
+    %  RawParameters returns beta./columnScale. Parameters applies the supplied
+    %  admissibility map without replacing the unconstrained RLS state.
+    %  This is a handle object: a controller receives the fitted coefficients
+    %  and covariance together. resetResidualWindow preserves both.
 
     properties (SetAccess = private)
         Beta
@@ -109,6 +116,7 @@ classdef RlsEstimator < handle
                 if ~isfinite(lambda) || lambda <= 0
                     error('RlsEstimator:InvalidForgettingFactor', 'The realized forgetting factor must be positive.');
                 end
+                % Forgetting rescales prior information before this joint update.
                 L = obj.Covariance / lambda;
                 S = eye(numel(b)) + regressor * L * regressor.';
                 if any(~isfinite(L), 'all') || any(~isfinite(S), 'all')

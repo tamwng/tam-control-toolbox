@@ -1,10 +1,11 @@
 function results = run_tests(scope)
-%RUN_TESTS Existing unit, numerical, archive and P07 interface checks.
-% From the repository root in a clean session, enter RUN_TESTS.
-% Requires MATLAB and Optimization Toolbox; tested with R2026a Update 5.
-% Paths are established locally and restored on exit. The full suite requires
-% retained archives; no caller workspace variables are needed. 'quick' selects
-% existing bounded core/Study 1 tests. Failed/incomplete checks raise an error.
+% RUN_TESTS Run existing unit, numerical, archive and interface checks.
+%  RUN_TESTS('quick') selects bounded core and Study 1 component tests.
+%  RUN_TESTS or RUN_TESTS('all') selects the complete suite, which requires
+%  retained archives and verification fixtures. Neither is full generation.
+%  Run from the repository root with MATLAB and Optimization Toolbox.
+%  Paths are restored on exit. RESULTS contains matlab.unittest results;
+%  failed or incomplete checks raise an error. No caller variables are needed.
 
 if nargin < 1, scope = 'all'; end
 assert(any(strcmp(scope,{'all','quick'})),'ejc:TestScope','Use all or quick.');

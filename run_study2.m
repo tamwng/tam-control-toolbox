@@ -5,6 +5,10 @@ function outputDir = run_study2(outputName,options)
 % complete test suite and creates a new local results package without tuning.
 % The 18 amplitude runs and Eq.67's four-case constraint audit stay separate.
 % Independent held-out input ranges never select a controller or its settings.
+% The complete test suite requires retained archives/fixtures; this is
+% not a reference-free single-case driver. Figures=false suppresses figures
+% only; it does not reduce the computation or its scientific checks.
+
 arguments
     outputName = ''
     options.Figures (1,1) logical = true

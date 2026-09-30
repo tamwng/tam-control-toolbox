@@ -1,10 +1,14 @@
 function solution = solve_mpc(qp)
-%SOLVE_MPC Solve Eq. (39), accepting only a finite, KKT-checked solution.
-% Requires Optimization Toolbox. quadprog uses interior-point-convex with
-% optimality/constraint tolerances 1e-8. Acceptance requires exitflag > 0
-% and normalized primal, stationarity, dual and complementarity <= 1e-7.
-% Residuals are normalized by the magnitudes of their defining terms.
-% Every rejection holds uNext equal to the committed input (Appendix A).
+% SOLVE_MPC Solve Eq. (39) and retain a finite, independently checked plan.
+%  QP comes from ASSEMBLE_QP. Requires Optimization Toolbox: quadprog uses
+%  interior-point-convex and 1e-8 optimality/constraint tolerances.
+%  Acceptance requires positive exitflag and finite normalized primal,
+%  stationarity, dual and complementarity residuals, each at most 1e-7.
+%  Accepted U is m-by-(N-1), Y is p-by-N and slack is nc-by-N. uNext is
+%  the first planned input for the NEXT interval. Slack has output units.
+%  Residuals use their defining-term magnitudes for normalization. Rejection
+%  returns accepted=false and holds uNext at the committed input, retaining
+%  the available solver status/message. Agreement alone cannot validate a QP.
 
 emptyResiduals = struct('primal',inf,'stationarity',inf,'dual',inf, ...
     'complementarity',inf);

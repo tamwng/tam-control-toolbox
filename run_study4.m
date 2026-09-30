@@ -3,6 +3,10 @@ function outputDir = run_study4(outputName,options)
 % From the repository root: run_study4
 % Requires MATLAB and Optimization Toolbox. Every invocation uses a new
 % results directory; no tuning, noisy repetitions, or confirmation runs.
+% The complete test suite requires retained archives/fixtures; this is
+% not a reference-free single-case driver. Figures=false suppresses figures
+% only; it does not reduce the computation or its scientific checks.
+
 arguments
     outputName = ''
     options.Figures (1,1) logical = true

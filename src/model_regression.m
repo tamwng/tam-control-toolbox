@@ -1,7 +1,13 @@
 function [b,Phi] = model_regression(model,previousState,currentMeasurement,previousInput)
-%MODEL_REGRESSION Form a regression using only the completed transition.
-%   At k, PREVIOUSINPUT is u(k-1); the already committed u(k) is not used.
-%   Direct models use Eq. (8); physical models use endpoint Eq. (21).
+% MODEL_REGRESSION Form a regression from one completed measured transition.
+%  PREVIOUSSTATE is model.n-by-1, CURRENTMEASUREMENT is model.p-by-1,
+%  and PREVIOUSINPUT is model.m-by-1. At k, the latter is u(k-1); the
+%  already committed u(k) did not generate the measured transition.
+%  B is the response column and PHI has model.ntheta coefficient columns.
+%  Direct models subtract the supplied known contribution, Eq. (8).
+%  The scalar physical model uses endpoint trapezoidal integration, Eq. (21):
+%  B has impulse units and PHI*theta uses theta=[J;d]. Measurement and
+%  quadrature errors remain regression errors, not exact physical identities.
 validateattributes(previousState,{'numeric'},{'real','finite','size',[model.n,1]});
 validateattributes(currentMeasurement,{'numeric'},{'real','finite','size',[model.p,1]});
 validateattributes(previousInput,{'numeric'},{'real','finite','size',[model.m,1]});

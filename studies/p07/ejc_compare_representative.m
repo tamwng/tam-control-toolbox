@@ -1,6 +1,13 @@
 function report=ejc_compare_representative(a,b,cfg)
-%EJC_COMPARE_REPRESENTATIVE Closed F3879--F3957 dispatch for the quick example.
-% Pure saved-array verification. Does not run a fit, controller or forecast.
+% EJC_COMPARE_REPRESENTATIVE Compare saved Study 1 Shared trial 0 arrays.
+%  A is the current result, B the separately identified historical reference,
+%  and CFG the unchanged Study 1 configuration. Both must identify the
+%  confirmation campaign, Shared model S and noise-free trial 0.
+%  The closed F3879--F3957 field mapping retains schema, source relationships,
+%  independent validity and scoped numerical/Gram requirements. controlTime
+%  is excluded. Qualified Gram diagnostics do not assert numerical equality.
+%  No fit, controller or forecast is run. REPORT retains blocked/failed
+%  reasons and field outcomes; passed is false if required checks cannot run.
 report=struct('passed',false,'status',"BLOCKED",'reason',"",'rows',struct([]), ...
  'conditions',struct,'qualifiedCount',0,'excludedFields',"result[].controlTime");
 try

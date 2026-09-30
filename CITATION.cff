@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "Cite this software with the exact verified source commit. A publication identifier and final P07 release version have not yet been assigned."
+message: "Cite this software and identify the source commit used for your results."
 title: "Structure-Informed Indirect Adaptive Predictive Control MATLAB Implementation"
 type: software
 authors:
@@ -7,4 +7,4 @@ authors:
     given-names: "Tam W."
 license: "BSD-3-Clause"
 repository-code: "https://github.com/tamwng/tam-control-toolbox"
-abstract: "MATLAB implementation for the frozen EJC manuscript A Numerical Investigation of Indirect Adaptive Predictive Control with Structure-Informed Nonlinear Regressors. Exploratory numerical evidence; no independent confirmation claim. The earlier repository citation concerns a different paper and remains available in Git history."
+abstract: "MATLAB implementation of structure-informed indirect adaptive predictive control. Fixed nonlinear regressors support recursive coefficient identification, nonlinear predictor reconstruction, and constrained control using a frozen affine horizon model. The numerical studies are exploratory evidence; independent confirmation is not claimed."

@@ -1,11 +1,20 @@
 function result = study1_trajectory(id,fit,estimator,controlNoise,cfg)
-%STUDY1_TRAJECTORY Stationary Plant A; true states stay in the evaluator.
-% Controller timing is delegated to the verified core. Diagnostics outside
-% the controller timer never change the applied input or estimator state.
+% STUDY1_TRAJECTORY Run stationary Plant A with evaluator-only true states.
+%  FIT and ESTIMATOR must come from the same initialization fit. The adaptive
+%  estimator is updated in place; both its coefficients and covariance enter
+%  control. CONTROLNOISE supplies K+1 measurement samples; CFG fixes timing.
+%  time, x, y and u contain K+1 endpoints. Applied u uses the first nSteps
+%  entries; the terminal input is computed but never applied in this record.
+%  theta/beta and diagnostics have K control-origin columns; plans contain
+%  N-1 inputs and N outputs per origin. Plants A/B use dimensionless states
+%  and inputs; time is in seconds. Only measurements enter the controller.
+%  Termination keeps the completed prefix and explicit status. Diagnostics
+%  outside the control timer never change the applied input or fitted state.
 [model,~,~] = study1_model(id);
 known = strcmp(id,'K');
 K = cfg.K;
 n = numel(fit.theta0);
+
 result.id = id;
 result.fit = fit;
 result.time = (0:K)*cfg.Ts;
@@ -38,10 +47,12 @@ result.events = struct('index',{},'stage',{},'message',{});
 result.completed = false;
 result.terminationReason = '';
 result.nSteps = 0;
+
 regressors = zeros(0,n);
 if ~known
     controller = AdaptiveController(model,estimator,cfg.control,0,0);
 end
+
 for j = 1:K
     k = j-1;
     if ~isfinite(result.x(j)) || abs(result.x(j)) > 5
@@ -49,10 +60,12 @@ for j = 1:K
         result.events(end+1) = event(k,'termination',result.terminationReason);
         break
     end
+
     measurement = result.x(j)+controlNoise(j);
     result.y(j) = measurement;
     reference = study1_reference((k+(1:cfg.N))*cfg.Ts);
     committed = result.u(j);
+
     timer = tic;
     if known
         % Only this declared diagnostic reference receives true parameters.
@@ -83,6 +96,7 @@ for j = 1:K
             result.events(end+1) = event(k,'identification',info.identification.message);
         end
     end
+
     result.controlTime(j) = toc(timer);
     result.controlAccepted(j) = control.accepted;
     if ~control.accepted
@@ -99,6 +113,7 @@ for j = 1:K
         result.plannedInput(:,j) = control.U(:);
         result.plannedOutput(:,j) = control.Y(:);
     end
+
     if ~isempty(prediction)
         result.A(j) = prediction.A; result.B(j) = prediction.B; result.c(j) = prediction.c;
         result.prediction(j) = prediction.value;
@@ -111,6 +126,7 @@ for j = 1:K
             result.events(end+1) = event(k,'diagnostic',exception.message);
         end
     end
+
     if ~isempty(theta), result.theta(:,j) = theta; end
     if ~known
         result.beta(:,j) = estimator.Beta;
@@ -128,12 +144,14 @@ for j = 1:K
             [result.gramEigenvalues(:,j),result.gramCondition(j)] = spectrum(G);
         end
     end
+
     % u(k), not the newly computed u(k+1), generates this transition.
     result.u(j+1) = nextInput;
     result.x(j+1) = study1_plant(result.x(j),committed);
     result.y(j+1) = result.x(j+1)+controlNoise(j+1);
     result.nSteps = j;
 end
+
 if result.nSteps == K && isfinite(result.x(K+1)) && abs(result.x(K+1)) <= 5
     result.completed = true;
 elseif isempty(result.terminationReason)

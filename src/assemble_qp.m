@@ -1,10 +1,13 @@
 function qp = assemble_qp(A, B, c, C, xi, uCommitted, reference, settings)
-%ASSEMBLE_QP Condense the frozen affine MPC problem, Eqs. (36)-(39).
-% reference is p-by-N; Q is p-by-p or p-by-p-by-N (terminal included).
-% R weights increments. Hu/hu, Hdu/hdu and optional Hy/hy specify bounds.
-% Seps weights one nonnegative slack per output-inequality row and step.
-% z = [u_1; ...; u_{N-1}; epsilon_1; ...; epsilon_N]. The first
-% predicted transition uses uCommitted, which is never a decision variable.
+% ASSEMBLE_QP Condense the frozen affine MPC problem, Eqs. (36)-(39).
+%  A is n-by-n, B is n-by-m, c and xi are n-by-1, and C is p-by-n.
+%  reference is p-by-N; Q is p-by-p or p-by-p-by-N, including terminal Q.
+%  R weights input increments per transition. Hu/hu, Hdu/hdu and optional
+%  Hy/hy define input, increment and output inequalities in model units.
+%  Seps weights one nonnegative output slack per inequality row and step.
+%  z=[u_1;...;u_(N-1);epsilon_1;...;epsilon_N]. The first transition uses
+%  uCommitted, never a decision variable. The objective is .5*z'*H*z+f'*z
+%  plus qp.constant. No optimizer is called here; SOLVE_MPC consumes qp.
 
 validateattributes(A, {'double'}, {'2d','real','finite','square','nonempty'});
 n = size(A,1);
