@@ -23,7 +23,7 @@ Each adaptive case fits afresh from its selected prefix and normalized prior; th
 
 Whole-run metrics use [0,120); applied increments use k=1:1199 and exclude the unused terminal input. A held-out prediction score requires all 600 queries. Partial-run rows retain their status; complete-run scores are NaN for incomplete control. Raw Gram `cond(G)` remains distinct from corrected numerical rank. No recovery metric or extra forecast campaign is added.
 
-Paired bootstrap uses mt19937ar/7401 and 2,000 resamples, separate from experimental streams. Configuration/model/trial order is fixed. Initial, pre-contrast and final states are saved. Intervals are contrast-specific. See `p06_schema.m` for the exact table definitions.
+Paired bootstrap uses mt19937ar/7401 and 2,000 resamples, separate from experimental streams. Configuration/model/trial order is fixed. Initial, pre-contrast and final states are saved. Intervals are contrast-specific. The saved tables follow the definitions in `p06_score.m` and `p06_summarize.m`.
 
 ## Saved comparison and interpretation
 
@@ -31,4 +31,4 @@ General comparison requires the separately identified canonical sensitivity data
 
 The baseline comparison requires exact statuses, counts, update/control acceptance and nonfinite masks. Fit states and initialization prediction use the fixed additive `1e-10 + 1e-10*abs(reference)` rule; trajectories use `1e-7 + 1e-7*abs(reference)`; whole-run scores use `1e-8 + 1e-7*abs(reference)`. Timing and machine-dependent condition diagnostics retain their distinct declared roles. These comparison rules do not alter solver or internal-validity limits.
 
-General comparison checks the source mapping and the identities of all supplied records before applying numerical rules. See the [verification guide](../../CROSS_PLATFORM_VERIFICATION.md) for reference inputs and result interpretation. Historical records and the pre-interface regression fixture retain their original identities.
+General comparison checks the source mapping and the identities of all supplied records before applying numerical rules. See the [verification guide](../../CROSS_PLATFORM_VERIFICATION.md) for reference inputs and result interpretation. Required canonical comparison inputs retain their original identities.
