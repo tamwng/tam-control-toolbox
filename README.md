@@ -65,21 +65,27 @@ Complete generation, saved plotting and reference comparison are separate operat
 
 ## Independent reference comparison
 
-For the fixed example, supply the separate canonical `confirmation_S_000.mat` explicitly:
+For the fixed example, the full repository includes the canonical `results/study1_candidate_20260917/data/confirmation_S_000.mat`. Supply it explicitly:
 
 ```matlab
+canonicalFile = fullfile(pwd,'results','study1_candidate_20260917','data','confirmation_S_000.mat');
 comparison = compare_reference(fullfile(output,'data','confirmation_S_000.mat'), ...
     canonicalFile,'example_comparison');
 ```
 
-No public download route for canonical data is established. Obtain the identified local dataset from its custodian; do not substitute a new run or a similarly named file. Missing or incorrect references raise an error and never produce PASS.
+The fixed-example reference is intact in the Git tree. Complete-study reference tables require byte-preserving distribution: ordinary Git exports do not preserve every frozen table identity. Until that route is available, obtain the exact dataset from its custodian; see the [reference requirements](CROSS_PLATFORM_VERIFICATION.md). Public download access is not yet verified. Missing or incorrect references raise an error and never produce PASS.
 
 The complete-study interface is `compare_study_reference(sources,references,output)`, where both structures identify study directories. Supply current `ParentSources` and `ReferenceParents` where required. Study 6 requires both five-study parent sets; sensitivity also requires canonical Study 1. The resolver checks the frozen canonical file identities. See [verification requirements](CROSS_PLATFORM_VERIFICATION.md) for the exact local reference roots and dependency requirements.
 
-**Development status:** the actual cleaned-source relationship is awaiting review. General reference agreement is disabled until that review. The accepted fixed-example comparison remains independently available. No fresh execution of every complete study is claimed for this cleanup.
+Complete-study reference comparison checks the reviewed source relationship and the supplied datasets. The cleanup was checked with component tests, retained-data bindings, and a fresh representative example; the complete studies were not rerun during cleanup.
 
 ## Interpretation and provenance
 
 **PASS** applies only to the explicitly reported checks and supplied inputs. **FAIL** means a required executed check failed; unavailable material means the comparison was not established. **QUALIFIED** identifies an approved limited diagnostic interpretation, including passive Gram diagnostics; it does not assert numerical equality. A run compared with itself is not historical-reference verification. A fixed example is not full-paper certification.
 
 The [provenance note](provenance/README.md) distinguishes historical generating revisions from this development source. Historical certificates are not rewritten or inherited. Attribution and software citation remain in `CITATION.cff`; license terms remain in [LICENSE.txt](LICENSE.txt). No version 2.0.0 tag, public data-hosting claim or unissued paper citation is implied.
+
+## Citation
+
+The revised manuscript will be available on arXiv. The final citation and DOI
+will be added when the updated public version is available.

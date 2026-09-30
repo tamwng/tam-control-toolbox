@@ -36,7 +36,7 @@ end
 function testRelationshipRequiresFixedOfflineAuthority(t)
 context=study_context; %#ok<NASGU>
 proof=verify_source_relationship;
-verifyEqual(t,proof.sourceReview,'HQ_REVIEW_PENDING');
+verifyEqual(t,proof.sourceReview,'HQ_APPROVED');
 verifyEqual(t,proof.relationshipSHA256,source_relationship_anchor);
 verifyEqual(t,proof.policySHA256,'ca9101ea01a6eb093664d383a3d6bd1734598ba84aed2ee35b28cfa7412aec58');
 end

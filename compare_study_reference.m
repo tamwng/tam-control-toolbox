@@ -3,8 +3,8 @@ function report = compare_study_reference(sources,references,output,options)
 % REFERENCES contains explicitly supplied canonical directories. Study 6 also
 % requires both parent sets; sensitivity requires canonical Study 1 records.
 % No simulation, reference download, or modification of a generated run occurs.
-% Until the actual source relationship is reviewed, only explicitly provisional
-% development comparisons are available; these never return reference PASS.
+% The reviewed source relationship enables comparison of supplied datasets.
+% Source approval alone does not establish reference agreement.
 arguments
     sources (1,1) struct
     references (1,1) struct
