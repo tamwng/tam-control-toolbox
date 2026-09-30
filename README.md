@@ -73,7 +73,7 @@ comparison = compare_reference(fullfile(output,'data','confirmation_S_000.mat'),
     canonicalFile,'example_comparison');
 ```
 
-The fixed-example reference is intact in the Git tree. Complete-study reference tables require byte-preserving distribution: ordinary Git exports do not preserve every frozen table identity. Until that route is available, obtain the exact dataset from its custodian; see the [reference requirements](CROSS_PLATFORM_VERIFICATION.md). Public download access is not yet verified. Missing or incorrect references raise an error and never produce PASS.
+The canonical reference datasets are included under `results/`. Use the directories listed in the [reference requirements](CROSS_PLATFORM_VERIFICATION.md), and preserve their file layout and bytes. Missing or altered reference files raise an error and never produce PASS.
 
 The complete-study interface is `compare_study_reference(sources,references,output)`, where both structures identify study directories. Supply current `ParentSources` and `ReferenceParents` where required. Study 6 requires both five-study parent sets; sensitivity also requires canonical Study 1. The resolver checks the frozen canonical file identities. See [verification requirements](CROSS_PLATFORM_VERIFICATION.md) for the exact local reference roots and dependency requirements.
 

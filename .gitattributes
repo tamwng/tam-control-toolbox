@@ -46,3 +46,6 @@ evidence/p07_legacy_schema/** -text -whitespace
 /provenance/** -text
 /verification/** -text
 /private/** -text
+
+# Preserve the exact bytes of retained reference data.
+/results/** -text
