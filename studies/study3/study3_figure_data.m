@@ -1,5 +1,5 @@
 function values = study3_figure_data(resultsDir)
-%STUDY3_FIGURE_DATA Exact trial-000 histories for the six journal panels.
+%STUDY3_FIGURE_DATA Exact trial-000 histories for the six publication panels.
 % Theta and lambda at array index j belong to time(j), after the available
 % transition is identified. True gain at j generates the next transition.
 % No time shift, resampling, fitting, or recovery calculation is performed.

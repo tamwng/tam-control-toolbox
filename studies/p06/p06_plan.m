@@ -1,5 +1,5 @@
 function [plan,manifest] = p06_plan
-%P06_PLAN Read-only identity checks and the fixed 1,558-run proposal.
+%P06_PLAN Check reference identities and declare the fixed 1,558-case design.
 root = fileparts(fileparts(fileparts(mfilename('fullpath'))));
 plan.root = root;
 plan.archive = fullfile(root,'results','study1_candidate_20260917');
@@ -35,7 +35,7 @@ plan.modelIds = ["A","S","W","R","P2","K"];
 plan.modelNames = ["Affine","Shared","Incorrectly shared","Relaxed","Complete quadratic","Known-model reference"];
 plan.cachePolicy = 'No fit-state cache: fit fresh from the paired prefix for every adaptive run';
 plan.scaling = 'Fixed 41-by-41 grid [-1.2,1.2] x [-1,1]; rowScale=1; beta=D.*theta';
-% Hash the actual reusable algorithms and both approved interface files.
+% Record the algorithm and interface file identities used by the design.
 sourceFiles = [dir(fullfile(root,'src','*.m'));dir(fullfile(root,'studies','study1','*.m')); ...
     dir(fullfile(root,'ejc_*.m'))];
 plan.sources = struct('file',{},'sha256',{});

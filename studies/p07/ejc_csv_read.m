@@ -1,5 +1,5 @@
 function value=ejc_csv_read(file,study,relative)
-%EJC_CSV_READ Header, ordering and types come from the approved schema.
+%EJC_CSV_READ Read CSV headers, ordering and types from the fixed schema.
 root=fileparts(fileparts(fileparts(mfilename('fullpath'))));
 persistent inventory
 if isempty(inventory)

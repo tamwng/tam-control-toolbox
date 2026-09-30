@@ -1,5 +1,5 @@
 function rule=ejc_rule_lookup(study,file,field,type,context)
-%EJC_RULE_LOOKUP Closed dispatch over the reviewed scientific field inventory.
+%EJC_RULE_LOOKUP Select a rule from the fixed scientific field inventory.
 root=fileparts(fileparts(fileparts(mfilename('fullpath'))));
 if nargin<5,context=[];end
 persistent inventory decisions

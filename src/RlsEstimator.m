@@ -37,6 +37,7 @@ classdef RlsEstimator < handle
             if nargin < 6 || isempty(admissibility)
                 admissibility = @(theta) theta;
             end
+
             validateattributes(theta0, {'double'}, {'column', 'nonempty', 'real', 'finite'});
             n = numel(theta0);
             validateattributes(P0, {'double'}, {'size', [n n], 'real', 'finite'});
@@ -47,6 +48,7 @@ classdef RlsEstimator < handle
                 error('RlsEstimator:InvalidMap', 'The admissibility map must be a function handle.');
             end
             RlsEstimator.checkForgetting(forgetting);
+
             obj.RowScale = rowScale(:);
             obj.ColumnScale = columnScale(:);
             obj.Beta = obj.ColumnScale .* theta0;
@@ -85,6 +87,7 @@ classdef RlsEstimator < handle
                 if ~isscalar(obj.RowScale) && numel(obj.RowScale) ~= numel(b)
                     error('RlsEstimator:RowScaleSize', 'Row scaling must match the response dimension.');
                 end
+
                 response = obj.RowScale .* b;
                 regressor = (obj.RowScale .* Phi) ./ obj.ColumnScale.';
                 residual = response - regressor * obj.Beta;
@@ -92,6 +95,7 @@ classdef RlsEstimator < handle
                 if any(~isfinite(response)) || any(~isfinite(regressor), 'all') || ~isfinite(square)
                     error('RlsEstimator:NonfiniteRegression', 'Scaled data and residual energy must be finite.');
                 end
+
                 info.residual = residual;
                 window = [obj.ResidualSquares; square];
                 switch char(obj.Forgetting.mode)
@@ -116,6 +120,7 @@ classdef RlsEstimator < handle
                 if ~isfinite(lambda) || lambda <= 0
                     error('RlsEstimator:InvalidForgettingFactor', 'The realized forgetting factor must be positive.');
                 end
+
                 % Forgetting rescales prior information before this joint update.
                 L = obj.Covariance / lambda;
                 S = eye(numel(b)) + regressor * L * regressor.';
@@ -129,6 +134,7 @@ classdef RlsEstimator < handle
                 if any(~isfinite(beta)) || any(~isfinite(beta ./ obj.ColumnScale))
                     error('RlsEstimator:NonfiniteUpdate', 'The parameter update is nonfinite.');
                 end
+
                 obj.Covariance = P;
                 obj.Beta = beta;
                 info.accepted = true;

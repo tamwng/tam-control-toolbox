@@ -1,5 +1,5 @@
 function tests = test_study4_reporting
-%TEST_STUDY4_REPORTING Exact archived journal traces; no control runs.
+%TEST_STUDY4_REPORTING Exact saved publication traces; no control runs.
 tests = functiontests(localfunctions);
 end
 function setupOnce(testCase)

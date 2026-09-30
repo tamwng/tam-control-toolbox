@@ -1,5 +1,5 @@
 function budget=ejc_csv_encoding_budget(values)
-%EJC_CSV_ENCODING_BUDGET Approved 15-significant-digit binary64 representation.
+%EJC_CSV_ENCODING_BUDGET Fixed 15-significant-digit binary64 representation budget.
 assert(isa(values,'double') && isreal(values) && all(isfinite(values),'all'), ...
     'ejc:CSVEncoding','Encoding budget requires finite real double values.');
 budget=zeros(size(values));

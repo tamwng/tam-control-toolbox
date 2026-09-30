@@ -1,5 +1,5 @@
 function values = study2_figure_data(resultsDir)
-%STUDY2_FIGURE_DATA Select journal scores and check their archived provenance.
+%STUDY2_FIGURE_DATA Select publication scores and check their saved-data provenance.
 % This reads saved tables and records only; it performs no fitting or rollout.
 learning = readtable(fullfile(resultsDir,'tables','initialization_scores.csv'), ...
     'TextType','string');

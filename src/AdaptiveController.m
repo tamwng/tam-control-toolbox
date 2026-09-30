@@ -37,11 +37,13 @@ classdef AdaptiveController < handle
             end
             assert(numel(estimator.RawParameters) == model.ntheta, ...
                 'AdaptiveController:Parameters', 'Model and estimator dimensions differ.');
+
             obj.Model = model;
             obj.Estimator = estimator;
             obj.Settings = settings;
             obj.InitialState = initialState(:);
             obj.CurrentInput = initialInput(:);
+
             % Starting a new record carries the fitted coefficients and
             % covariance, but has no transition and an empty residual window.
             obj.Estimator.resetResidualWindow();
@@ -55,11 +57,13 @@ classdef AdaptiveController < handle
                 {'real','vector','numel',obj.Model.p});
             measurement = measurement(:);
             committed = obj.CurrentInput;
+
             info.index = obj.Index;
             info.committedInput = committed;
             info.transitionInput = obj.PreviousInput;
             info.identification = struct('attempted',false,'accepted',false, ...
                 'message','No completed transition is available at initialization.');
+
             if isempty(obj.PreviousState)
                 state = obj.InitialState;
                 state(1:obj.Model.p) = measurement;
@@ -83,6 +87,7 @@ classdef AdaptiveController < handle
             info.mappingActivated = false;
             info.prediction = [];
             nextInput = committed;
+
             try
                 parameters = obj.Estimator.Parameters;
                 info.parameters = parameters;
@@ -101,6 +106,7 @@ classdef AdaptiveController < handle
 
             info.fallback = ~info.control.accepted;
             info.nextInput = nextInput;
+
             % Even an invalid measurement occupies its actual sample index;
             % never bridge missing data into a fictitious measured transition.
             obj.PreviousState = state;

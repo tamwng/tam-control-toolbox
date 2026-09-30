@@ -1,5 +1,5 @@
 function checks = p06_gate(current,saved,cfg)
-%P06_GATE Proposed tolerances fixed before production results are available.
+%P06_GATE Compare saved nominal cases using fixed quantity-specific bounds.
 % Exact statuses; fit state 1e-10+1e-10*|reference|; trajectory 1e-7+1e-7*|ref|;
 % scores 1e-8+1e-7*|ref|. Timing and machine-dependent condition scores excluded.
 rows = struct([]);

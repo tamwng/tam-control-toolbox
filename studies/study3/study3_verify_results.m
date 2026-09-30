@@ -3,7 +3,7 @@ function study3_verify_results(output,cfg,gramComparison)
 % Explicit plant/dictionary formulas and weighted batch QR verify causality
 % and numerical obligations without imposing a scientific ranking. Relative
 % batch tolerance is 1e-8; data/timing tolerance is 1e-12; QP residuals 1e-7.
-% Optional P07 hook replaces ONLY the recent-Gram condition assertion.
+% The optional callback evaluates only the recent-Gram condition assertion.
 % All other assertions and the no-option strict path remain unchanged.
 if nargin < 3, gramComparison = []; end
 assert(isempty(gramComparison) || isa(gramComparison,'function_handle'));

@@ -1,6 +1,6 @@
 function tests=test_p07_p06_reporting
-% Approved portable replacements for two strict P06 reporting assertions.
-% Original P06 tests are unedited and their strict execution remains recorded.
+% Portable checks for the two specified sensitivity-summary comparisons.
+% Strict test outcomes are recorded separately; no other requirement changes.
 tests=functiontests(localfunctions);
 end
 function setupOnce(t)

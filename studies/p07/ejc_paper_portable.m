@@ -1,5 +1,5 @@
 function report=ejc_paper_portable(sources,references,output)
-%EJC_PAPER_PORTABLE Original paper selection with approved P07 field rules.
+%EJC_PAPER_PORTABLE Compare selected paper results under their fixed field rules.
 % A component only: all study comparisons and original validity must pass
 % separately. The original report still makes its exact source/count checks.
 assert(~isfolder(output) && ~isfile(output),'ejc:ExistingEvidence','New paper evidence required.');

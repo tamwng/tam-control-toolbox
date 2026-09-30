@@ -1,5 +1,5 @@
 function verdict=ejc_study2_gram_reduction(a,b,row,reference,pair)
-%EJC_STUDY2_GRAM_REDUCTION B2 only; inputs come from hash-bound real sources.
+%EJC_STUDY2_GRAM_REDUCTION Check the specified Gram maximum using hash-bound saved sources.
 assert(isstruct(pair) && pair.passed,'ejc:GramReportParents','Complete original paired parents must pass.');
 assert(isrow(a.gramCount) && isrow(b.gramCount) && isequal(a.nSteps,b.nSteps) && ...
     isequal(a.gramCount,b.gramCount) && a.nSteps<=numel(a.gramCondition) && ...

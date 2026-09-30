@@ -1,5 +1,5 @@
 function claim=ejc_apply_claim_scope(strict,rule,a,b,rowA,rowB,c)
-%EJC_APPLY_CLAIM_SCOPE Preserve strict raw verdict; change approved inference only.
+%EJC_APPLY_CLAIM_SCOPE Preserve raw differences and apply fixed claim-specific interpretation.
 claim=strict;
 % A genuinely asserted scientific direction always retains the generic guard.
 if isfield(c,'explicitDirectionalClaim') && c.explicitDirectionalClaim,return;end

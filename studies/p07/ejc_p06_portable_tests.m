@@ -1,7 +1,9 @@
 function report=ejc_p06_portable_tests(output)
-%EJC_P06_PORTABLE_TESTS Preserve strict evidence; execute approved fieldwise assertions.
-% Authorized by the user after the two additional P06 assertion failures.
-% No original test is edited, skipped, marked incomplete or relabelled passed.
+%EJC_P06_PORTABLE_TESTS Run strict sensitivity tests and scoped portable checks.
+% All 17 strict outcomes are retained. Only the two named summary comparisons
+% may use the separate fieldwise reporting tests; the other 15 must pass and
+% no strict test may be incomplete. Portable checks retain their matrix/source
+% requirements. A portable pass does not relabel a failed strict assertion.
 % MATLAB's test runner changes folders. Resolve the caller's evidence path
 % before that happens so generated output cannot land under the test sources.
 output=char(java.io.File(char(output)).getCanonicalPath());

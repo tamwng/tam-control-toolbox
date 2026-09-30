@@ -1,5 +1,5 @@
 function figureDir = plot_study6_journal(resultsDir,figureDir)
-%PLOT_STUDY6_JOURNAL Two-panel journal figure from archived scores only.
+%PLOT_STUDY6_JOURNAL Two-panel publication figure from saved scores only.
 % From the repository root: plot_study6_journal
 % Requires MATLAB only. Exports a 137.07-by-85 mm vector PDF, 300 dpi PNG,
 % exact selected-value CSV and supplied caption. No forecasts are rerun.

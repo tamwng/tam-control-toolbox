@@ -1,5 +1,5 @@
 function verdict=ejc_portable_leaf(a,b,field,parentA,parentB,context)
-%EJC_PORTABLE_LEAF Closed P07 field dispatch, with own saved matrix parents.
+%EJC_PORTABLE_LEAF Apply field-specific rules with each value's saved matrix parents.
 % CONTEXT is created by the file comparator from its actually loaded inputs.
 % A component verdict never substitutes for the original study requirements.
 verdict=struct('passed',false,'status',"BLOCKED",'coverageId',"",'family',"", ...
@@ -68,12 +68,12 @@ try
                 ownA=own_scalar(a,pa.sourceValue,context.isCSV);
                 % A historical unrounded recomputed Study 1 scalar is not
                 % invented. Its declared source recipe and all paired
-                % contributing parents gate the approved passive reduction.
+                % contributing parents must pass before the passive reduction.
                 ownB=own_scalar(b,pb.sourceValue,context.isCSV);
                 if any(context.study==["study1","p06"])
                     % These original reducers recompute cond(G). Their old
                     % scalar cannot be reconstructed by inventing an old
-                    % backend or argmax. The approved passive reduction
+                    % backend or argmax. The specified passive reduction
                     % requires immutable historical bytes, exact selection
                     % and executed paired parents; it remains qualified.
                     ownB=immutable_reference(context) && parent.passed;

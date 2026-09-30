@@ -1,5 +1,5 @@
 function report=ejc_study2_portable_report(current,reference,output)
-%EJC_STUDY2_PORTABLE_REPORT B2 saved-data figure path; never runs trajectories.
+%EJC_STUDY2_PORTABLE_REPORT Export source-bound rank diagnostics without running trajectories.
 assert(~isfolder(output) && ~isfile(output),'ejc:ExistingEvidence','New report evidence required.');
 root=fileparts(fileparts(fileparts(mfilename('fullpath'))));
 previous=path;restore=onCleanup(@()path(previous));

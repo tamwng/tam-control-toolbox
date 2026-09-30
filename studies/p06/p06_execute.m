@@ -1,5 +1,5 @@
 function p06_execute(output,plan,manifest,authorization)
-%P06_EXECUTE Future separately authorized runs. Never used by dry-run/tests.
+%P06_EXECUTE Execute the fixed full design through the historical authorization contract.
 assert(nargin==4 && strcmp(authorization,'P06_PRODUCTION_AUTHORIZED'), ...
     'p06:NotAuthorized','Separate production authorization is required.');
 assert(height(manifest)==1558,'p06:Budget','Only the approved full design is supported.');

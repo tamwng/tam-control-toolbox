@@ -1,4 +1,4 @@
 function value = source_relationship_anchor
-%SOURCE_RELATIONSHIP_ANCHOR Fixed offline authority for the HQ-reviewed source relationship.
-value = '4357432419f3f4f01a0d142651d422544a34e5fe514a58fb411063426d12436e';
+%SOURCE_RELATIONSHIP_ANCHOR Fixed offline hash of the source relationship.
+value = 'fc3b869fe2b59fc3983e445df8cc2059b5795d6584b55daa9b79d3b80c7225b1';
 end

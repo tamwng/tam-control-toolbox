@@ -1,5 +1,5 @@
 function [result,scores] = p06_case(row,plan,records,operations)
-%P06_CASE Orchestration only; production supplies the existing algorithms.
+%P06_CASE Fit, control and score one selected sensitivity case.
 % Optional operations are explicit synthetic-test doubles, never path shadows.
 if nargin < 4
     operations = struct('fit',@study1_fit,'trajectory',@study1_trajectory, ...

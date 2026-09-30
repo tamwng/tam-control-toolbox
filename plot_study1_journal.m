@@ -1,5 +1,5 @@
 function figureDir = plot_study1_journal(resultsDir,figureDir)
-%PLOT_STUDY1_JOURNAL Two-panel journal figure from saved Study 1 summaries.
+%PLOT_STUDY1_JOURNAL Two-panel publication figure from saved Study 1 summaries.
 % Run from the repository root; requires MATLAB only (tested R2026a).
 % No simulations, fitting, or metric calculations are repeated. Both panels
 % use the 40 paired noisy confirmation trials. Panel (b) uses the original

@@ -1,5 +1,5 @@
 function [model,name,unit] = study6_model(plant,id,physicalSettings)
-%STUDY6_MODEL Reuse the approved complete maps and descriptive model names.
+%STUDY6_MODEL Reuse the complete study maps and descriptive model names.
 unit = 'dimensionless state';
 switch char(plant)
     case 'A'

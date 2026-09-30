@@ -1,5 +1,5 @@
 function tests = test_study3_reporting
-%TEST_STUDY3_REPORTING Journal histories remain exact, causal archive views.
+%TEST_STUDY3_REPORTING Publication histories remain exact, causal views of saved records.
 tests = functiontests(localfunctions);
 end
 

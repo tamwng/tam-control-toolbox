@@ -27,7 +27,7 @@ elseif isequal(rawCurrent,Inf) && isequal(rawReference,Inf) && ...
         any(string({parentVerdicts.status})=="EXACT_STRUCTURAL_ZERO_GRAM" & ...
         [parentVerdicts.rawCurrent]==Inf & [parentVerdicts.rawReference]==Inf)
     % The maximum contains an executed exact structural-zero parent on both
-    % sides. Preserve that approved +Inf convention without Inf subtraction.
+    % sides. Preserve that fixed +Inf convention without Inf subtraction.
     out.status="EXACT_STRUCTURAL_ZERO_GRAM_REDUCTION";
     out.eligibleToAdvance=true;out.rawExtremumReproduced=true;
 else

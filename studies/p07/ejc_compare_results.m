@@ -1,20 +1,22 @@
 function report = ejc_compare_results(sources,references,output,portable)
-%EJC_COMPARE_RESULTS Compare fresh EJC results with immutable reference files.
-% Sources/references have absolute study1,...,study6,p06 directory fields.
-% Output is a new or existing writable evidence directory. Each MAT is loaded
-% separately. Scientific values, array order, classes and nonfinite masks
-% must agree exactly for this same-machine candidate. This rule was fixed
-% after the unchanged-source Gate B comparisons, before the candidate run.
-% Existing P06 gate tolerances remain separately visible; they are not a
-% blanket allowance for other quantities. CSV values are compared at their
-% stored precision, with underlying MAT arrays compared independently.
-% Wall-clock measurements and explicit source/environment metadata are
-% recorded as exclusions. No covariance/Hessian conditioning is excluded.
-% The 12 retained Study 1 pilot files alone may lack two legacy forecast
-% evaluation flags. Fresh flags are required and checked against their
-% unchanged definitions; every other scientific comparison remains exact.
-% Optional portable context is supplied only by the P07 policy adapter.
-% Omitting it preserves the original strict comparator and its evidence.
+%EJC_COMPARE_RESULTS Compare saved study outputs with canonical references.
+% Sources/references contain absolute study1,...,study6,p06 directories.
+% Output is a writable comparison directory; existing reports are rejected.
+%
+% With no PORTABLE adapter, scientific values, classes, array ordering and
+% nonfinite masks are compared exactly. CSV values use stored precision;
+% underlying MAT arrays are checked independently. Declared wall-clock and
+% source/environment fields are recorded as exclusions, not scientific matches.
+%
+% A PORTABLE adapter supplies file-specific context for the fixed numerical
+% rules and their required saved-data parents. Bounds and qualified matrix
+% diagnostics are field-specific; covariance/Hessian conditioning is not
+% excluded. There is no file-wide numerical tolerance.
+%
+% The 12 named legacy Study 1 pilot files alone may omit two forecast flags;
+% current flags must satisfy their definitions. Sensitivity baseline maxima
+% are reported separately under their quantity-specific bounds. Neither case
+% permits additional omissions or a blanket numerical allowance.
 if nargin<4,portable=[];end
 collect=false;
 if ~isempty(portable)
@@ -181,7 +183,7 @@ save(fullfile(output,'comparison.mat'),'report','-v7');
 end
 
 function [a,state] = legacy_pilot_flags(a,b,context,state)
-% Author-approved legacy schema only. Do not manufacture historical flags:
+% Only the named legacy schema omissions apply; do not create historical flags:
 % validate fresh values, then omit only an absent legacy counterpart from
 % the in-memory comparison. No saved record or other field is changed.
 allowed = ["data/pilot_A_000.mat","data/pilot_A_001.mat", ...

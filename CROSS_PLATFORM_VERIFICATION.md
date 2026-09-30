@@ -11,11 +11,17 @@ The supported record is Study 1, model `S`, campaign `confirmation`, trial 0, wi
 The released specification is available locally:
 
 - [Effective numerical policy](studies/p07/p07_acceptance_policy.json), SHA-256 `ca9101ea01a6eb093664d383a3d6bd1734598ba84aed2ee35b28cfa7412aec58`.
-- [Complete field inventory](evidence/p07_acceptance/full_field_coverage.csv), including the representative's closed F3879–F3957 mapping.
+- [Complete field inventory](evidence/p07_acceptance/full_field_coverage.csv), including the representative's fixed F3879–F3957 field mapping.
 - [Units and dispatch](evidence/p07_acceptance/UNIT_AND_DISPATCH.md) and [qualified Gram scopes](evidence/p07_acceptance/P7_QUALIFIED_SCOPE.csv).
 - [Claim applicability](evidence/p07_acceptance/freezing_identity/CLAIM_APPLICABILITY.csv) for the retained full-study specification; it does not enlarge the representative command's coverage.
 
-These are frozen numerical specifications, not private certification directories. Their historical identifiers are retained to identify the exact rules. Public generation needs no historical dataset, source-pin certificate or private audit archive. General multi-study/source-bound comparison remains a separate retained workflow; this representative command does not bypass its source guards.
+These are frozen numerical specifications, not private certification directories. Their historical identifiers are retained to identify the exact rules. Public generation needs no historical dataset, source-pin certificate or private audit archive. Complete-study comparison separately checks each supplied package and its source dependencies.
+
+## Strict and portable comparison
+
+The low-level `ejc_compare_results` function has two modes. Without its optional adapter it requires exact scientific values, classes, shapes, ordering and nonfinite masks; CSV numbers are compared at their stored precision and underlying MAT arrays are checked separately. Only declared timing/source metadata, the named legacy forecast flags and the separately evaluated sensitivity baseline maxima receive their specified treatment.
+
+`compare_study_reference` supplies the portable adapter. Each scientific field then uses its own fixed policy family and required saved-data parents. There is no single tolerance for an entire file. Exact requirements, scoped representation allowances, claim checks and qualified matrix diagnostics remain distinct. Neither mode reruns a simulation or turns an unavailable reference into agreement.
 
 ## Numerical agreement
 
@@ -74,6 +80,6 @@ The local resolver verifies each supplied canonical file against [the immutable 
 
 Study 2 publication export additionally needs `gram_numerical_rank_check.csv`, identified as `results/study2_journal/gram_numerical_rank_check.csv` in the same inventory, and its canonical Study 2 parents. Missing files or parents, incorrect identities, incomplete generated outputs and self-reference are failures/unavailable outcomes, never PASS. The resolver neither downloads nor substitutes data. The repository includes the canonical reference datasets under `results/`. Their paths, sizes, and SHA-256 hashes are fixed by the membership inventory. Keep these records separate from newly generated results and supply the listed directories explicitly. The stored reference bytes are preserved during Git checkout and archive export. Missing or altered records fail verification.
 
-The original exact-source certification guards remain historical. The descendant is bound by `verification/cleaned_source_relationship.json` and its fixed offline authority hash. The source relationship is reviewed and activated as `HQ_APPROVED`. General comparison still checks the supplied canonical identities, generated-package identity, source bindings and numerical rules; source approval is not comparison execution. An unreviewed relationship remains blocked unless an explicitly provisional development comparison is requested, which returns no overall reference PASS. The fixed-example comparison has its own unchanged contract above.
+Before complete-study comparison, `verify_source_relationship` checks the current files and scientific definitions against `verification/cleaned_source_relationship.json` and its fixed offline anchor. The comparator also checks generated-package identities, canonical references and source bindings. A source-identity check alone does not establish numerical agreement. A relationship that is not enabled for comparison returns an error; explicitly requested provisional comparisons never return overall reference PASS. The fixed-example command has the separate contract described above.
 
-The [provenance note](provenance/README.md) identifies the distinct historical generating commits and frozen policy. A complete-study smoke test, compact saved fixture, or representative run is not execution of every study or a new cross-platform certificate.
+The [provenance note](provenance/README.md) identifies the distinct historical generating commits and the policy they used. A component test, saved fixture or representative run does not establish execution of every study or a new cross-platform certification. Immutable reference packages may retain original run instructions and reports; their required paths and hashes remain part of the data provenance.

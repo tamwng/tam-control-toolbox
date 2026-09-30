@@ -1,5 +1,5 @@
 function binding=ejc_study2_gram_binding(currentDirectory,referenceDirectory,referenceFile,output,referenceIdentity)
-%EJC_STUDY2_GRAM_BINDING New per-invocation, hash-bound B2 callback; no reuse flag.
+%EJC_STUDY2_GRAM_BINDING Bind each rank-report comparison to exact saved inputs.
 assert(~isfolder(output) && ~isfile(output),'ejc:ExistingEvidence','New Gram binding evidence required.');
 root=fileparts(fileparts(fileparts(mfilename('fullpath'))));
 policyFile=fullfile(root,'studies/p07/p07_acceptance_policy.json');policyHash=ejc_file_sha256(policyFile);

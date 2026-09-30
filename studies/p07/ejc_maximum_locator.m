@@ -1,5 +1,5 @@
 function out=ejc_maximum_locator(a,b,proof)
-%EJC_MAXIMUM_LOCATOR Approved passive F0698 reduction; no empirical tie band.
+%EJC_MAXIMUM_LOCATOR Fixed passive F0698 reduction; no empirical tie band.
 % Proof is assembled from actual source rows and the complete paired run
 % screen by ejc_qp_max_locator. This component never certifies a campaign.
 out=struct('passed',false,'status',"FAILED_MAX_LOCATOR",'reason',"", ...

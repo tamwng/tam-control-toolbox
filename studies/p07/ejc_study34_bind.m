@@ -1,5 +1,5 @@
 function report=ejc_study34_bind(extracted,cfg,output,diagnostic)
-%EJC_STUDY34_BIND Complete the approved same-record portable assertion pass.
+%EJC_STUDY34_BIND Complete the source-bound portable checks on the same saved record.
 % The original verifier must first finish EVERY non-hook requirement. Its
 % evidence is bound to the checker/policy and every original source file.
 % This is only the two named assertion sites, not full/paper acceptance.
@@ -25,7 +25,7 @@ end
 scope="F0894";if study=="study4",scope="F1344";end
 rule=ejc_rule_lookup(study,"runs/case.mat","value[].result[].gramCondition","double");
 assert(rule.coverage_id==scope && rule.policy_family=="P7",'ejc:BindingScope','Approved passive scope changed.');
-% The approved passive-use finding must remain true for all controller code.
+% The condition diagnostic must remain unused by all controller code.
 scientific=dir(fullfile(root,'src','**','*.m'));
 for f=scientific.'
     assert(~contains(fileread(fullfile(f.folder,f.name)),'gramCondition'), ...

@@ -3,8 +3,8 @@ function report = compare_study_reference(sources,references,output,options)
 % REFERENCES contains explicitly supplied canonical directories. Study 6 also
 % requires both parent sets; sensitivity requires canonical Study 1 records.
 % No simulation, reference download, or modification of a generated run occurs.
-% The reviewed source relationship enables comparison of supplied datasets.
-% Source approval alone does not establish reference agreement.
+% Source identity, generated-package identity and numerical agreement are
+% checked separately for the supplied datasets.
 arguments
     sources (1,1) struct
     references (1,1) struct
@@ -40,7 +40,7 @@ for key=keys.'
     verify_generated_package(key,sources.(key));
 end
 assert(~strcmp(proof.sourceReview,'HQ_REVIEW_PENDING') || options.DevelopmentComparison, ...
-    'study:SourceReviewPending','The actual cleaned-source relationship requires HQ review.');
+    'study:SourceReviewPending','The source relationship is not enabled for reference comparison.');
 output=ejc_output_path('reference_comparison',output);
 study_separate_output(output,parents);study_separate_output(output,referenceParents);
 mkdir(output);

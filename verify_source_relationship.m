@@ -1,12 +1,12 @@
 function proof = verify_source_relationship
-%VERIFY_SOURCE_RELATIONSHIP Check fixed reviewed-candidate bytes, not runtime pins.
-% The authority hash is an offline review artifact. Recording observed hashes
-% for a generated run does not make that run its own acceptance authority.
+%VERIFY_SOURCE_RELATIONSHIP Check source files against a fixed offline identity.
+% Recording observed hashes for a generated run does not make that run
+% its own reference authority.
 root=fileparts(mfilename('fullpath'));
 file=fullfile(root,'verification','cleaned_source_relationship.json');
 expected=source_relationship_anchor;
 assert(strcmp(ejc_file_sha256(file),expected),'study:RelationshipChanged', ...
-    'Source relationship differs from the fixed candidate authority.');
+    'Source relationship differs from its fixed identity.');
 mapping=jsondecode(fileread(file));
 assert(strcmp(mapping.policySHA256, ...
     'ca9101ea01a6eb093664d383a3d6bd1734598ba84aed2ee35b28cfa7412aec58'), ...
@@ -14,7 +14,7 @@ assert(strcmp(mapping.policySHA256, ...
 for row=reshape(mapping.files,1,[])
     target=fullfile(root,row.path);
     assert(isfile(target) && strcmp(ejc_file_sha256(target),row.newSHA256), ...
-        'study:SourceChanged','Source differs from mapped candidate: %s.',row.path);
+        'study:SourceChanged','Source file differs from its recorded identity: %s.',row.path);
 end
 % Only generated results are outside the declared source inventory.
 entries=dir(fullfile(root,'**','*')); actual=strings(0,1);

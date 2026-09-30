@@ -1,5 +1,5 @@
 function [absolute,relative,subrule]=ejc_rule_parameters(rule,tableContext,parentNorm)
-%EJC_RULE_PARAMETERS Exact subgroup and approved row predicates; no float fallback.
+%EJC_RULE_PARAMETERS Exact subgroup and fixed row predicates; no float fallback.
 if nargin<2,tableContext=table;end
 if nargin<3,parentNorm=NaN;end
 family=rule.policy_family;subrule="";field=string(rule.fieldPath);

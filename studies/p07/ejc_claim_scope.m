@@ -1,5 +1,5 @@
 function scope=ejc_claim_scope(rule,row)
-%EJC_CLAIM_SCOPE Closed post-failure semantic map, independent of magnitude.
+%EJC_CLAIM_SCOPE Fixed claim-applicability map, independent of observed magnitude.
 scope=struct('applicable',false,'kind',"STRICT",'identityClass',"",'sourceStudy',string(rule.study), ...
     'sourceFile',string(rule.family),'sourceField',string(rule.fieldPath));
 root=fileparts(fileparts(fileparts(mfilename('fullpath'))));

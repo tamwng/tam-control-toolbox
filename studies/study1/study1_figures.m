@@ -1,5 +1,5 @@
 function study1_figures(output,cfg,summary)
-%STUDY1_FIGURES Candidate Study 1 figures from the saved confirmation data.
+%STUDY1_FIGURES Study 1 figures from the saved confirmation data.
 %   Clean runs are primary; noisy trial 1 was selected before execution.
 %   Error bars show Q1--Q3, or paired-bootstrap 95% intervals as labelled.
 folder = fullfile(output,'figures');

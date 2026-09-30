@@ -4,6 +4,7 @@ function result = study4_trajectory(id,fit,scenario,cfg)
 % No event branch, reset, regressor insertion, or evaluator query enters it.
 [model,theta0,labels,name] = study4_model(id);
 known = strcmp(id,'K'); K = cfg.K; n = model.ntheta;
+
 result = struct('id',char(id),'name',name,'scenario',char(scenario), ...
     'scenarioName',cfg.scenarioNames{strcmp(cfg.scenarios,scenario)}, ...
     'labels',{labels},'Ts',cfg.Ts,'controlSettings',cfg.control, ...
@@ -19,6 +20,7 @@ if ~known
     result.D = fit.D; result.initialTheta = fit.theta(:,end);
     result.initialCovariance = fit.covariance(:,:,end);
 end
+
 result.initialBeta = result.D.*result.initialTheta;
 result.theta = nan(n,K); result.beta = nan(n,K);
 result.covariance = nan(result.nEstimated,result.nEstimated,K);
@@ -37,16 +39,19 @@ result.slack = nan(2,cfg.N,K); result.plannedInput = nan(cfg.N-1,K);
 result.plannedOutput = nan(cfg.N,K);
 result.A = nan(1,K); result.B = nan(1,K); result.c = nan(1,K);
 result.events = struct('index',{},'stage',{},'message',{});
+
 rows = zeros(0,n);
 if ~known
     estimator = RlsEstimator(result.initialTheta,result.initialCovariance,1,result.D,cfg.forgetting);
     controller = AdaptiveController(model,estimator,cfg.control,0,0);
 end
+
 for j = 1:K
     k = j-1;
     if ~isfinite(result.x(j)) || abs(result.x(j)) > 5, break; end
     measurement = result.y(j); committed = result.u(j);
     preview = study1_reference((k+(1:cfg.N))*cfg.Ts);
+
     timer = tic;
     if known
         % Current parameters only; the shared fixed-step function cannot see
@@ -70,6 +75,7 @@ for j = 1:K
             result.events(end+1) = event(k,'identification',info.identification.message);
         end
     end
+
     result.controlTime(j) = toc(timer);
     result.controlAccepted(j) = control.accepted;
     if ~control.accepted

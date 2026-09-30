@@ -1,91 +1,96 @@
 # Structure-Informed Indirect Adaptive Predictive Control
 
-This MATLAB software studies how supplied nonlinear functions and coefficient relations affect identification, prediction and constrained control. Recursive least squares estimates coefficients in a fixed regressor. The fitted model reconstructs a nonlinear predictor; its value and Jacobian define an affine model held fixed over each control horizon.
+This MATLAB package studies how nonlinear regressors and coefficient relations affect identification, prediction and constrained control. Recursive least squares fits a model whose value and Jacobian define an affine predictor held fixed over each control horizon.
 
-The accompanying research is *A Numerical Investigation of Indirect Adaptive Predictive Control with Structure-Informed Nonlinear Regressors*. The evidence is exploratory: it does not establish general closed-loop stability, recursive feasibility, parameter convergence or independent confirmation. The known-model controller solves the same frozen-affine control problem; it is a diagnostic reference, not a performance bound.
+The accompanying research, *A Numerical Investigation of Indirect Adaptive Predictive Control with Structure-Informed Nonlinear Regressors*, provides exploratory numerical evidence. It does not establish general closed-loop stability, recursive feasibility, parameter convergence or independent confirmation. The known-model controller is a diagnostic reference, not a performance bound.
 
-## Requirements and first example
+## First example
 
-Use MATLAB with licensed Optimization Toolbox (`quadprog`). The representative workflow has been tested on Windows with MATLAB R2026a Update 5 and Optimization Toolbox 26.1; other releases are unverified. Start MATLAB in this directory and keep the source layout intact. Public commands select this tree's functions and restore the caller's path and directory.
+Use MATLAB with licensed Optimization Toolbox (`quadprog`). The representative workflow was tested on Windows with MATLAB R2026a Update 5 and Optimization Toolbox 26.1; other releases are unverified. Start MATLAB in the repository root. Keep the source layout intact; public commands select this tree's functions and restore your original path and directory.
 
 ```matlab
 [output, summary] = run_example;
 ```
 
-This fixed noise-free Shared-model example uses 200 fitting transitions, a separate 600-transition evaluation record and 120 seconds of control at 0.1-second intervals. It generates its own inputs with the fixed seeds and needs no historical results. Trial 0 is distinct from the paper's noisy trial 1.
+This fixed noise-free example fits the Shared model using 200 transitions, evaluates 600 separate transitions, and runs 120 seconds of control at 0.1-second intervals. Inputs use fixed seeds. No historical results are needed. Trial 0 is distinct from the paper's noisy trial 1.
 
-The new `results/example_*` folder contains `data/confirmation_S_000.mat` (result, settings and records), `metrics.csv`, `summary.json` (checks, identities and environment), and `function_resolution.csv`. Existing destinations are rejected. `run_example('my_example')` selects a new named folder. Failures retain an error record.
+The new `results/example_*` directory contains the saved result, settings and inputs in `data/confirmation_S_000.mat`, metrics in `metrics.csv`, and checks, source identities and environment in `summary.json` and `function_resolution.csv`. Use `run_example('my_example')` for a named directory. Existing destinations are rejected; failures retain an error record.
 
-## Inspect and check saved results
+Plot the saved response without rerunning:
 
 ```matlab
 inspect_results(1,'confirmation_S_000',output);
-checks = check_result(fullfile(output,'data','confirmation_S_000.mat'));
-run_component_tests;
 ```
 
-The viewer does not rerun the controller. It shows state/reference and input histories, with provenance in figure metadata. Supply `'SaveTo','response.png'` to export. Internal checks cover applicable mathematical, finite-value, solver, constraint and implementation requirements; passing them is not agreement with published results.
+Add `'SaveTo',fullfile(output,'response.png')` to export the figure. Its metadata identifies the source record.
 
 ## Individual studies and complete reproduction
 
 ```matlab
-study2 = generate_results('study2',OutputDirectory='study2_run');
-check_study_results('study2',study2);
+s2 = generate_results('study2',OutputDirectory='study2_run');
+check_study_results('study2',s2);
 ```
 
-This runs the **complete** selected study, not another inexpensive example. `Figures=false` is the generation default and changes plotting only. Study settings and case definitions are fixed. Generated manifests record own validity separately from reference comparison.
+This executes the **complete selected study**. It is more expensive than the example. Generation uses fixed study definitions and defaults to `Figures=false`; plotting is separate.
 
-| Study | Purpose | Implementation |
-|---|---|---|
-| 1 | Structure-informed regressors and paired measurement-noise trials | `studies/study1/` |
-| 2 | Input range, polynomial dictionaries and constraints | `studies/study2/` |
-| 3 | Parameter changes and forgetting | `studies/study3/` |
-| 4 | Fixed dictionaries under structural change | `studies/study4/` |
-| 5 | Physical identification and predictor reconstruction | `studies/study5/` |
-| 6 | Saved-data prediction and control diagnostics | `studies/study6/` |
-| Sensitivity | Paired control-weight, prior and record-length cases | `studies/p06/` |
-
-`src/` holds the models, RLS estimator and controller. In the implementation, `x`, `y` and `u` denote state, measured output and input; `theta` is a physical/model coefficient vector, `beta` its scaled estimate, `P` the estimator covariance, `Ts` the sample interval, and `N` the control horizon. Arrays retain the timing and units documented in function help.
-
-Study 6 requires all five explicitly identified newly generated parents:
+Study 6 requires complete newly generated Studies 1–5 from the same source identity:
 
 ```matlab
 parents = struct('study1',s1,'study2',s2,'study3',s3,'study4',s4,'study5',s5);
 s6 = generate_results('study6',Sources=parents,OutputDirectory='study6_run');
 ```
 
-Here `s1`–`s5` are returned complete-study directories from the same source identity. No historical fallback is used. To inspect sensitivity case IDs without simulation, use `run_sensitivity('plan')`. Run a named case with `run_sensitivity('case',Case='baseline_S_000')`.
+Here `s1`–`s5` are the directories returned by those study runs. For sensitivity, `run_sensitivity('plan')` lists the fixed cases without simulation; `run_sensitivity('case',Case='baseline_S_000')` runs one named case. See the [sensitivity guide](studies/p06/README.md) for the paired design.
 
 ```matlab
-% Expensive: all original studies and the complete 1,558-case sensitivity set.
+% Expensive: all six studies and the complete 1,558-case sensitivity set.
 paper = generate_results('all',OutputDirectory='paper_run',ConfirmFull=true);
 ```
 
-Complete generation, saved plotting and reference comparison are separate operations. Use `plot_results('study1',s1)` for saved publication figures. Study 2 publication plotting additionally requires `ReferenceInputs.study2` and `ReferenceInputs.rankFile`; absent rank evidence blocks that export. The ordinary time-domain viewer needs no reference.
+Use `plot_results('study1',s1)` for saved study figures. Study 2's publication figures additionally require the canonical rank file and its source dataset, described in the [verification guide](CROSS_PLATFORM_VERIFICATION.md). The ordinary time-domain viewer needs no reference data. Inspect selected sensitivity cases rather than plotting the entire campaign.
 
-## Independent reference comparison
+## Internal validity
 
-For the fixed example, the full repository includes the canonical `results/study1_candidate_20260917/data/confirmation_S_000.mat`. Supply it explicitly:
+Generation checks the applicable mathematical identities, finite values, solver conditions, constraints and implementation requirements. Recheck the saved example or run the small component suite with:
+
+```matlab
+resultFile = fullfile(output,'data','confirmation_S_000.mat');
+checks = check_result(resultFile);
+run_component_tests;
+```
+
+These checks assess the calculation itself. Passing them does not establish agreement with a reference dataset.
+
+## Reference comparison
+
+Canonical datasets are included under `results/`. For the example, supply the reference explicitly:
 
 ```matlab
 canonicalFile = fullfile(pwd,'results','study1_candidate_20260917','data','confirmation_S_000.mat');
-comparison = compare_reference(fullfile(output,'data','confirmation_S_000.mat'), ...
-    canonicalFile,'example_comparison');
+comparison = compare_reference(resultFile,canonicalFile,'example_comparison');
 ```
 
-The canonical reference datasets are included under `results/`. Use the directories listed in the [reference requirements](CROSS_PLATFORM_VERIFICATION.md), and preserve their file layout and bytes. Missing or altered reference files raise an error and never produce PASS.
+This reuses the saved result. Missing or altered reference material raises an error, never PASS. Preserve the reference paths and exact bytes.
 
-The complete-study interface is `compare_study_reference(sources,references,output)`, where both structures identify study directories. Supply current `ParentSources` and `ReferenceParents` where required. Study 6 requires both five-study parent sets; sensitivity also requires canonical Study 1. The resolver checks the frozen canonical file identities. See [verification requirements](CROSS_PLATFORM_VERIFICATION.md) for the exact local reference roots and dependency requirements.
+For completed studies, use `compare_study_reference(sources,references,output)`. Study 6 also needs both five-study parent sets; sensitivity needs canonical Study 1 records. The [verification guide](CROSS_PLATFORM_VERIFICATION.md) lists the exact inputs, fixed numerical rules and plotting dependencies.
 
-Complete-study reference comparison checks the reviewed source relationship and the supplied datasets. The cleanup was checked with component tests, retained-data bindings, and a fresh representative example; the complete studies were not rerun during cleanup.
+**PASS** applies to the reported checks and inputs. **FAIL** identifies a failed requirement; unavailable inputs leave comparison unestablished. **QUALIFIED** retains a specified limitation, including unresolved passive Gram diagnostics, and does not mean numerical equality. Self-comparison is not independent reference verification.
 
-## Interpretation and provenance
+## Package map and provenance
 
-**PASS** applies only to the explicitly reported checks and supplied inputs. **FAIL** means a required executed check failed; unavailable material means the comparison was not established. **QUALIFIED** identifies an approved limited diagnostic interpretation, including passive Gram diagnostics; it does not assert numerical equality. A run compared with itself is not historical-reference verification. A fixed example is not full-paper certification.
+| Location | Contents |
+|---|---|
+| `src/` | Models, recursive least squares and constrained controller |
+| `studies/study1/`, `studies/study2/` | Regressor structure, measurement noise, input range and constraints |
+| `studies/study3/`, `studies/study4/` | Parameter changes, forgetting and structural change |
+| `studies/study5/`, `studies/study6/` | Physical reconstruction and saved-data diagnostics |
+| `studies/p06/` | Paired tuning and initialization sensitivity |
+| `tests/`, `results/` | Component tests; generated outputs and canonical datasets |
 
-The [provenance note](provenance/README.md) distinguishes historical generating revisions from this development source. Historical certificates are not rewritten or inherited. Attribution and software citation remain in `CITATION.cff`; license terms remain in [LICENSE.txt](LICENSE.txt). No version 2.0.0 tag, public data-hosting claim or unissued paper citation is implied.
+In the source, `x`, `y`, `u` denote state, measurement and input; `theta` and `beta` are model and scaled coefficients, `P` is estimator covariance, `Ts` the sample interval, and `N` the horizon. Function help specifies array timing and units.
 
-## Citation
+The [provenance note](provenance/README.md) identifies the revisions used for historical cross-platform certification. Those records do not certify another source revision or a user's example. Software attribution is in `CITATION.cff`; terms are in [LICENSE.txt](LICENSE.txt).
 
-The revised manuscript will be available on arXiv. The final citation and DOI
-will be added when the updated public version is available.
+## Paper citation
+
+The citation and DOI for the revised arXiv version will be added when that version is announced.

@@ -1,7 +1,7 @@
 function report=ejc_journal_figures(output,sources,portable)
-%EJC_JOURNAL_FIGURES Original six figure paths; approved B2 binding in FULL.
-% A saved-data reporting component, never a trajectory or certification gate.
-% Archive/default calls retain the original strict plotter invocation.
+%EJC_JOURNAL_FIGURES Export six study figures from saved data.
+% Portable mode binds the Study 2 rank report to its canonical parents.
+% Default calls use the strict plotters. No control trajectories are run.
 if nargin<3,portable=false;end
 assert(islogical(portable) && isscalar(portable),'ejc:FigureMode','Expected explicit logical mode.');
 report=struct('passed',false,'figureCount',0,'portableStudy2',portable);

@@ -1,6 +1,6 @@
 function report=ejc_paper_export_checks(sources,references,output,paper)
 %EJC_PAPER_EXPORT_CHECKS Bind all 13 paper CSV exports to their own sources.
-% The seven selected result exports retain the already approved scalar/claim
+% The seven selected result exports also retain their fixed scalar/claim
 % comparisons as well. Underlying complete study comparisons remain mandatory.
 root=fileparts(fileparts(fileparts(mfilename('fullpath'))));
 previous=path;restorePath=onCleanup(@()path(previous));

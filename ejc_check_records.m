@@ -7,7 +7,7 @@ a = load(fullfile(output,'settings.mat'),'cfg');
 b = load(fullfile(reference,'settings.mat'),'cfg');
 if study == 3 && isfield(b.cfg,'execution'), b.cfg = rmfield(b.cfg,'execution'); end
 assert(isequaln(a.cfg,b.cfg),'ejc:ConfigurationMismatch', ...
-    'Scientific settings differ in Study %d. Stop for review.',study);
+    'Scientific settings differ in Study %d.',study);
 files = {'records.mat'};
 if study == 1, files = {fullfile('data','records_pilot.mat'),fullfile('data','records_confirmation.mat')}; end
 for j = 1:numel(files)

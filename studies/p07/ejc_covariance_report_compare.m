@@ -17,8 +17,8 @@ if ~isequal(a.diagnostics.Properties.VariableNames,b.diagnostics.Properties.Vari
 end
 x=a.diagnostics.covarianceConditionMax;y=b.diagnostics.covarianceConditionMax;
 left=a;right=b;left.diagnostics.covarianceConditionMax=[];right.diagnostics.covarianceConditionMax=[];
-% These are the other already approved mappings exposed by the complete
-% strict diff, not extra tolerances on the summary structure.
+% These named fields have individual comparison rules. All remaining
+% fields of the summary structure retain exact comparison.
 for name=["parameterScaledRMSPercent","parameterFinalScaledPercent"]
     if ~istable(a.metrics) || ~isequal(a.metrics.Properties.VariableNames,b.metrics.Properties.VariableNames)
         report.reason="Metric schema differs";return

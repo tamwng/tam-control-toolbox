@@ -1,7 +1,7 @@
 function study4_verify_results(output,cfg,gramComparison)
 %STUDY4_VERIFY_RESULTS Independent formulas and saved-data causal audits.
 % No performance ordering is required. Verification does not rerun control.
-% Optional P07 hook replaces ONLY the finite recent-Gram condition assertion.
+% The optional callback evaluates only the finite recent-Gram condition assertion.
 % The original rank-deficiency Inf assertion is still executed in both modes.
 if nargin < 3, gramComparison = []; end
 assert(isempty(gramComparison) || isa(gramComparison,'function_handle'));

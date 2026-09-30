@@ -3,7 +3,7 @@ function summary = study1_summarize(output,cfg,destination)
 %   Complete-run summaries exclude incomplete runs and retain their counts.
 %   Finite-prefix scores are explicitly labelled. Quantiles interpolate
 %   linearly at order-statistic position 1+(n-1)*p; no Statistics Toolbox.
-% Single-argument P06 access exposes the unchanged per-run scoring helpers.
+% The single-argument helper selector exposes the same per-run scoring functions.
 % An optional destination keeps regenerated tables outside the source archive.
 if nargin == 1 && isequal(output,'p06_helpers')
     summary = struct('scoreRun',@score_run,'scoreFit',@score_fit, ...
