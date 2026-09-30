@@ -7,9 +7,12 @@ function setupOnce(t)
 folder=fileparts(mfilename('fullpath'));
 s=load(fullfile(folder,'fixtures','pre_interface.mat'),'oracle');
 t.TestData.oracle=s.oracle;
-t.TestData.output=getappdata(0,'p06TestOutput');
-[t.TestData.plan,t.TestData.manifest]=p06_plan;
-s=load(t.TestData.plan.recordFile,'records'); t.TestData.records=s.records;
+f=t.applyFixture(matlab.unittest.fixtures.TemporaryFolderFixture);t.TestData.output=f.Folder;
+cfg=study1_settings;
+[t.TestData.plan,t.TestData.manifest]=p06_design(cfg,'','','');
+t.TestData.records=study1_records(cfg,'confirmation');
+archive=getappdata(0,'sensitivityTestReference');
+if ~isempty(archive),t.TestData.plan.archive=archive;end
 end
 
 function testDefaultFitExactlyMatchesPrechange(t)
@@ -71,7 +74,7 @@ end
 
 function testOriginalTwoArgumentSummaryExactlyMatchesPrechange(t)
 output=fullfile(t.TestData.output,'legacy_after');
-cfg=p06_legacy_fixture(output);
+cfg=p06_legacy_fixture(output,t.TestData.plan.archive);
 actual=study1_summarize(output,cfg);
 verifyEqual(t,actual,t.TestData.oracle.summary);
 end
@@ -229,14 +232,14 @@ function testDryRunWritesOnlyManifestAndCallsNoCampaign(t)
 output=fullfile(t.TestData.output,'dry_run');
 profile clear; profile on;
 stop=onCleanup(@() profile('off'));
-run_p06(output);
+run_sensitivity('plan',OutputDirectory=output);
 profile off; p=profile('info'); names=string({p.FunctionTable.FunctionName});
 for forbidden=["p06_execute","study1_fit","study1_trajectory","study1_forecasts","study1_plant","study1_record","solve_mpc"]
     verifyFalse(t,any(names==forbidden),forbidden);
 end
 files=dir(output); files=files(~[files.isdir]);
-verifyEqual(t,{files.name},{'P06_RUN_MANIFEST.csv'});
-verifyError(t,@() run_p06(output),'p06:ExistingOutput');
-verifyError(t,@() run_p06(fullfile(t.TestData.output,'not_created'),'execute'),'p06:NotAuthorized');
+verifyEqual(t,sort(string({files.name})),["P06_RUN_MANIFEST.csv","sensitivity_manifest.json"]);
+verifyError(t,@() run_sensitivity('plan',OutputDirectory=output),'ejc:ExistingOutput');
+verifyError(t,@() run_sensitivity('all',OutputDirectory=fullfile(t.TestData.output,'not_created')),'study:ExpensiveSelection');
 verifyFalse(t,isfolder(fullfile(t.TestData.output,'not_created')));
 end

@@ -4,9 +4,9 @@ function outputDir = run_study3(outputName,options)
 % Run from the repository root in a clean session. Results always go to a new
 % local directory. Settings, windows and seeds are fixed before execution.
 % No confirmation campaign, tuning, structural change, or later study is run.
-% The complete test suite requires retained archives/fixtures; this is
-% not a reference-free single-case driver. Figures=false suppresses figures
-% only; it does not reduce the computation or its scientific checks.
+% Generates the complete fixed study with applicable component and saved-data
+% validity checks. Figures=false changes plotting only. Reference comparison
+% is a separate operation; use generate_results for recorded source identity.
 
 arguments
     outputName = ''
@@ -16,15 +16,21 @@ arguments
 end
 root = fileparts(mfilename('fullpath'));
 outputDir = ejc_output_path('study3',outputName);
+if isempty(options.VerificationAdapter)
+    options.VerificationAdapter = study_validity_callback('study3', ...
+        [outputDir '_validity']);
+end
 oldPath = path;
 cleanup = onCleanup(@() path(oldPath));
 restoredefaultpath;
 addpath(root,fullfile(root,'src'),fullfile(root,'studies','study1'), ...
     fullfile(root,'studies','study2'),fullfile(root,'studies','study3'));
-run_verification;
+study_prerequisites('study3');
+
 cfg = study3_settings;
 study3_prepare(outputDir,cfg);
 ejc_check_records(outputDir,options.ReferenceDirectory,3);
+
 study3_run_batch(outputDir,0:cfg.noiseTrials);
 if isempty(options.VerificationAdapter)
     study3_verify_results(outputDir,cfg);
@@ -32,8 +38,9 @@ else
     assert(isa(options.VerificationAdapter,'function_handle'),'ejc:VerificationAdapter','Expected a verification function.');
     options.VerificationAdapter(outputDir,cfg);
 end
+
 summary = study3_summarize(outputDir,cfg);
 if options.Figures, study3_figures(outputDir,cfg,summary); end
-run_verification;
+study_prerequisites('study3');
 fprintf('Study 3 pilot package complete: %s\n',outputDir);
 end

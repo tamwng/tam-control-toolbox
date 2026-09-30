@@ -3,9 +3,9 @@ function outputDir = run_study4(outputName,options)
 % From the repository root: run_study4
 % Requires MATLAB and Optimization Toolbox. Every invocation uses a new
 % results directory; no tuning, noisy repetitions, or confirmation runs.
-% The complete test suite requires retained archives/fixtures; this is
-% not a reference-free single-case driver. Figures=false suppresses figures
-% only; it does not reduce the computation or its scientific checks.
+% Generates the complete fixed study with applicable component and saved-data
+% validity checks. Figures=false changes plotting only. Reference comparison
+% is a separate operation; use generate_results for recorded source identity.
 
 arguments
     outputName = ''
@@ -15,13 +15,18 @@ arguments
 end
 root = fileparts(mfilename('fullpath'));
 outputDir = ejc_output_path('study4',outputName);
+if isempty(options.VerificationAdapter)
+    options.VerificationAdapter = study_validity_callback('study4', ...
+        [outputDir '_validity']);
+end
 oldPath = path;
 cleanup = onCleanup(@() path(oldPath));
 restoredefaultpath;
 addpath(root,fullfile(root,'src'),fullfile(root,'studies','study1'), ...
     fullfile(root,'studies','study2'),fullfile(root,'studies','study3'), ...
     fullfile(root,'studies','study4'));
-before = run_verification;
+before = study_prerequisites('study4');
+
 cfg = study4_settings;
 mkdir(outputDir);
 for folder = {'fits','runs','evaluation','tables','figures'}
@@ -35,6 +40,7 @@ records.initialization = study4_record(200,.5,cfg.inputSeed,cfg);
 records.evaluation = study4_record(600,.5,cfg.evaluationSeed,cfg);
 save(fullfile(outputDir,'records.mat'),'records');
 ejc_check_records(outputDir,options.ReferenceDirectory,4);
+
 fits = struct;
 for id = string(cfg.modelIds)
     if id == "K", continue; end
@@ -65,10 +71,11 @@ else
     assert(isa(options.VerificationAdapter,'function_handle'),'ejc:VerificationAdapter','Expected a verification function.');
     options.VerificationAdapter(outputDir,cfg);
 end
+
 summary = study4_summarize(outputDir,cfg);
 save(fullfile(outputDir,'summary.mat'),'summary');
 if options.Figures, study4_figures(outputDir,cfg); end
-after = run_verification;
+after = study_prerequisites('study4');
 verification = struct('beforeNames',{ {before.Name} },'beforePassed',[before.Passed], ...
     'afterNames',{ {after.Name} },'afterPassed',[after.Passed], ...
     'savedDataChecksPassed',true);

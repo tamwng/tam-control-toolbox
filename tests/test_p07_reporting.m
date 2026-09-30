@@ -10,7 +10,7 @@ t.TestData.root = root;
 for study = 1:6, addpath(fullfile(root,'studies',sprintf('study%d',study))); end
 addpath(fullfile(root,'studies','p06','tests'));
 addpath(fullfile(root,'studies','p07'));
-t.TestData.sources = ejc_reference_sources;
+t.TestData.sources = reference_test_sources;
 end
 
 function teardownOnce(t)
@@ -20,7 +20,7 @@ end
 function testSeparateStudy1SummaryMatchesPreinterfaceOracle(t)
 fixture = t.applyFixture(matlab.unittest.fixtures.TemporaryFolderFixture);
 source = fullfile(fixture.Folder,'source');
-cfg = p06_legacy_fixture(source);
+refs=reference_test_sources;cfg = p06_legacy_fixture(source,refs.study1);
 before = read_bytes(fullfile(source,'tables','measured_initialization_audit.csv'));
 destination = fullfile(fixture.Folder,'report');
 actual = study1_summarize(source,cfg,destination);
@@ -84,7 +84,7 @@ filename = fullfile(source,'data','confirmation_S_001.mat');
 original = read_bytes(filename);
 saved = load(filename,'result'); r = saved.result;
 before = rng;
-[fig,selection] = inspect_ejc(1,'confirmation_S_001',source,'Visible','off');
+[fig,selection] = inspect_results(1,'confirmation_S_001',source,'Visible','off');
 cleanup = onCleanup(@() close(fig));
 verifyEqual(t,rng,before);
 verifyEqual(t,selection.sourceFile,filename);
@@ -101,19 +101,19 @@ function testInspectorSavesOnlyOnExplicitRequest(t)
 fixture = t.applyFixture(matlab.unittest.fixtures.TemporaryFolderFixture);
 source = t.TestData.sources.study1;
 target = fullfile(fixture.Folder,'inspection.png'); before = rng;
-[fig,selection] = inspect_ejc(1,'confirmation_S_001',source,'SaveTo',target,'Visible','off');
+[fig,selection] = inspect_results(1,'confirmation_S_001',source,'SaveTo',target,'Visible','off');
 cleanup = onCleanup(@() close(fig));
 verifyTrue(t,isfile(target)); verifyEqual(t,selection.savedTo,target);
 verifyEqual(t,rng,before);
-verifyError(t,@() inspect_ejc(1,'confirmation_S_001',source, ...
+verifyError(t,@() inspect_results(1,'confirmation_S_001',source, ...
     'SaveTo',target,'Visible','off'),'ejc:ExistingOutput');
 end
 
 function testInspectorRejectsMissingCaseAndProtectedExport(t)
 source = t.TestData.sources.study1;
 before = rng;
-verifyError(t,@() inspect_ejc(1,'missing_case',source,'Visible','off'),'ejc:MissingInspectionCase');
-verifyError(t,@() inspect_ejc(1,'confirmation_S_001',source, ...
+verifyError(t,@() inspect_results(1,'missing_case',source,'Visible','off'),'ejc:MissingInspectionCase');
+verifyError(t,@() inspect_results(1,'confirmation_S_001',source, ...
     'SaveTo',fullfile(source,'forbidden.png'),'Visible','off'),'ejc:ProtectedOutput');
 verifyFalse(t,isfile(fullfile(source,'forbidden.png')));
 verifyEqual(t,rng,before);

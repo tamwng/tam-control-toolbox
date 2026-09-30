@@ -66,7 +66,7 @@ verifyEqual(t,r.policy_family,"P10");
 end
 function test_file_report_retains_input_hashes_and_fieldwise_policy(t)
 f=t.applyFixture(matlab.unittest.fixtures.TemporaryFolderFixture);
-root=fileparts(fileparts(mfilename('fullpath')));s=ejc_reference_sources;
+root=fileparts(fileparts(mfilename('fullpath')));s=reference_test_sources;
 source=fullfile(s.study1,'audits','confirmation_S_000.mat');
 current=fullfile(f.Folder,'current');reference=fullfile(f.Folder,'reference');
 for folder={current,reference}
@@ -82,7 +82,7 @@ verifyTrue(t,r.passed);verifyEqual(t,height(r.files),1);
 verifyEqual(t,r.files.sourceSHA256,string(ejc_file_sha256(source)));
 verifyEqual(t,r.files.referenceSHA256,r.files.sourceSHA256);
 verifyTrue(t,isnan(r.files.absoluteTolerance) && isnan(r.files.relativeTolerance));
-verifyEqual(t,root,fileparts(which('run_ejc')));
+verifyEqual(t,root,fileparts(which('generate_results')));
 end
 function test_explicitly_claimed_cross_term_means_preserve_sign(t)
 c=context;c.study="study6";c.file="tables/main.csv";c.sources=struct;c.references=struct;c.explicitDirectionalClaim=true;

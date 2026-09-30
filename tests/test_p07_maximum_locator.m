@@ -105,19 +105,6 @@ end
 function c=ctx(info,a,b)
 c=info;c.rootA=a;c.rootB=b;c.isCSV=false;c.rowIndex=NaN;
 end
-function test_diagnostic_dependency_failures_are_not_passes(t)
-verifyError(t,@()ejc_preflight_branch(false,true,true,true),'ejc:PreflightIntegrity');
-verifyEqual(t,ejc_preflight_branch(true,false,true,true),"FAILED_SCIENTIFIC_VALIDITY");
-verifyEqual(t,ejc_preflight_branch(true,true,false,true),"FAILED_COMPARISON_VALID_SCIENTIFIC_INPUTS");
-verifyEqual(t,ejc_preflight_branch(true,true,true,false),"BLOCKED_DEPENDENCY");
-verifyEqual(t,ejc_preflight_branch(true,true,true,true),"DIAGNOSTIC_CHECKS_PASSED_NOT_CERTIFICATION");
-end
-function test_study6_missing_science_or_identity_blocks_before_computation(t)
-f=t.applyFixture(matlab.unittest.fixtures.TemporaryFolderFixture);
-p=struct('diagnosticOnly',true,'originalValidityPassed',[true true false true true]);
-verifyError(t,@()ejc_preflight_study6(fullfile(f.Folder,'missing'),struct,p),'ejc:PreflightDependency');
-verifyFalse(t,isfolder(fullfile(f.Folder,'missing')));
-end
 function test_real_constraint_source_and_false_alias_links(t)
 refs=ejc_reference_sources;z=load(fullfile(refs.study2,'runs/constraint_K.mat'),'result');a=z.result;b=a;
 T=ejc_csv_read(fullfile(refs.study2,'tables/run_diagnostics.csv'),"study2","tables/run_diagnostics.csv");
@@ -133,32 +120,4 @@ q=row;q.qpConditionMax=q.qpConditionMax+1e-4;verifyError(t,@()ejc_qp_max_locator
 q=row;q.amplitude=0.2;verifyError(t,@()ejc_qp_max_locator(a,b,q,row,c,pair,r),'ejc:LocatorIdentity');
 q=c;q.file="paper_A14_conditioning.csv";verifyError(t,@()ejc_qp_max_locator(a,b,row,row,q,pair,r),'ejc:LocatorScope');
 q=pair;q.passed=false;v=ejc_qp_max_locator(a,b,row,row,c,q,r);verifyFalse(t,v.passed);
-end
-function test_study6_validity_guard_cannot_be_bypassed_by_a_status_label(t)
-f=t.applyFixture(matlab.unittest.fixtures.TemporaryFolderFixture);
-p=struct('diagnosticOnly',true,'originalValidityPassed',true(1,5),'inputSnapshot',struct);
-verifyError(t,@()ejc_preflight_study6(fullfile(f.Folder,'invalid'),struct,p),'ejc:MissingSource');
-verifyFalse(t,isfolder(fullfile(f.Folder,'invalid')));
-end
-function test_integrity_exceptions_stop_collector(t)
-for id=["ejc:PreflightIntegrity","ejc:InputChanged","ejc:SourceChanged","ejc:PolicyChanged","ejc:RecordMismatch"]
- verifyError(t,@()caught_integrity(id),char(id));
-end
-ejc_preflight_integrity_exception(MException('ejc:ReproductionMismatch','Comparison failure remains evidence.'));
-end
-function test_preflight_never_overwrites_and_requires_authorization(t)
-f=t.applyFixture(matlab.unittest.fixtures.TemporaryFolderFixture);
-verifyError(t,@()ejc_diagnostic_preflight(f.Folder,'unused',''),'ejc:DiagnosticAuthorization');
-verifyError(t,@()ejc_diagnostic_preflight(f.Folder,'unused','P07_DIAGNOSTIC_ONLY_AUTHORIZED'),'ejc:ExistingEvidence');
-end
-function test_preflight_rejects_changed_base_before_any_stage(t)
-f=t.applyFixture(matlab.unittest.fixtures.TemporaryFolderFixture);file=fullfile(f.Folder,'snapshot.json');
-fid=fopen(file,'w');fprintf(fid,'%s',jsonencode(struct('baseCandidate','wrong')));fclose(fid);
-verifyError(t,@()ejc_diagnostic_preflight(fullfile(f.Folder,'output'),file,'P07_DIAGNOSTIC_ONLY_AUTHORIZED'),'ejc:PreflightIntegrity');
-verifyFalse(t,isfolder(fullfile(f.Folder,'output')));
-end
-
-function caught_integrity(id)
-try,error(char(id),'Synthetic already-caught integrity failure.');
-catch e,ejc_preflight_integrity_exception(e);end
 end

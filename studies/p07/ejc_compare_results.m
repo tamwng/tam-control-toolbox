@@ -48,6 +48,12 @@ for group = groups
     [expected,ignoredReference] = scientific_files(referenceRoot);
     [actual,ignoredCurrent] = scientific_files(actualRoot);
     assert(~isempty(expected),'ejc:MissingReference','No scientific reference files found for %s.',group);
+    if ~isempty(portable) && isfield(portable,'additionalFiles')
+        extra=portable.additionalFiles(group);
+        assert(isempty(extra) || (group=="p06" && isequal(extra,"tables/baseline_gate.csv")), ...
+            'ejc:ComparisonEvidence','Only the declared sensitivity baseline table may be supplied separately.');
+        actual=union(actual,extra);
+    end
     names = union(expected,actual);
     for name = reshape(names,1,[])
         present = any(actual == name); retained = any(expected == name);
@@ -56,6 +62,9 @@ for group = groups
         inventory = [inventory;inventoryRow]; %#ok<AGROW>
         context = struct('study',group,'file',name,'source',string(fullfile(actualRoot,name)), ...
             'reference',string(fullfile(referenceRoot,name)));
+        if ~isempty(portable) && isfield(portable,'sourceFile')
+            context.source=string(portable.sourceFile(group,name,context.source));
+        end
         state = empty_state;
         if ~present || ~retained
             state = failed(state,"<file>","Required file set differs",NaN,NaN);

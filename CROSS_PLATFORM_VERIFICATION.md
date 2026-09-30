@@ -52,24 +52,28 @@ CSV checks preserve exact keys, source recipes and the known 15-digit writer con
 | `PASSED_WITH_GRAM_QUALIFICATIONS` | Applicable requirements passed with retained unresolved passive Gram diagnostics; no blanket equality claim. |
 | BLOCKED / unavailable / not run | A required input, identity, dependency or execution is missing. No reference agreement is established. |
 
-## Complete-study and paper reproduction
+## Complete studies and supplied references
 
-The following existing routes are documented from inspected source and retained execution. They were not executed for the public-interface checkpoint. They need the retained reproduction environment and its canonical archives, active fixtures, exact source relationships and original certification inputs. An edited development tree cannot satisfy the old exact-source guard. Do not alter that guard or transfer an old certificate to new source.
+`generate_results('study1')` through `generate_results('study5')` execute the complete selected study with the applicable component and own-record checks. Study 6 requires explicit newly generated parents in `Sources`. Sensitivity provides `run_sensitivity('plan')`, a named `case`, and an explicitly confirmed `all`. These commands do not read historical results. The complete selection `generate_results('all',ConfirmFull=true)` is expensive and is separate from reference comparison and historical certification.
 
-| Selection | Existing route | Dependency and output scope |
-|---|---|---|
-| Study 1 | `run_study1('new_study1',Figures=false)` | Whole-suite prerequisites, pilot and confirmation, saved-data audits and tables |
-| Study 2 | `run_study2('new_study2',Figures=false)` | Whole-suite prerequisites, degree/restriction/range experiments and diagnostics |
-| Studies 3 and 4 | `run_ejc('study3')`, `run_ejc('study4')` | Retains required own-record callback registration, source bindings and comparisons |
-| Study 5 | `run_study5('new_study5',Figures=false)` | Whole-suite prerequisites and physical integration/reconstruction checks |
-| Study 6 | `run_ejc('study6',Sources=sources)` | Requires completed fresh `sources.study1` through `sources.study5` with matching identities; derives diagnostics |
-| Sensitivity | `run_ejc('p06')` | Original fixed seven-setting campaign and baseline/reference checks; see [sensitivity guide](studies/p06/README.md) |
-| Complete paper | `[output,sources] = run_ejc('full')` | Sequential Studies 1–6 and sensitivity, source/archive checks, comparisons, publication checks and figures |
+`check_study_results` rechecks a completed saved package; `plot_results` exports saved study figures. The ordinary `inspect_results` viewer remains independent of reference material. Publication plotting for Study 2 also requires the canonical rank CSV and its original source relationship.
 
-The retained orchestrator also supports `run_ejc('study1')`, `run_ejc('study2')` and `run_ejc('study5')` for generation plus historical comparison. The lower-level drivers still call the complete test suite, which includes archive dependencies. Study 3/4 callback requirements and Study 6 source binding must not be disabled to make a smaller distribution run.
+For general comparison, supply explicit local directories to `compare_study_reference(sources,references,output)`. The following names identify the canonical roots in the frozen membership inventory, not download URLs:
 
-Existing `plot_study1_journal` through `plot_study6_journal` operate on saved study packages; their table/parent dependencies differ from the single-result viewer. `run_ejc('archive')` regenerates historical summaries and figures, not fresh science. None is a substitute for generating a new calculation.
+| Structure key | Canonical dataset identity |
+|---|---|
+| study1 | study1_candidate_20260917 |
+| study2 | study2_pilot_20260918 |
+| study3 | study3_pilot_20260918 |
+| study4 | study4_pilot_20260922 |
+| study5 | study5_pilot_20260922 |
+| study6 | study6_pilot_20260922 |
+| p06 | p06_sensitivity_20260924_225708 |
 
-Complete reproduction is an explicit expensive action, with no automatic retry/resume. Retained full runs took roughly eight hours on their recorded hosts; this is not an estimate for the small example. The original runner checks its declared environment and storage requirements. Public canonical-data hosting and a downloadable complete reproduction bundle are not established here.
+The local resolver verifies each supplied canonical file against [the immutable membership inventory](evidence/p07_gate_b/P07_SOURCE_SHA256.csv). A copied dataset must retain its original relative file layout and hashes. Study 6 comparison requires both explicit five-study parent sets. Sensitivity comparison requires the canonical Study 1 records and saved cases for the original twelve-case/204-check baseline reduction; no new simulation is performed by that comparison. The baseline table is separate comparison evidence and does not modify generated data.
 
-Historical certificates remain attached to their exact generating source and evidence. Mac FULL used `9855c14210643cc06908fb529afd47953413ed6c`; Windows #2 FULL used `b8754a2938104f5843aebd60c4d51162223407f3`, under the same effective policy above. Later tests or a representative comparison do not certify this development snapshot or a future cleaned release.
+Study 2 publication export additionally needs `gram_numerical_rank_check.csv`, identified as `results/study2_journal/gram_numerical_rank_check.csv` in the same inventory, and its canonical Study 2 parents. Missing files or parents, incorrect identities, incomplete generated outputs and self-reference are failures/unavailable outcomes, never PASS. The resolver neither downloads nor substitutes data. No public reference acquisition route has been established.
+
+The original exact-source certification guards remain historical. The descendant is bound by `verification/cleaned_source_relationship.json` and its fixed offline authority hash. While that actual mapping is awaiting review, general reference agreement is disabled; explicitly requested development comparisons are labeled provisional and return no overall reference PASS. The accepted fixed-example comparison has its own unchanged contract above.
+
+The [provenance note](provenance/README.md) identifies the distinct historical generating commits and frozen policy. A complete-study smoke test, compact saved fixture, or representative run is not execution of every study or a new cross-platform certificate.

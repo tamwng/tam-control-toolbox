@@ -5,7 +5,7 @@ function setupOnce(t)
 t.TestData.path=path;root=fileparts(fileparts(mfilename('fullpath')));addpath(root,fullfile(root,'studies/p07'));
 end
 function test_p06_plan_status_is_transformed_not_copied(t)
-ref=ejc_reference_sources;file=fullfile(ref.p06,'runs/baseline_S_000.mat');z=load(file);
+ref=reference_test_sources;file=fullfile(ref.p06,'runs/baseline_S_000.mat');z=load(file);
 ejc_own_source_copies(z,"p06",file,ref);
 a=z;a.item.executionStatus="PROPOSED_NOT_RUN";
 verifyError(t,@()ejc_own_source_copies(a,"p06",file,ref),'ejc:OwnSource');

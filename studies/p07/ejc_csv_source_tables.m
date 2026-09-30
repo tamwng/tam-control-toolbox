@@ -1,7 +1,8 @@
-function bindings=ejc_csv_source_tables(sources,destination)
+function bindings=ejc_csv_source_tables(sources,destination,inputs)
 %EJC_CSV_SOURCE_TABLES Frozen CSV producers/selected MAT tables, saved inputs only.
 % RECOMPUTED_SAVED_REDUCTION is not an unrounded historical scalar. In particular
 % unstable historical Gram extrema are not replaced by the present calculation.
+if nargin<3,inputs=struct;end
 assert(~isfolder(destination) && ~isfile(destination),'ejc:ExistingOutput','New binding directory required.');
 ejc_assert_writable(destination);mkdir(destination);
 bindings=struct('study',{},'file',{},'values',{},'authority',{},'sourceKind',{},'parents',{});
@@ -53,7 +54,13 @@ for study=["study4","study5","study6"]
     end
 end
 if isfield(sources,'p06')
-    base=sources.p06;[plan,manifest]=p06_plan;
+    base=sources.p06;
+    if isfield(inputs,'sensitivityPlan')
+        plan=inputs.sensitivityPlan;manifest=inputs.sensitivityManifest;
+        gateArchive=inputs.sensitivityReference;
+    else
+        [plan,manifest]=p06_plan;gateArchive=plan.archive;
+    end
     put("p06","P06_RUN_MANIFEST.csv",manifest,"unchanged p06_plan.m", ...
         "EXACT_FIXED_DESIGN",string({plan.recordFile,plan.settingsFile}));
     listing=ejc_csv_read(fullfile(base,'tables/runs.csv'),"p06","tables/runs.csv");
@@ -63,7 +70,7 @@ if isfield(sources,'p06')
         assert(string(z.item.runId)==listing.runId(j),'ejc:CSVSource','P06 item identity differs.');
         items{j}=z.item;
         if z.item.baselineGate
-            expected=fullfile(plan.archive,'data',sprintf('confirmation_%s_%03d.mat',z.item.modelId,z.item.trial));
+            expected=fullfile(gateArchive,'data',sprintf('confirmation_%s_%03d.mat',z.item.modelId,z.item.trial));
             old=load(expected,'result');g=p06_gate(z.result,old.result,plan.cfg);
             g.runId=repmat(string(z.item.runId),height(g),1);
             g.baselineSHA256=repmat(string(p06_hash(expected)),height(g),1);gates=[gates;g]; %#ok<AGROW>

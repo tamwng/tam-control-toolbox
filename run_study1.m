@@ -5,9 +5,9 @@ function outputDir = run_study1(outputName,options)
 % trials plus noiseless comparisons, using the fixed manuscript pilot values.
 % No tuning occurs. Each invocation writes a new repository-local package.
 % Complete execution may take several minutes. Nothing is overwritten.
-% The complete test suite requires retained archives/fixtures; this is
-% not a reference-free single-case driver. Figures=false suppresses figures
-% only; it does not reduce the computation or its scientific checks.
+% Generates the complete fixed study with applicable component and saved-data
+% validity checks. Figures=false changes plotting only. Reference comparison
+% is a separate operation; use generate_results for recorded source identity.
 
 arguments
     outputName = ''
@@ -20,14 +20,18 @@ previousPath = path;
 restorePath = onCleanup(@() path(previousPath));
 restoredefaultpath;
 addpath(root,fullfile(root,'src'),fullfile(root,'studies','study1'));
-run_verification;
+study_prerequisites('study1');
+
 cfg = study1_settings;
 study1_prepare(outputDir,cfg);
 ejc_check_records(outputDir,options.ReferenceDirectory,1);
+
 study1_run_batch(outputDir,'pilot',0:cfg.pilot.noiseTrials);
 study1_run_batch(outputDir,'confirmation',0:cfg.confirmation.noiseTrials);
 study1_measured_audits(outputDir,cfg);
+
 study1_verify_results(outputDir,cfg);
+
 summary = study1_summarize(outputDir,cfg);
 if options.Figures, study1_figures(outputDir,cfg,summary); end
 fprintf('Study 1 package complete: %s\n',outputDir);

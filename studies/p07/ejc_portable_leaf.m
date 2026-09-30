@@ -190,6 +190,7 @@ root=fileparts(fileparts(fileparts(mfilename('fullpath'))));
 persistent manifest
 if isempty(manifest),manifest=readtable(fullfile(root,'evidence/p07_gate_b/P07_SOURCE_SHA256.csv'),'TextType','string');end
 path=replace(string(c.reference),string(root)+filesep,"");path=replace(path,filesep,'/');
+if isfield(c,'canonicalReferencePath'),path=string(c.canonicalReferencePath);end
 ix=find(manifest.relative_path==path);
 yes=isscalar(ix) && manifest.sha256(ix)==string(c.referenceSHA256);
 end

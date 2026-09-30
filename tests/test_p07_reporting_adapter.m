@@ -6,7 +6,7 @@ root=fileparts(fileparts(mfilename('fullpath')));t.TestData.path=path;
 addpath(root,fullfile(root,'src'),fullfile(root,'studies/p07'), ...
     fullfile(root,'studies/study1'),fullfile(root,'studies/p06/tests'));
 f=t.applyFixture(matlab.unittest.fixtures.TemporaryFolderFixture);
-source=fullfile(f.Folder,'source');cfg=p06_legacy_fixture(source);
+source=fullfile(f.Folder,'source');refs=reference_test_sources;cfg=p06_legacy_fixture(source,refs.study1);
 t.TestData.a=study1_summarize(source,cfg,fullfile(f.Folder,'summary'));
 z=load(fullfile(root,'studies/p06/tests/fixtures/pre_interface.mat'),'oracle');t.TestData.b=z.oracle.summary;
 runs=cell(2,1);campaigns={'pilot','confirmation'};

@@ -6,7 +6,10 @@ if side=="current",sources=c.sources;bindings=c.claimBindingsA;else,sources=c.re
 assert(isfield(sources,scope.sourceStudy),'ejc:ClaimParents','Missing own source package.');
 base=string(sources.(scope.sourceStudy));cache=c.parentCache;
 sourceKey='P07_CLAIM_SOURCE_PROOF';
-if ~isKey(cache,sourceKey),cache(sourceKey)=ejc_claim_source_guard;end
+if ~isKey(cache,sourceKey)
+    if isfield(c,'sourceGuard'),cache(sourceKey)=c.sourceGuard();
+    else,cache(sourceKey)=ejc_claim_source_guard;end
+end
 sourceProof=cache(sourceKey);
 relative=scope.sourceFile;
 if relative=="summary.mat"

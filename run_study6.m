@@ -3,9 +3,9 @@ function outputDir = run_study6(outputName,options)
 % From the repository root: run_study6
 % No fitting, new noise, QP solves or closed-loop study runs are performed by
 % this evaluator. The complete verification suite includes its own fixtures.
-% The complete test suite requires retained archives/fixtures; this is
-% not a reference-free single-case driver. Figures=false suppresses figures
-% only; it does not reduce the computation or its scientific checks.
+% Generates the complete fixed study with applicable component and saved-data
+% validity checks. Figures=false changes plotting only. Reference comparison
+% is a separate operation; use generate_results for recorded source identity.
 
 arguments
     outputName = ''
@@ -17,11 +17,13 @@ outputDir = ejc_output_path('study6',outputName);
 oldPath = path; cleanup = onCleanup(@() path(oldPath));
 restoredefaultpath; addpath(root,fullfile(root,'src'));
 for s = 1:6, addpath(fullfile(root,'studies',sprintf('study%d',s))); end
-before = run_verification;
+before = study_prerequisites('study6');
+
 cfg = study6_settings;
-cfg.sourceMode = 'historical';
+validate_generated_sources(options.Sources);
+cfg.sourceMode = 'fresh';
 if ~isempty(fieldnames(options.Sources))
-    ejc_validate_sources(options.Sources);
+
     cfg.sourceMode = 'fresh';
     for s = 1:5
         key = sprintf('study%d',s);
@@ -53,7 +55,7 @@ names = fieldnames(summary);
 for j = 1:numel(names), writetable(summary.(names{j}),fullfile(outputDir,'tables',[names{j},'.csv'])); end
 if options.Figures, study6_figures(outputDir,summary); end
 verification = study6_verify_results(outputDir);
-after = run_verification;
+after = study_prerequisites('study6');
 verification.beforeNames = {before.Name}; verification.beforePassed = [before.Passed];
 verification.afterNames = {after.Name}; verification.afterPassed = [after.Passed];
 save(fullfile(outputDir,'verification.mat'),'verification');

@@ -8,7 +8,9 @@ scope=jsondecode(fileread(file));
 assert(c.study==string(scope.study) && c.file==string(scope.file) && scope.coverageId=="F0698" && ...
     scope.field=="qpConditionMax" && scope.maximumLocationClaim=="NOT_ASSERTED", ...
     'ejc:LocatorScope','Missing or contradictory passive locator scope.');
-ejc_claim_source_guard(root,jsondecode(fileread(fullfile(root,amend.source_definitions))));
+definitions=jsondecode(fileread(fullfile(root,amend.source_definitions)));
+if isfield(c,'sourceGuard'),c.sourceGuard(definitions);
+else,ejc_claim_source_guard(root,definitions);end
 keys={'model','modelName','estimatedCoefficients','kind','amplitude','completed','attemptedSteps','terminationReason'};
 assert(all(ismember(keys,rowA.Properties.VariableNames)) && all(ismember(keys,rowB.Properties.VariableNames)), ...
     'ejc:LocatorIdentity','Missing exact source keys.');

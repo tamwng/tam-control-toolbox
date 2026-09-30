@@ -1,7 +1,7 @@
-function cfg = p06_legacy_fixture(output)
+function cfg = p06_legacy_fixture(output,archive)
 %P06_LEGACY_FIXTURE Copy two saved cases for the summarizer regression only.
-root = fileparts(fileparts(fileparts(fileparts(mfilename('fullpath')))));
-archive = fullfile(root,'results','study1_candidate_20260917');
+assert(nargin==2 && isfolder(archive),'test:ReferenceUnavailable', ...
+    'Supply the saved Study 1 fixture source explicitly.');
 assert(~isfolder(output),'p06:ExistingOutput','Use a fresh fixture directory.');
 mkdir(output); mkdir(fullfile(output,'data')); mkdir(fullfile(output,'audits'));
 mkdir(fullfile(output,'tables'));

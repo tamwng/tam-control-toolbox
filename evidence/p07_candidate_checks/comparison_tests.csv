@@ -1,8 +1,0 @@
-name,passed,seconds
-test_p07_comparison/testExactScientificValuesAndTimingExclusions,1,2.7849971
-test_p07_comparison/testConditioningIsScientificAndReportsMaximum,1,0.3246292
-test_p07_comparison/testNonfiniteMasksAndDiscreteFieldsAreExact,1,0.1935615
-test_p07_comparison/testMissingAndUnexpectedFilesFail,1,0.1894447
-test_p07_comparison/testEmptyStructSchemaCannotDisappear,1,0.19681
-test_p07_comparison/testTableCountsAndRowOrderAreCompared,1,1.4346621
-test_p07_comparison/testIndividualStudyStillRequiresAllItsFiles,1,0.1939147

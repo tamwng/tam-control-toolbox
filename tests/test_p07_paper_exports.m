@@ -3,7 +3,7 @@ tests=functiontests(localfunctions);
 end
 function setupOnce(t)
 root=fileparts(fileparts(mfilename('fullpath')));
-if ~isfile(fullfile(root,'run_ejc.m')),root=fileparts(root);end
+if ~isfile(fullfile(root,'generate_results.m')),root=fileparts(root);end
 t.TestData.path=path;addpath(root,fullfile(root,'studies/p07'));
 t.TestData.sources=ejc_reference_sources;
 f=t.applyFixture(matlab.unittest.fixtures.TemporaryFolderFixture);

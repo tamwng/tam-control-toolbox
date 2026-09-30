@@ -2,12 +2,12 @@ function outputDir = run_study2(outputName,options)
 %RUN_STUDY2 Complete deterministic Section 6.2.2 pilot, not confirmation.
 % Requires MATLAB and Optimization Toolbox; tested R2026a Update 5.
 % From a clean session at the repository root, run RUN_STUDY2. This runs the
-% complete test suite and creates a new local results package without tuning.
+% applicable component checks and creates a new local results package without tuning.
 % The 18 amplitude runs and Eq.67's four-case constraint audit stay separate.
 % Independent held-out input ranges never select a controller or its settings.
-% The complete test suite requires retained archives/fixtures; this is
-% not a reference-free single-case driver. Figures=false suppresses figures
-% only; it does not reduce the computation or its scientific checks.
+% Generates the complete fixed study with applicable component and saved-data
+% validity checks. Figures=false changes plotting only. Reference comparison
+% is a separate operation; use generate_results for recorded source identity.
 
 arguments
     outputName = ''
@@ -20,7 +20,8 @@ previousPath = path;
 cleanup = onCleanup(@() path(previousPath));
 restoredefaultpath;
 addpath(root,fullfile(root,'src'),fullfile(root,'studies','study2'));
-run_verification;
+study_prerequisites('study2');
+
 cfg = study2_settings;
 mkdir(outputDir);
 for name = {'fits','evaluation','runs'}
@@ -36,6 +37,7 @@ for j = 1:numel(cfg.evaluationRanges)
 end
 save(fullfile(outputDir,'records.mat'),'initialization','evaluation');
 ejc_check_records(outputDir,options.ReferenceDirectory,2);
+
 for m = 1:numel(cfg.modelIds)
     id = cfg.modelIds{m};
     [~,fit] = study2_fit(id,initialization,cfg);
@@ -60,7 +62,9 @@ for m = 1:numel(cfg.modelIds)
         print_run(result);
     end
 end
+
 study2_verify_results(outputDir,cfg);
+
 summary = study2_summarize(outputDir,cfg);
 if options.Figures, study2_figures(outputDir,cfg,summary); end
 fprintf('Study 2 pilot package complete: %s\n',outputDir);

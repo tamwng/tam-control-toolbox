@@ -12,18 +12,7 @@ save(fullfile(outputDir,'settings.mat'),'cfg','environment');
 campaigns = {'pilot','confirmation'};
 for c = 1:numel(campaigns)
     campaign = campaigns{c};
-    settings = cfg.(campaign);
-    records.initialization = study1_record(200,0.5,settings.inputSeed,cfg);
-    records.evaluation = study1_record(600,0.5,settings.evaluationSeed,cfg);
-    records.initialNoise = zeros(settings.noiseTrials,201);
-    records.controlNoise = zeros(settings.noiseTrials,cfg.K+1);
-    for trial = 1:settings.noiseTrials
-        stream = RandStream('mt19937ar','Seed',settings.initialNoiseBase+trial);
-        records.initialNoise(trial,:) = cfg.noiseSigma*randn(stream,1,201);
-        stream = RandStream('mt19937ar','Seed',settings.controlNoiseBase+trial);
-        records.controlNoise(trial,:) = cfg.noiseSigma*randn(stream,1,cfg.K+1);
-    end
-    records.campaign = campaign;
+    records = study1_records(cfg,campaign);
     save(fullfile(outputDir,'data',['records_' campaign '.mat']),'records');
 end
 end

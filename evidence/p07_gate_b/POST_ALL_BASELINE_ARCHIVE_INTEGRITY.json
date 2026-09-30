@@ -1,8 +1,0 @@
-{
-  "checked_utc": "2026-09-25T03:05:16.6542310Z",
-  "file_count": 3022,
-  "total_bytes": 1357579926.0,
-  "all_archives_unchanged": true,
-  "mismatches": [],
-  "note": "After all Gate B numerical checks and during interface-only refactoring; source changes excluded from scientific archive manifest."
-}
