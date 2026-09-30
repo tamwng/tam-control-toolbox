@@ -39,7 +39,6 @@ codegen/
 *.sbproj.backup
 *.sbproj.bak
 
-# New generated evidence and trajectories; historical tracked archives remain
-# tracked. Compact release evidence is committed separately in evidence/.
+# Generated results and plots are local outputs.
 /results/*/
 *.DS_Store

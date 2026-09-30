@@ -15,7 +15,7 @@ arguments
     options.VerificationAdapter = []
 end
 root = fileparts(mfilename('fullpath'));
-outputDir = ejc_output_path('study3',outputName);
+outputDir = new_output_path('study3',outputName);
 if isempty(options.VerificationAdapter)
     options.VerificationAdapter = study_validity_callback('study3', ...
         [outputDir '_validity']);
@@ -29,7 +29,7 @@ study_prerequisites('study3');
 
 cfg = study3_settings;
 study3_prepare(outputDir,cfg);
-ejc_check_records(outputDir,options.ReferenceDirectory,3);
+check_input_records(outputDir,options.ReferenceDirectory,3);
 
 study3_run_batch(outputDir,0:cfg.noiseTrials);
 if isempty(options.VerificationAdapter)

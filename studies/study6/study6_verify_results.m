@@ -2,7 +2,7 @@ function verification = study6_verify_results(output,reportDestination)
 %STUDY6_VERIFY_RESULTS Audit saved arrays and write a compact verification CSV.
 % Supply a separate report destination when auditing a protected archive.
 if nargin < 2, reportDestination = output; end
-ejc_assert_writable(reportDestination);
+assert_output_writable(reportDestination);
 tableDir = fullfile(reportDestination,'tables');
 if ~isfolder(tableDir), mkdir(tableDir); end
 verification = struct('filesChecked',0,'attemptedPaths',0,'finitePaths',0,'failureRecords',0, ...

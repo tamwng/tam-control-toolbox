@@ -80,7 +80,7 @@ assert(isequal(r.fit.checkpointTheta,r.fit.theta(:,cfg.fitSteps+1)) && ...
 assert(all(r.fit.lambda==1) && all(r.lambda(r.idAttempted)==1), ...
     'ejc:FixedForgetting','The unchanged fixed forgetting rule differs.');
 for j = 1:size(r.fit.covariance,3)
-    screen = ejc_matrix_screen(r.fit.covariance(:,:,j),"covariance");
+    screen = verification_matrix_screen(r.fit.covariance(:,:,j),"covariance");
     assert(screen.valid,'ejc:FitCovariance','Fit covariance validity failed at %d.',j);
 end
 accepted = r.controlAccepted;

@@ -13,7 +13,7 @@ arguments
     options.ReferenceDirectory = ''
 end
 root = fileparts(mfilename('fullpath'));
-outputDir = ejc_output_path('study5',outputName);
+outputDir = new_output_path('study5',outputName);
 oldPath = path; cleanup = onCleanup(@() path(oldPath));
 restoredefaultpath; addpath(root,fullfile(root,'src'));
 for s = [1 2 3 5], addpath(fullfile(root,'studies',sprintf('study%d',s))); end
@@ -33,7 +33,7 @@ assert(audit.stateChecksPassed,'study5:NumericalAccuracy', ...
 records.initialization = study5_record(200,cfg.inputSeed,cfg);
 records.evaluation = study5_record(600,cfg.evaluationSeed,cfg);
 save(fullfile(outputDir,'records.mat'),'records');
-ejc_check_records(outputDir,options.ReferenceDirectory,5);
+check_input_records(outputDir,options.ReferenceDirectory,5);
 
 queries = study5_queries(records.evaluation,cfg);
 save(fullfile(outputDir,'evaluation','common_queries.mat'),'queries');

@@ -23,12 +23,12 @@ assert(isfile(referenceFile),'reference:MissingReference', ...
 assert(isfile(resultFile),'example:MissingResult','Saved result is missing: %s',resultFile);
 assert(~strcmpi(resultFile,referenceFile),'reference:SelfComparison', ...
     'The generated result and canonical reference must be separate records.');
-contract = jsondecode(fileread(fullfile(root,'private','representative_reference_inputs.json')));
-referenceHash = ejc_file_sha256(referenceFile);
+contract = jsondecode(fileread(fullfile(root,'verification','specification','example_reference.json')));
+referenceHash = verification_file_sha256(referenceFile);
 assert(strcmp(referenceHash,contract.canonical_sha256),'reference:Identity', ...
     'The supplied file is not the declared canonical reference.');
-assert(strcmp(ejc_file_sha256(fullfile(root,contract.policy_path)),contract.policy_sha256) && ...
-    strcmp(ejc_file_sha256(fullfile(root,contract.field_inventory_path)),contract.field_inventory_sha256), ...
+assert(strcmp(verification_file_sha256(fullfile(root,contract.policy_path)),contract.policy_sha256) && ...
+    strcmp(verification_file_sha256(fullfile(root,contract.field_inventory_path)),contract.field_inventory_sha256), ...
     'reference:PolicyIdentity','The released policy or field inventory differs.');
 current = load(resultFile,'result','cfg','records');
 assert(all(isfield(current,{'result','cfg','records'})),'example:Record','The generated result is incomplete.');
@@ -36,14 +36,14 @@ checks = study1_check_case(current.result,current.records,current.cfg);
 canonical = load(referenceFile,'result');
 assert(isfield(canonical,'result'),'reference:Record','The reference result is missing.');
 
-report = ejc_compare_representative(current.result,canonical.result,current.cfg);
+report = verification_compare_representative(current.result,canonical.result,current.cfg);
 report.scope = contract.scope; report.internalChecks = checks;
 report.sourceFile = resultFile; report.referenceFile = referenceFile;
-report.sourceSHA256 = ejc_file_sha256(resultFile); report.referenceSHA256 = referenceHash;
+report.sourceSHA256 = verification_file_sha256(resultFile); report.referenceSHA256 = referenceHash;
 report.policySHA256 = contract.policy_sha256;
 report.fieldInventorySHA256 = contract.field_inventory_sha256;
 if ~isempty(outputName)
-    output = ejc_output_path('comparison',outputName); mkdir(output);
+    output = new_output_path('comparison',outputName); mkdir(output);
     compact = rmfield(report,intersect(fieldnames(report),{'rows','conditions','matrixDetails'}));
     compact.fieldRows = numel(report.rows);
     public_json(fullfile(output,'comparison.json'),compact);

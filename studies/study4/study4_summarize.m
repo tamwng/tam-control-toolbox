@@ -2,7 +2,7 @@ function summary = study4_summarize(output,cfg,destination)
 %STUDY4_SUMMARIZE Appendix A windows; incomplete prefixes remain labelled.
 % The optional destination separates regenerated reports from source records.
 if nargin < 3, destination = output; end
-ejc_assert_writable(destination);
+assert_output_writable(destination);
 for folder = {'tables','evaluation'}
     target = fullfile(destination,folder{1});
     if ~isfolder(target), mkdir(target); end

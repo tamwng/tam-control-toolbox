@@ -20,7 +20,7 @@ assert(exist('quadprog','file')==2 && license('test','Optimization_Toolbox'), ..
 if isempty(outputName)
     outputName = ['example_' char(datetime('now','Format','yyyyMMdd_HHmmss_SSS'))];
 end
-output = ejc_output_path('example',outputName);
+output = new_output_path('example',outputName);
 mkdir(output); mkdir(fullfile(output,'data'));
 randomState = rng; restoreRandom = onCleanup(@() rng(randomState));
 summary = struct('schema','FIXED_EXAMPLE_V1','status','RUNNING', ...
@@ -39,12 +39,12 @@ try
     save(resultFile,'result','cfg','records');
 
     summary.internalChecks = study1_check_case(result,records,cfg);
-    helpers = study1_summarize('p06_helpers');
+    helpers = study1_summarize('analysis_helpers');
     base = struct('campaign',"confirmation",'model',"S",'trial',0,'noise',false);
     metrics = struct2table(helpers.scoreRun(result,base,cfg));
     writetable(metrics,fullfile(output,'metrics.csv'));
     summary.status = 'PASS'; summary.metrics = table2struct(metrics);
-    summary.resultFile = resultFile; summary.resultSHA256 = ejc_file_sha256(resultFile);
+    summary.resultFile = resultFile; summary.resultSHA256 = verification_file_sha256(resultFile);
     summary.elapsedSeconds = toc(timer);
     summary.environment = struct('MATLAB',version,'architecture',computer, ...
         'optimizationToolbox',ver('optim'));

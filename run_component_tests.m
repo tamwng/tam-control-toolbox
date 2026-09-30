@@ -9,8 +9,8 @@ assert(exist('quadprog','file')==2 && license('test','Optimization_Toolbox'), ..
     'ejc:MissingSolver','Optimization Toolbox with a licensed quadprog is required.');
 folder = fullfile(root,'tests'); addpath(folder);
 files = {'test_controller.m','test_estimation.m','test_models.m','test_physical.m', ...
-    'test_qp.m','test_study1.m','test_p07_acceptance_numeric.m', ...
-    'test_p07_representation.m','test_p07_comparison.m'};
+    'test_qp.m','test_study1.m','test_verification_acceptance_numeric.m', ...
+    'test_verification_representation.m','test_verification_comparison.m'};
 suite = matlab.unittest.TestSuite.fromFile(fullfile(folder,files{1}));
 for j = 2:numel(files)
     suite = [suite matlab.unittest.TestSuite.fromFile(fullfile(folder,files{j}))]; %#ok<AGROW>

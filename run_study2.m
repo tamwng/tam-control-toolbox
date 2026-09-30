@@ -15,7 +15,7 @@ arguments
     options.ReferenceDirectory = ''
 end
 root = fileparts(mfilename('fullpath'));
-outputDir = ejc_output_path('study2',outputName);
+outputDir = new_output_path('study2',outputName);
 previousPath = path;
 cleanup = onCleanup(@() path(previousPath));
 restoredefaultpath;
@@ -36,7 +36,7 @@ for j = 1:numel(cfg.evaluationRanges)
     evaluation(j) = study2_record(600,cfg.evaluationRanges(j),cfg.evaluationSeeds(j),cfg); %#ok<AGROW>
 end
 save(fullfile(outputDir,'records.mat'),'initialization','evaluation');
-ejc_check_records(outputDir,options.ReferenceDirectory,2);
+check_input_records(outputDir,options.ReferenceDirectory,2);
 
 for m = 1:numel(cfg.modelIds)
     id = cfg.modelIds{m};

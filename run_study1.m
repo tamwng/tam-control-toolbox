@@ -15,7 +15,7 @@ arguments
     options.ReferenceDirectory = ''
 end
 root = fileparts(mfilename('fullpath'));
-outputDir = ejc_output_path('study1',outputName);
+outputDir = new_output_path('study1',outputName);
 previousPath = path;
 restorePath = onCleanup(@() path(previousPath));
 restoredefaultpath;
@@ -24,7 +24,7 @@ study_prerequisites('study1');
 
 cfg = study1_settings;
 study1_prepare(outputDir,cfg);
-ejc_check_records(outputDir,options.ReferenceDirectory,1);
+check_input_records(outputDir,options.ReferenceDirectory,1);
 
 study1_run_batch(outputDir,'pilot',0:cfg.pilot.noiseTrials);
 study1_run_batch(outputDir,'confirmation',0:cfg.confirmation.noiseTrials);

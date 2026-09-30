@@ -6,7 +6,7 @@ function summary = study3_summarize(output,cfg,destination)
 % inspection. Bootstrap resamples retain complete trial pairs (2,000 draws).
 % The optional destination separates regenerated reports from source records.
 if nargin < 3, destination = output; end
-ejc_assert_writable(destination);
+assert_output_writable(destination);
 folder = fullfile(destination,'tables');
 if ~isfolder(folder), mkdir(folder); end
 metrics = struct([]); diagnostics = struct([]); parameters = struct([]);

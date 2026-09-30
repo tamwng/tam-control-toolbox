@@ -4,22 +4,22 @@ Use `run_example` to generate the fixed Shared-model example, `check_result` to 
 
 ## Representative comparison contract
 
-The supported record is Study 1, model `S`, campaign `confirmation`, trial 0, with the unmodified `study1_settings`. The generated file contains `result`, `cfg` and its generated input `records`. The reference must be the canonical `study1_candidate_20260917/data/confirmation_S_000.mat`, SHA-256 `4ba023851eec31b4dc4a9ac118c1ec1c3a0086fb009deb94f1342d07281c44e6`. Supply the file explicitly; no reference is inferred from an existing output folder.
+The supported record is Study 1, model `S`, campaign `confirmation`, trial 0, with the unmodified `study1_settings`. The generated file contains `result`, `cfg` and its generated input `records`. The reference must be the canonical `references/study1/data/confirmation_S_000.mat`, SHA-256 `4ba023851eec31b4dc4a9ac118c1ec1c3a0086fb009deb94f1342d07281c44e6`. Supply the file explicitly; no reference is inferred from an existing output folder.
 
-`compare_reference(resultFile,referenceFile)` first checks missing inputs, distinct paths, canonical identity, policy/inventory bytes, fixed settings and own-result validity. It then calls the existing `ejc_compare_representative` implementation once. Saved field order, class/shape, discrete outcomes and applicable numerical requirements are preserved. `controlTime` remains the declared wall-clock exclusion. Output includes all field outcomes, parent matrix checks and qualified Gram diagnostics. A missing/wrong reference raises an error before comparison; other failed or blocked checks retain `passed=false` and a reason.
+`compare_reference(resultFile,referenceFile)` first checks missing inputs, distinct paths, canonical identity, policy/inventory bytes, fixed settings and own-result validity. It then calls the existing `verification_compare_representative` implementation once. Saved field order, class/shape, discrete outcomes and applicable numerical requirements are preserved. `controlTime` remains the declared wall-clock exclusion. Output includes all field outcomes, parent matrix checks and qualified Gram diagnostics. A missing/wrong reference raises an error before comparison; other failed or blocked checks retain `passed=false` and a reason.
 
 The released specification is available locally:
 
-- [Effective numerical policy](studies/p07/p07_acceptance_policy.json), SHA-256 `ca9101ea01a6eb093664d383a3d6bd1734598ba84aed2ee35b28cfa7412aec58`.
-- [Complete field inventory](evidence/p07_acceptance/full_field_coverage.csv), including the representative's fixed F3879–F3957 field mapping.
-- Field units are described below. The [qualification implementation](studies/p07/ejc_p7_qualify.m) fixes the 19 permitted passive Gram scopes.
-- [Claim applicability](evidence/p07_acceptance/freezing_identity/CLAIM_APPLICABILITY.csv) for the retained full-study specification; it does not enlarge the representative command's coverage.
+- [Effective numerical policy](verification/specification/numerical_policy.json), SHA-256 `ca9101ea01a6eb093664d383a3d6bd1734598ba84aed2ee35b28cfa7412aec58`.
+- [Complete field inventory](verification/specification/field_coverage.csv), including the representative's fixed F3879–F3957 field mapping.
+- Field units are described below. The [qualification implementation](verification/functions/verification_gram_qualify.m) fixes the 19 permitted passive Gram scopes.
+- [Claim applicability](verification/specification/claim_applicability.csv) for the retained full-study specification; it does not enlarge the representative command's coverage.
 
 These are frozen numerical specifications, not private certification directories. Their historical identifiers are retained to identify the exact rules. Public generation needs no historical dataset, source-pin certificate or private audit archive. Complete-study comparison separately checks each supplied package and its source dependencies.
 
 ## Strict and portable comparison
 
-The low-level `ejc_compare_results` function has two modes. Without its optional adapter it requires exact scientific values, classes, shapes, ordering and nonfinite masks; CSV numbers are compared at their stored precision and underlying MAT arrays are checked separately. Only declared timing/source metadata, the named legacy forecast flags and the separately evaluated sensitivity baseline maxima receive their specified treatment.
+The low-level `verification_compare_results` function has two modes. Without its optional adapter it requires exact scientific values, classes, shapes, ordering and nonfinite masks; CSV numbers are compared at their stored precision and underlying MAT arrays are checked separately. Only declared timing/source metadata, the named legacy forecast flags and the separately evaluated sensitivity baseline maxima receive their specified treatment.
 
 `compare_study_reference` supplies the portable adapter. Each scientific field then uses its own fixed policy family and required saved-data parents. There is no single tolerance for an entire file. Exact requirements, scoped representation allowances, claim checks and qualified matrix diagnostics remain distinct. Neither mode reruns a simulation or turns an unavailable reference into agreement.
 
@@ -41,7 +41,7 @@ Plants A/B use dimensionless coordinates. Plant C uses rad/s for output/slack, N
 
 ## Matrices, claims and exports
 
-RLS covariance, recent Gram matrices and QP Hessians have different roles. Matrix checks require parent entries, decomposition, symmetry/definiteness where applicable and source/coordinate checks. Only the 19 listed passive Gram scopes can qualify unresolved condition/rank diagnostics after prescribed pairwise guards pass. Matching original ranks/outcomes remain required. Covariance and Hessian have no generic waiver. `ejc_matrix_screen.m` and `ejc_p7_qualify.m` implement engineering screens, not interval-certified spectra or algebraic-rank proofs for nonzero matrices.
+RLS covariance, recent Gram matrices and QP Hessians have different roles. Matrix checks require parent entries, decomposition, symmetry/definiteness where applicable and source/coordinate checks. Only the 19 listed passive Gram scopes can qualify unresolved condition/rank diagnostics after prescribed pairwise guards pass. Matching original ranks/outcomes remain required. Covariance and Hessian have no generic waiver. `verification_matrix_screen.m` and `verification_gram_qualify.m` implement engineering screens, not interval-certified spectra or algebraic-rank proofs for nonzero matrices.
 
 A qualification is **not numerical equality**. Reductions with unresolved contributors remain explicitly qualified. F0698's passive maximum-locator rule preserves each own first maximum and bounds both cross-index losses; it does not assert equal peak times. The Study 2 report binding and Study 3/4 own-record hooks have separate exact scopes.
 
@@ -64,22 +64,19 @@ CSV checks preserve exact keys, source recipes and the known 15-digit writer con
 
 `check_study_results` rechecks a completed saved package; `plot_results` exports saved study figures. The ordinary `inspect_results` viewer remains independent of reference material. Publication plotting for Study 2 also requires the canonical rank CSV and its original source relationship.
 
-For general comparison, supply explicit local directories to `compare_study_reference(sources,references,output)`. The following names identify the canonical roots in the frozen membership inventory, not download URLs:
+For general comparison, supply explicit local directories to `compare_study_reference(sources,references,output)`. Use `reference_directories` to obtain the included local directories. These are filesystem locations, not download URLs:
 
-| Structure key | Canonical dataset identity |
+| Structure key | Included directory |
 |---|---|
-| study1 | study1_candidate_20260917 |
-| study2 | study2_pilot_20260918 |
-| study3 | study3_pilot_20260918 |
-| study4 | study4_pilot_20260922 |
-| study5 | study5_pilot_20260922 |
-| study6 | study6_pilot_20260922 |
-| p06 | p06_sensitivity_20260924_225708 |
+| study1–study6 | references/study1–references/study6 |
+| sensitivity | references/sensitivity |
 
-The local resolver verifies each supplied canonical file against [the immutable membership inventory](evidence/p07_gate_b/P07_SOURCE_SHA256.csv). A copied comparison dataset must retain the required MAT/CSV relative paths and hashes. The inventory describes the original complete snapshot; unused historical prose, scripts and rendered figures are not required distribution inputs. Study 6 comparison requires both explicit five-study parent sets. Sensitivity comparison requires the canonical Study 1 records and saved cases for the original twelve-case/204-check baseline reduction; no new simulation is performed by that comparison. The baseline table is separate comparison evidence and does not modify generated data.
+The local resolver verifies each supplied canonical file against [the immutable membership inventory](verification/specification/reference_inventory.csv). A copied comparison dataset must retain the required MAT/CSV relative paths and hashes. The inventory describes the original complete snapshot; unused historical prose, scripts and rendered figures are not required distribution inputs. Study 6 comparison requires both explicit five-study parent sets. Sensitivity comparison requires the canonical Study 1 records and saved cases for the original twelve-case/204-check baseline reduction; no new simulation is performed by that comparison. The baseline table is separate comparison evidence and does not modify generated data.
 
-Study 2 publication export additionally needs `gram_numerical_rank_check.csv`, identified as `results/study2_journal/gram_numerical_rank_check.csv` in the same inventory, and its canonical Study 2 parents. Missing files or parents, incorrect identities, incomplete generated outputs and self-reference are failures/unavailable outcomes, never PASS. The resolver neither downloads nor substitutes data. The repository includes the required canonical MAT/CSV inputs under `results/`. Their paths, sizes and SHA-256 hashes remain those in the original membership inventory. Keep these records separate from newly generated results and supply the listed directories explicitly. The stored reference bytes are preserved during Git checkout and archive export. Missing or altered records fail verification.
+Study 2 publication export additionally needs `references/study2_rank.csv` and the canonical Study 2 parents. Supply `ReferenceInputs=struct('study2',references.study2,'rankFile',fullfile(pwd,'references','study2_rank.csv'))` to `plot_results`. Missing files or parents, incorrect identities, incomplete generated outputs and self-reference are failures/unavailable outcomes, never PASS. The resolver neither downloads nor substitutes data.
 
-Before complete-study comparison, `verify_source_relationship` checks the current files and scientific definitions against `verification/cleaned_source_relationship.json` and its fixed offline anchor. The comparator also checks generated-package identities, canonical references and source bindings. A source-identity check alone does not establish numerical agreement. A relationship that is not enabled for comparison returns an error; explicitly requested provisional comparisons never return overall reference PASS. The fixed-example command has the separate contract described above.
+The supplied MAT/CSV records retain their original bytes. `resolve_reference_inputs` maps the neutral directory names to original inventory prefixes; the rank file has its original inventory identity too. The immutable inventory and numerical policy retain historical identifiers and paths. They are verification data, not user commands or instructions. Saved schemas and error identifiers also keep compatibility names where the released rules require them. MATLAB's `private/` is ordinary function visibility, not a private data dependency. No public command reads a recovery directory.
 
-A component test, saved fixture or representative run does not establish execution of every study or a new cross-platform certification. Historical generating revisions and retired evidence remain recoverable from Git history and the author’s backup. The current source relationship verifies only its declared scope; it does not transfer a historical certificate to a new revision.
+Before complete-study comparison, `verify_source_relationship` checks the current files and scientific definitions against `verification/source_relationship.json` and its fixed offline anchor. The comparator also checks generated-package identities, canonical references and source bindings. A source-identity check alone does not establish numerical agreement. A relationship that is not enabled for comparison returns an error; explicitly requested provisional comparisons never return overall reference PASS. The fixed-example command has the separate contract described above.
+
+A component test, saved fixture or representative run does not establish execution of every study or a new cross-platform certification. Historical generating revisions and retired evidence remain recoverable from Git history and the author’s backup. The source relationship verifies only its declared scope; it does not transfer a historical certificate to a new revision.

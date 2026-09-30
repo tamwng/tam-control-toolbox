@@ -13,7 +13,7 @@ assert(mode~='all' || options.ConfirmFull,'study:ExpensiveSelection','ConfirmFul
 [context,root,resolution]=study_context; %#ok<ASGLU>
 identity=verify_source_relationship;
 cfg=study1_settings;
-[plan,manifest]=p06_design(cfg,'','','');
+[plan,manifest]=sensitivity_design(cfg,'','','');
 if mode=='case'
     index=find(manifest.runId==options.Case);
     assert(isscalar(index),'study:SensitivityCase','Supply one exact fixed runId.');
@@ -25,7 +25,7 @@ end
 if isempty(options.OutputDirectory)
     options.OutputDirectory=char("sensitivity_"+mode+"_"+string(datetime('now','Format','yyyyMMdd_HHmmss_SSS')));
 end
-output=ejc_output_path('sensitivity',options.OutputDirectory);mkdir(output);
+output=new_output_path('sensitivity',options.OutputDirectory);mkdir(output);
 summary=struct('schema','GENERATED_SENSITIVITY_V1','mode',char(mode),'status','PLANNED', ...
     'sourceIdentity',identity.sourceIdentity,'referenceComparison','NOT_REQUESTED', ...
     'internalValidity',struct('passed',false,'scope','No execution requested'));
@@ -36,18 +36,18 @@ end
 mkdir(fullfile(output,'runs'));mkdir(fullfile(output,'tables'));
 inputs=fullfile(output,'review','generation_inputs');mkdir(inputs);
 records=study1_records(cfg,'confirmation');
-p06_check_records(cfg,records);
+sensitivity_check_records(cfg,records);
 recordFile=fullfile(inputs,'records_confirmation.mat');save(recordFile,'records');
 environment=struct('matlab',version,'optimizationToolbox',ver('optim'));
 settingsFile=fullfile(inputs,'settings.mat');save(settingsFile,'cfg','environment');
-[plan,manifest]=p06_design(cfg,recordFile,p06_hash(recordFile),'');
-plan.settingsFile=settingsFile;plan.settingsSHA256=p06_hash(settingsFile);
+[plan,manifest]=sensitivity_design(cfg,recordFile,sensitivity_hash(recordFile),'');
+plan.settingsFile=settingsFile;plan.settingsSHA256=sensitivity_hash(settingsFile);
 manifest=manifest(index,:);
 save(fullfile(output,'execution_provenance.mat'),'plan','manifest');
 writetable(manifest,fullfile(output,'P06_RUN_MANIFEST.csv'));
 rows=struct([]);
 for j=1:height(manifest)
-    item=p06_generate_case(output,manifest(j,:),plan,records);
+    item=sensitivity_generate_case(output,manifest(j,:),plan,records);
     rows=[rows;item]; %#ok<AGROW>
     assert(item.completed && item.predictionCompleted,'study:SensitivityFailed', ...
         'Sensitivity case %s failed; saved failure evidence retained.',item.runId);
@@ -57,7 +57,7 @@ writetable(runs,fullfile(output,'tables','runs.csv'));
 writetable(runs(~runs.noisy,:),fullfile(output,'tables','deterministic.csv'));
 writetable(plan.knownAliases,fullfile(output,'tables','known_reference_aliases.csv'));
 if mode=='all'
-    [summaries,contrasts,analysis]=p06_summarize(runs,plan);
+    [summaries,contrasts,analysis]=sensitivity_summarize(runs,plan);
     writetable(summaries,fullfile(output,'tables','noisy_summaries.csv'));
     writetable(contrasts,fullfile(output,'tables','paired_contrasts.csv'));
     save(fullfile(output,'analysis_randomness.mat'),'analysis','-v7');

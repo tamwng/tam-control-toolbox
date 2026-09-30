@@ -20,7 +20,7 @@ identity=verify_source_relationship;
 if isempty(options.OutputDirectory)
     options.OutputDirectory=char(study+"_"+string(datetime('now','Format','yyyyMMdd_HHmmss_SSS')));
 end
-output=ejc_output_path(char(study),options.OutputDirectory);
+output=new_output_path(char(study),options.OutputDirectory);
 study_separate_output(output,options.Sources);
 manifest=struct('schema','GENERATED_STUDY_V1','study',char(study), ...
     'status','RUNNING','sourceIdentity',identity.sourceIdentity, ...

@@ -20,7 +20,7 @@ if study=='all'
     [path6,m]=operations.generate('study6',OutputDirectory=fullfile(output,'study6'), ...
         Sources=parents,Figures=options.Figures);
     stages=[stages;struct('study',"study6",'output',string(path6),'internalValidityPassed',m.internalValidity.passed)];
-    [pathS,m]=operations.sensitivity('all',OutputDirectory=fullfile(output,'p06'),ConfirmFull=true);
+    [pathS,m]=operations.sensitivity('all',OutputDirectory=fullfile(output,'sensitivity'),ConfirmFull=true);
     stages=[stages;struct('study',"p06",'output',string(pathS),'internalValidityPassed',m.internalValidity.passed)];
 elseif study=='sensitivity'
     [~,stages]=operations.sensitivity('all',OutputDirectory=output,ConfirmFull=options.ConfirmFull);

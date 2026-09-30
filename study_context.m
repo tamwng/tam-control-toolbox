@@ -4,8 +4,8 @@ root = fileparts(mfilename('fullpath'));
 oldPath = path; oldDirectory = pwd;
 cleanup = onCleanup(@() restore(oldDirectory,oldPath));
 restoredefaultpath; cd(root);
-folders = {root,fullfile(root,'src'),fullfile(root,'studies','p06'), ...
-    fullfile(root,'studies','p07')};
+folders = {root,fullfile(root,'src'),fullfile(root,'studies','sensitivity'), ...
+    fullfile(root,'verification','functions')};
 for j=1:6, folders{end+1}=fullfile(root,'studies',sprintf('study%d',j)); end
 addpath(folders{:});
 names = strings(0,1); files = strings(0,1);

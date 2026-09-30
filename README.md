@@ -50,7 +50,7 @@ run_sensitivity('plan');                 % List cases; no simulation.
 run_sensitivity('case',Case='baseline_S_000');
 ```
 
-The [sensitivity guide](studies/p06/README.md) explains the paired design. Inspect selected cases instead of plotting the entire campaign.
+The [sensitivity guide](studies/sensitivity/README.md) explains the paired design. Inspect selected cases instead of plotting the entire campaign.
 
 Optional complete reproduction is expensive: six studies plus 1,558 sensitivity cases.
 
@@ -62,19 +62,26 @@ paper = generate_results('all',OutputDirectory='paper_run',ConfirmFull=true);
 
 Generation applies the applicable mathematical, solver, finite-value and constraint checks. `check_result` and `check_study_results` recheck saved calculations; `run_component_tests` runs the small public regression suite. These checks do not establish agreement with a reference.
 
-Canonical comparison inputs are included under `results/`. Compare the saved example separately:
+Canonical comparison inputs are included under `references/`. Compare the saved example separately:
 
 ```matlab
-referenceFile = fullfile(pwd,'results','study1_candidate_20260917', ...
+referenceFile = fullfile(pwd,'references','study1', ...
     'data','confirmation_S_000.mat');
 comparison = compare_reference(resultFile,referenceFile,'example_comparison');
 ```
 
-For completed studies, use `compare_study_reference(sources,references,output)` with explicit generated and canonical directories. The [verification guide](CROSS_PLATFORM_VERIFICATION.md) lists the required parents and fixed numerical rules. Missing or altered reference data raises an error; comparison never silently downloads or substitutes data.
+For a completed individual study, comparison reuses its saved output:
+
+```matlab
+references = reference_directories;
+comparison = compare_study_reference(struct('study1',s1),references,'study1_comparison');
+```
+
+Use the `sensitivity` key for the sensitivity dataset. The [verification guide](CROSS_PLATFORM_VERIFICATION.md) lists the required parents and fixed numerical rules. Missing or altered reference data raises an error; comparison never silently downloads or substitutes data.
 
 **PASS** applies to the reported checks. **FAIL** means a requirement failed. **QUALIFIED** records a specified limitation, including unresolved passive Gram diagnostics; it does not mean numerical equality. Comparing a run with itself is not independent verification.
 
-`src/` contains the mathematical implementation; `studies/` contains study definitions and comparison routines; `tests/` contains public prerequisites; `results/` contains canonical inputs and new outputs. Keep the required reference paths and bytes intact.
+`src/` contains the mathematical implementation; `studies/study1`–`study6` and `studies/sensitivity` contain study definitions; `verification/` contains comparison functions and fixed specifications; `references/` contains supplied paper results; `results/` is for new output. `private/` holds MATLAB-only helpers, and `tests/` holds the component tests.
 
 ## Citation and license
 

@@ -32,20 +32,12 @@
 *.png binary
 *.xlsx binary
 
-# Preserve the exact baseline evidence bytes across platforms.
-evidence/p07_gate_b/** -text -whitespace
-evidence/p07_candidate_checks/** -text -whitespace
-evidence/p07_legacy_schema/** -text -whitespace
-
-# Preserve the exact bytes of the public source identity across Git checkouts.
+# Preserve source identities and canonical reference bytes across checkouts.
 /* -text
 /src/** -text
 /studies/** -text
 /tests/** -text
-/evidence/** -text
-/provenance/** -text
 /verification/** -text
 /private/** -text
-
-# Preserve the exact bytes of retained reference data.
+/references/** -text
 /results/** -text

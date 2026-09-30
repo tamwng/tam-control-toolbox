@@ -22,7 +22,7 @@ for j=1:5
     z=load(fullfile(source,'settings.mat'),'cfg');settings=str2func(key+"_settings");
     assert(isequaln(z.cfg,settings()),'study:ParentSettings','Parent study settings differ.');
     rows=[rows;struct('study',key,'source',string(source), ...
-        'manifestSHA256',ejc_file_sha256(file),'passed',true)]; %#ok<AGROW>
+        'manifestSHA256',verification_file_sha256(file),'passed',true)]; %#ok<AGROW>
 end
 proof=struct('passed',true,'parents',rows,'sourceIdentity',identity.sourceIdentity);
 end

@@ -14,7 +14,7 @@ arguments
     options.VerificationAdapter = []
 end
 root = fileparts(mfilename('fullpath'));
-outputDir = ejc_output_path('study4',outputName);
+outputDir = new_output_path('study4',outputName);
 if isempty(options.VerificationAdapter)
     options.VerificationAdapter = study_validity_callback('study4', ...
         [outputDir '_validity']);
@@ -39,7 +39,7 @@ save(fullfile(outputDir,'settings.mat'),'cfg','environment');
 records.initialization = study4_record(200,.5,cfg.inputSeed,cfg);
 records.evaluation = study4_record(600,.5,cfg.evaluationSeed,cfg);
 save(fullfile(outputDir,'records.mat'),'records');
-ejc_check_records(outputDir,options.ReferenceDirectory,4);
+check_input_records(outputDir,options.ReferenceDirectory,4);
 
 fits = struct;
 for id = string(cfg.modelIds)

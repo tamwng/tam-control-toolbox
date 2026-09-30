@@ -5,13 +5,13 @@ function summary = study1_summarize(output,cfg,destination)
 %   linearly at order-statistic position 1+(n-1)*p; no Statistics Toolbox.
 % The single-argument helper selector exposes the same per-run scoring functions.
 % An optional destination keeps regenerated tables outside the source archive.
-if nargin == 1 && isequal(output,'p06_helpers')
+if nargin == 1 && isequal(output,'analysis_helpers')
     summary = struct('scoreRun',@score_run,'scoreFit',@score_fit, ...
         'diagnoseRun',@diagnose_run,'percentile',@percentile);
     return
 end
 if nargin < 3, destination = output; end
-ejc_assert_writable(destination);
+assert_output_writable(destination);
 tableDir = fullfile(destination,'tables');
 if ~isfolder(tableDir), mkdir(tableDir); end
 metrics = struct([]); diagnostics = struct([]); initialization = struct([]);

@@ -15,8 +15,8 @@ else
 end
 assert(isfile(recordFile) && isfile(settingsFile),'study:ReferenceUnavailable','Sensitivity record/settings missing.');
 z=load(settingsFile,'cfg');assert(isequaln(z.cfg,cfg),'study:SensitivitySettings','Fixed settings differ.');
-z=load(recordFile,'records');p06_check_records(cfg,z.records);
-[plan,manifest]=p06_design(cfg,recordFile,p06_hash(recordFile),archive);
+z=load(recordFile,'records');sensitivity_check_records(cfg,z.records);
+[plan,manifest]=sensitivity_design(cfg,recordFile,sensitivity_hash(recordFile),archive);
 plan.settingsFile=settingsFile;
 assert(height(manifest)==1558,'study:SensitivityInventory','Complete sensitivity design required.');
 inputs=struct('sensitivityPlan',plan,'sensitivityManifest',manifest, ...

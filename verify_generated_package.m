@@ -1,6 +1,7 @@
 function manifest = verify_generated_package(study,source)
 %VERIFY_GENERATED_PACKAGE Bind a completed saved package to its producing source.
 identity=verify_source_relationship;
+if string(study)=="sensitivity",study="p06";end
 file=fullfile(source,'generation_manifest.json');
 if string(study)=='p06',file=fullfile(source,'sensitivity_manifest.json');end
 assert(isfile(file),'study:MissingGenerationManifest','A generated-package manifest is required.');

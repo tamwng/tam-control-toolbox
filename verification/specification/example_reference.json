@@ -1,0 +1,11 @@
+{
+  "schema": "REPRESENTATIVE_REFERENCE_INPUTS_V1",
+  "scope": "Study 1 Shared confirmation trial 0; full saved record, not whole-paper certification",
+  "canonical_label": "study1_candidate_20260917/data/confirmation_S_000.mat",
+  "canonical_sha256": "4ba023851eec31b4dc4a9ac118c1ec1c3a0086fb009deb94f1342d07281c44e6",
+  "policy_path": "verification/specification/numerical_policy.json",
+  "policy_sha256": "ca9101ea01a6eb093664d383a3d6bd1734598ba84aed2ee35b28cfa7412aec58",
+  "field_inventory_path": "verification/specification/field_coverage.csv",
+  "field_inventory_sha256": "2d828ea5d50acfd19e05765967b7003c39ab633a924fcc465aa5333cac0e5799",
+  "acquisition": "Explicit local file required; no public hosting route is established"
+}

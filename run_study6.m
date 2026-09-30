@@ -13,7 +13,7 @@ arguments
     options.Sources (1,1) struct = struct
 end
 root = fileparts(mfilename('fullpath'));
-outputDir = ejc_output_path('study6',outputName);
+outputDir = new_output_path('study6',outputName);
 oldPath = path; cleanup = onCleanup(@() path(oldPath));
 restoredefaultpath; addpath(root,fullfile(root,'src'));
 for s = 1:6, addpath(fullfile(root,'studies',sprintf('study%d',s))); end

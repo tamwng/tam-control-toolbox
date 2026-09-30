@@ -8,7 +8,7 @@ cleanup = onCleanup(@() restore_context(previousDirectory,previousPath));
 restoredefaultpath;
 cd(root);
 folders = {root,fullfile(root,'src'),fullfile(root,'studies','study1'), ...
-    fullfile(root,'studies','p07')};
+    fullfile(root,'verification','functions')};
 addpath(folders{:});
 names = strings(0,1); locations = strings(0,1);
 for k = 1:numel(folders)

@@ -14,7 +14,7 @@ assert(any(study=="study"+(1:6)),'study:Selection','Select study1 through study6
 source=char(java.io.File(char(source)).getCanonicalPath());
 assert(isfolder(source),'study:MissingSource','Saved study unavailable.');
 before=study_output_identity(source);random=rng;restore=onCleanup(@()rng(random));
-output=ejc_output_path('study_figures',options.OutputDirectory);
+output=new_output_path('study_figures',options.OutputDirectory);
 study_separate_output(output,struct('source',source));
 study_separate_output(output,options.ReferenceInputs);
 if study=='study2'
@@ -26,11 +26,11 @@ if study=='study2'
     refs.rankFile=char(java.io.File(char(refs.rankFile)).getCanonicalPath());
     study_separate_output([output '_binding'],struct('source',source));
     study_separate_output([output '_binding'],refs);
-    binding=ejc_study2_gram_binding(source,refs.study2,refs.rankFile,[output '_binding'],refs);
-    [output,verification]=plot_study2_journal(source,output,refs.rankFile,binding.compare); %#ok<NASGU>
+    binding=verification_study2_gram_binding(source,refs.study2,refs.rankFile,[output '_binding'],refs);
+    [output,verification]=plot_study2(source,output,refs.rankFile,binding.compare); %#ok<NASGU>
     report=binding.finish();
 else
-    exporter=str2func('plot_'+study+'_journal');output=exporter(source,output);
+    exporter=str2func('plot_'+study);output=exporter(source,output);
     report=struct('passed',true,'scope','Saved-data figure export');
 end
 assert(isequaln(before,study_output_identity(source)),'study:InputChanged','Saved plot inputs changed.');

@@ -15,6 +15,9 @@ arguments
 end
 [context,root]=study_context; %#ok<ASGLU>
 proof=verify_source_relationship;
+sources=study_reference_keys(sources);references=study_reference_keys(references);
+options.ParentSources=study_reference_keys(options.ParentSources);
+options.ReferenceParents=study_reference_keys(options.ReferenceParents);
 keys=string(fieldnames(sources));assert(~isempty(keys),'study:Selection','No generated studies selected.');
 parents=options.ParentSources;
 for key=keys.'
@@ -41,10 +44,10 @@ for key=keys.'
 end
 assert(~strcmp(proof.sourceReview,'HQ_REVIEW_PENDING') || options.DevelopmentComparison, ...
     'study:SourceReviewPending','The source relationship is not enabled for reference comparison.');
-output=ejc_output_path('reference_comparison',output);
+output=new_output_path('reference_comparison',output);
 study_separate_output(output,parents);study_separate_output(output,referenceParents);
 mkdir(output);
-before=ejc_input_snapshot(parents,referenceParents);
+before=verification_input_snapshot(parents,referenceParents);
 policyHash=proof.policySHA256;
 save(fullfile(output,'input_identity_before.mat'),'before','policyHash');
 currentInputs=struct;referenceInputs=struct;
@@ -52,8 +55,8 @@ if any(keys=='p06')
     currentInputs=study_sensitivity_inputs(sources.p06,referenceParents.study1);
     referenceInputs=study_sensitivity_inputs(references.p06,referenceParents.study1);
 end
-bindingsA=ejc_csv_source_tables(sources,fullfile(output,'current_sources'),currentInputs);
-bindingsB=ejc_csv_source_tables(select(references,keys),fullfile(output,'reference_sources'),referenceInputs);
+bindingsA=verification_csv_source_tables(sources,fullfile(output,'current_sources'),currentInputs);
+bindingsB=verification_csv_source_tables(select(references,keys),fullfile(output,'reference_sources'),referenceInputs);
 gateFile='';
 if any(keys=='p06') && ~isfile(fullfile(sources.p06,'tables','baseline_gate.csv'))
     ix=find(string({bindingsA.study})=='p06' & string({bindingsA.file})=='tables/baseline_gate.csv');
@@ -64,10 +67,10 @@ if any(keys=='p06') && ~isfile(fullfile(sources.p06,'tables','baseline_gate.csv'
 end
 cache=containers.Map('KeyType','char','ValueType','any');
 cache('P07_MATRIX_EVIDENCE_DIRECTORY')=fullfile(output,'matrix_details');mkdir(cache('P07_MATRIX_EVIDENCE_DIRECTORY'));
-cache('P07_INPUT_IDENTITY_SHA256')=ejc_file_sha256(fullfile(output,'input_identity_before.mat'));
+cache('P07_INPUT_IDENTITY_SHA256')=verification_file_sha256(fullfile(output,'input_identity_before.mat'));
 adapter=struct('contextForFile',@bind,'additionalFiles',@extra,'sourceFile',@source_file);
-report=ejc_compare_results(sources,references,fullfile(output,'comparison'),adapter);
-assert(isequaln(before,ejc_input_snapshot(parents,referenceParents)), ...
+report=verification_compare_results(sources,references,fullfile(output,'comparison'),adapter);
+assert(isequaln(before,verification_input_snapshot(parents,referenceParents)), ...
     'study:InputChanged','Generated or canonical inputs changed.');
 after=verify_source_relationship;
 assert(strcmp(after.relationshipSHA256,proof.relationshipSHA256),'study:SourceChanged','Source authority changed.');
@@ -81,7 +84,7 @@ end
 study_json(fullfile(output,'reference_comparison.json'),report);
 save(fullfile(output,'reference_comparison.mat'),'report');
     function c=bind(info,a,b)
-        c=ejc_portable_context(info,a,b,parents,referenceParents,bindingsA,bindingsB,cache);
+        c=verification_portable_context(info,a,b,parents,referenceParents,bindingsA,bindingsB,cache);
         c.sourceGuard=@study_claim_source_guard;
         c.canonicalReferencePath=string(referenceIdentity.(info.study).originalPrefix)+info.file;
     end

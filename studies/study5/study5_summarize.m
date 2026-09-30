@@ -3,7 +3,7 @@ function summary = study5_summarize(output,cfg,destination)
 % Inverse and direct regression residuals are not pooled or compared.
 % The optional destination separates regenerated reports from source records.
 if nargin < 3, destination = output; end
-ejc_assert_writable(destination);
+assert_output_writable(destination);
 tableDir = fullfile(destination,'tables');
 if ~isfolder(tableDir), mkdir(tableDir); end
 summary.metrics = table; initialization = struct([]); forecasts = struct([]);

@@ -8,7 +8,7 @@ function summary = study2_summarize(output,cfg,destination)
 % magnitudes are retained separately, including floating-point exceedances.
 % The optional destination separates regenerated reports from source records.
 if nargin < 3, destination = output; end
-ejc_assert_writable(destination);
+assert_output_writable(destination);
 folder = fullfile(destination,'tables');
 if ~isfolder(folder), mkdir(folder); end
 metrics = struct([]); diagnostics = struct([]); initialization = struct([]);

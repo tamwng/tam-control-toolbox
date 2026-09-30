@@ -1,7 +1,7 @@
 function [fig,selection] = inspect_results(study,caseId,sourceDirectory,varargin)
 %INSPECT_RESULTS Plot a saved response without rerunning its model.
 % INSPECT_RESULTS(1,'confirmation_S_000',output) views the fixed example.
-% Studies 1--5 and 'p06' retain the existing case/directory selectors.
+% Studies 1--5 and 'sensitivity' use existing case/directory selectors.
 % Supply the source directory explicitly; no historical default is loaded.
 % 'Visible','on'/'off'; 'SaveTo', an unused PNG/PDF file (optional).
 % The result is unchanged. FIG.UserData and SELECTION retain full provenance;
@@ -25,12 +25,13 @@ if nargin < 2, caseId = ''; end
 if nargin < 3, sourceDirectory = ''; end
 if isnumeric(study)
     assert(isscalar(study) && ismember(study,1:5), ...
-        'ejc:InspectionStudy','Select Study 1--5 or ''p06''; Study 6 contains derived forecasts.');
+        'ejc:InspectionStudy','Select Study 1--5 or ''sensitivity''; Study 6 contains derived forecasts.');
     key = sprintf('study%d',study);
 else
     key = char(string(study));
+    if strcmp(key,'sensitivity'),key='p06';end
     assert(strcmp(key,'p06'),'ejc:InspectionStudy', ...
-        'Select Study 1--5 or ''p06''; Study 6 contains derived forecasts.');
+        'Select Study 1--5 or ''sensitivity''; Study 6 contains derived forecasts.');
 end
 defaults = struct('study1','confirmation_S_001','study2','amplitude_02_E', ...
     'study3','abrupt_S_vrf_001','study4','represented_Aplus', ...
@@ -45,7 +46,7 @@ addParameter(parser,'Visible','on',@(value) any(strcmp(value,{'on','off'})));
 parse(parser,varargin{:});
 saveFile = char(parser.Results.SaveTo);
 if ~isempty(saveFile)
-    ejc_assert_writable(saveFile);
+    assert_output_writable(saveFile);
     assert(~isfile(saveFile) && ~isfolder(saveFile),'ejc:ExistingOutput', ...
         'Inspection exports must use an unused filename.');
     assert(~isfile([saveFile '.json']),'ejc:ExistingOutput','Export metadata already exists.');

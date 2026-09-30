@@ -12,7 +12,7 @@ path(testCase.TestData.previousPath);
 end
 function testIndicesAndCommonInputs(testCase)
 cfg = study6_settings; root = testCase.TestData.root;
-saved = load(fullfile(root,'results',cfg.sources{1},'data','records_pilot.mat'),'records');
+saved = load(fullfile(study6_source(root,cfg,1),'data','records_pilot.mat'),'records');
 r = saved.records.evaluation; before = r;
 q = study6_queries(r,cfg.anchors,'clean');
 verifyEqual(testCase,q.matlabColumns,21:20:581); verifyEqual(testCase,q.x,r.x(21:20:581).');
@@ -54,7 +54,7 @@ end
 end
 function testSnapshotSelectionAndPhysicalMapping(testCase)
 root = testCase.TestData.root; cfg = study6_settings;
-saved = load(fullfile(root,'results',cfg.sources{5},'fits','fit_I.mat'),'fit'); fit = saved.fit;
+saved = load(fullfile(study6_source(root,cfg,5),'fits','fit_I.mat'),'fit'); fit = saved.fit;
 verifyEqual(testCase,fit.checkpointTheta,fit.theta(:,cfg.fitSteps+1));
 q = fixture_queries; q.y = q.x; q = study6_truth(q,'A',.45);
 raw = [-.2;2.5]; mapped = study5_map('I',raw); copy = raw;
@@ -105,7 +105,7 @@ end
 function testConstraintBenchmarkFromArchive(testCase)
 root = testCase.TestData.root; cfg = study6_settings;
 for id = ["A","O3","E","K"]
-    saved = load(fullfile(root,'results',cfg.sources{2},'runs',"constraint_"+id+".mat"),'result'); r = saved.result;
+    saved = load(fullfile(study6_source(root,cfg,2),'runs',"constraint_"+id+".mat"),'result'); r = saved.result;
     verifyEqual(testCase,[r.x(1)-.85,r.x(2)-.85],[.55 .09],'AbsTol',1e-11);
     verifyEqual(testCase,r.time(2)-r.time(1),.1);
     verifyEqual(testCase,r.x(2),study2_plant(r.x(1),r.u(1)));
