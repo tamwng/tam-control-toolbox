@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-message: "Cite this software and identify the source commit used for your results."
+message: "Cite the accompanying paper and this software, and identify the source commit used for your results."
 title: "Structure-Informed Indirect Adaptive Predictive Control MATLAB Implementation"
 type: software
 authors:
@@ -8,3 +8,17 @@ authors:
 license: "BSD-3-Clause"
 repository-code: "https://github.com/tamwng/tam-control-toolbox"
 abstract: "MATLAB implementation of structure-informed indirect adaptive predictive control. Fixed nonlinear regressors support recursive coefficient identification, nonlinear predictor reconstruction, and constrained control using a frozen affine horizon model. The numerical studies are exploratory evidence; independent confirmation is not claimed."
+preferred-citation:
+  type: article
+  authors:
+    - family-names: "Nguyen"
+      given-names: "Tam W."
+  title: "A Numerical Investigation of Indirect Adaptive Predictive Control with Structure-Informed Nonlinear Regressors"
+  journal: "arXiv"
+  year: 2026
+  month: 9
+  version: "2"
+  date-released: "2026-09-30"
+  doi: "10.48550/arXiv.2602.12016"
+  url: "https://arxiv.org/abs/2602.12016v2"
+  abstract: "This paper numerically investigates nonlinear model construction from supplied structural information within predictive cost adaptive control. The study varies the retained nonlinear functions, coefficient sharing, and forward reconstruction under a common identification and control architecture. Recursive least squares updates unknown coefficients from direct or integrated relations that are linear in the parameters. The reconstructed nonlinear forward predictor need not be parameter-linear. A local affine approximation, constructed from the predictor value and Jacobian, is frozen over the prediction horizon for constrained quadratic optimization. Scalar full-state studies compare exact parameterizations, Taylor-informed approximations, broader dictionaries, and incorrectly restricted models. The comparisons include parameter variation, structural changes, and selected noisy cases. Common-data tests assess nonlinear prediction, whereas common-query forecasts distinguish nonlinear-model error from affine-freezing error. Under the tested conditions, correct structure improves prediction relative to affine models without increasing parameter count. Integrated physical identification reduces prediction error relative to direct sampled-map fitting after initialization. Additional coefficients and improved nonlinear prediction do not ensure lower tracking error. Forgetting improves readaptation without ensuring parameter recovery, and coefficient activation does not establish structure discovery. Affine freezing can reverse the nonlinear prediction advantage over an affine baseline. The results support evaluating representation, identification, reconstruction, and horizon prediction separately before increasing model complexity."

@@ -81,10 +81,14 @@ Use the `sensitivity` key for the sensitivity dataset. The [verification guide](
 
 **PASS** applies to the reported checks. **FAIL** means a requirement failed. **QUALIFIED** records a specified limitation, including unresolved passive Gram diagnostics; it does not mean numerical equality. Comparing a run with itself is not independent verification.
 
-`src/` contains the mathematical implementation; `studies/study1`–`study6` and `studies/sensitivity` contain study definitions; `verification/` contains comparison functions and fixed specifications; `references/` contains supplied paper results; `results/` is for new output. `private/` holds MATLAB-only helpers, and `tests/` holds the component tests.
+`src/` contains the mathematical implementation; `studies/study1`–`study6` and `studies/sensitivity` contain study definitions; `verification/` contains comparison functions and fixed specifications; `references/` contains supplied paper results; `results/` is for new output. `private/` holds MATLAB-only helpers, `tests/` holds the component tests, and `paper/` contains the accompanying preprint.
 
 ## Citation and license
 
-Software citation metadata is in `CITATION.cff`; terms are in [LICENSE.txt](LICENSE.txt).
+Please cite the accompanying preprint and identify the software commit used for your results:
 
-The citation and DOI for the revised arXiv version will be added when that version is announced.
+Tam W. Nguyen (2026). *A Numerical Investigation of Indirect Adaptive Predictive Control with Structure-Informed Nonlinear Regressors*. arXiv:2602.12016v2, 30 September 2026.
+
+[Paper (PDF)](paper/2602.12016v2.pdf) · [arXiv v2](https://arxiv.org/abs/2602.12016v2) · [DOI](https://doi.org/10.48550/arXiv.2602.12016)
+
+Paper and software citation metadata is in [CITATION.cff](CITATION.cff). The software uses the [BSD 3-Clause license](LICENSE.txt); the paper retains the license shown on its arXiv page.
